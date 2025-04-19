@@ -20,7 +20,7 @@ import UserProfile from './pages/UserProfile';
 import ChatPage from './pages/ChatPage';
 import ChatIcon from './components/Chaticon';
 import WorkshopsF from './pages/WorkshopsF';
-import Otpverify from './components/otpverify';
+import Otpverify from './components/Otpverify';
 
  
 const App = () => {
