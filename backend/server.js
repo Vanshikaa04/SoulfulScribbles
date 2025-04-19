@@ -24,6 +24,9 @@ app.use(express.json())
 
 const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:5174',
+
+      "http://localhost:3080",
     'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app',
     'https://www.soulfulscribble.in',
     'https://www.soulfulscribble.in/'

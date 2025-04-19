@@ -24,7 +24,7 @@ const Otpverify=()=> {
         const registerRes = await axios.post(backendurl+"/api/user/register", formData);
         toast.success("Signup successful!");
         setToken( registerRes.data.token);
-        navigate("/");
+        navigate("/login");
       } else {
         toast.error("Invalid OTP");
       }
