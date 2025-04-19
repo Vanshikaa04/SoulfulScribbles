@@ -22,9 +22,9 @@ app.use(express.json())
 app.use(cors({
     origin: [
       'http://localhost:3080',
-      'https://https://soulful-scribble-backend.vercel.app/',
-      'https://soulfulscribble.in', 
-      'https://www.soulfulscribble.in' // 👈 and this if you're using www
+     'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app/',
+     'https://www.soulfulscribble.in/',
+     
     ],
     // credentials: true // if you use cookies or auth headers
   }));
