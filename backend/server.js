@@ -15,33 +15,37 @@ const app =express()
 const port = process.env.PORT || 3080
 
 connectDB()
-connectCloudinary()
+// connectCloudinary()
 
 //middlewares
 app.use(express.json())
+// app.use(cors())
 
-// Allowed origins
+
 const allowedOrigins = [
-    'http://localhost:3080',
-    'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app/',
-    'https://www.soulfulscribble.in/',
-    
+    'http://localhost:5173',
+    'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app',
+    'https://www.soulfulscribble.in',
+    'https://www.soulfulscribble.in/'
   ];
   
-  //  CORS middleware
-  app.use(cors({
+  const corsOptions = {
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // Allow non-browser tools like Postman
+      if (!origin) return callback(null, true);
+  
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.error('❌ CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,
-  }));
+    credentials: true, // if using cookies or Authorization headers
+  };
   
-  app.options("*", cors());
-
+  app.use(cors(corsOptions));
+  
 // //api endpoints
 app.use('/api/user',router)
 app.use('/api/product',productrouter)
