@@ -1,0 +1,17 @@
+.text-gradient {
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #f06595, #845ec2);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -o-background-clip: text;
+    -ms-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Admin Panel Small Text */
+  .admin-text {
+    font-size: 0.8rem;
+    color: rgba(99, 8, 8, 0.7);
+    font-weight: normal;
+  }

@@ -1,0 +1,26 @@
+.chat-icon {
+    position: fixed;
+    right: 25px;
+    bottom: 2rem; /* default for desktop */
+    z-index: 1000;
+    background-color: rgb(31, 94, 167);
+    color: white;
+    padding: 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .chat-icon:hover {
+    background-color: #1d4ed8;
+    transform: scale(1.05);
+  }
+  
+  /* Media query for mobile devices */
+  @media (max-width: 576px) {
+    .chat-icon {
+      bottom: 2rem;
+    }
+  }
+  

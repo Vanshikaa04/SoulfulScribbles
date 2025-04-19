@@ -1,0 +1,145 @@
+.featured-items-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  padding: 30px 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+
+  /* Hide scrollbar - works on most modern browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.featured-items-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.desktop-featured {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 1200px; /* Optional: limit max width */
+  padding: 0 20px;
+}
+
+.circle-img-container {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: transform 0.3s ease;
+}
+
+.circle-img-container:hover {
+  transform: scale(1.05);
+}
+
+.circle-img-container {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid black;
+  margin-left: 2px;
+  /* padding: 2px;; */
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.circle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.circle-img:hover {
+  transform: scale(1.05);
+}
+
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+  font-weight: bold;
+}
+
+.circle-img-container:hover .img-overlay {
+  opacity: 1;
+}
+
+.img-title {
+  font-size: 1rem;
+}
+
+/* Responsive visibility control */
+.desktop-featured {
+  display: flex;
+}
+
+.mobile-featured {
+  display: none;
+  
+}
+
+@media (max-width: 768px) {
+  .desktop-featured {
+    display: none;
+  }
+
+  .mobile-featured {
+    display: block;
+  }
+
+  .circle-img-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .img-title {
+    font-size: 0.9rem;
+  }
+}
+
+/* Prevent edge collision */
+.carousel-section {
+  padding: 0 15px;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* For smooth spacing between carousels */
+.carousel + .carousel {
+  margin-top: 2rem;
+}
+
+/* Optional: ensure rows/cards inside carousel don’t overflow on small screens */
+.carousel .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Prevent extra margin on small screens */
+@media (max-width: 576px) {
+  .carousel .carousel-item {
+    padding: 0 5px;
+  }
+
+  .circle-img-container {
+    width: 120px;
+    height: 120px;
+  }
+}

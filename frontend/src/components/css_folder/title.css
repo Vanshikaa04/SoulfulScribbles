@@ -1,0 +1,80 @@
+.title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 5px; /* Reduced vertical padding */
+  text-align: center;
+  font-weight: bold;
+  flex-wrap: wrap;
+}
+
+.title-text1 {
+  font-size: clamp(1.6rem, 4vw, 2.8rem); /* Slightly smaller scaling range */
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #2d0c7a, #d45e5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.title-text2 {
+  font-size: clamp(1.4rem, 4vw, 2.8rem); /* More consistent size on mobile */
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: underline;
+  background: linear-gradient(90deg, #cc5d80, #40428d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (max-width: 768px) {
+  .title-container {
+    flex-direction: row; /* Keep it horizontal on mobile too */
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+.title-text1,
+.title-text2 {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+ 
+ .title-text1 {
+   font-size: clamp(1.8rem, 3vw, 3rem); /* Responsive font size */
+   font-weight: 700;
+   letter-spacing: 1px;
+   background: linear-gradient(90deg, #2d0c7a, #d45e5e); /* Orange-Peach Gradient */
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+ }
+ 
+ .title-text2 {
+   font-size: clamp(1.8rem, 3vw, 3rem);
+
+   font-weight: 700;
+   letter-spacing: 1px;
+   text-decoration: underline;
+   background: linear-gradient(90deg, #cc5d80, #40428d); /* Orange-Peach Gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+ }
+ 
+ @media (max-width: 768px) {
+   .title-container {
+     flex-direction: column;
+     gap: 5px;
+   }
+ }
+ 

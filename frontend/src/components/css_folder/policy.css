@@ -1,0 +1,64 @@
+.main {
+  max-width: 250px;
+  padding: 10px;
+}
+
+.img-size {
+  max-width: 80px;
+  height: auto;
+}
+
+.service {
+  color: var(--maincolor);
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* New additions for responsiveness */
+.footer-link {
+  color: var(--maincolor);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.small-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.policy .main {
+  flex: 1 1 200px;
+  min-width: 150px;
+  margin: 10px;
+}
+
+/* Centering the white top section (inside the row) */
+.row.text-center.my-5 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Center content in each column */
+.row.text-center.my-5 > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Responsive padding for paragraphs */
+.row.text-center.my-5 p {
+  padding: 0 10px;
+}
+

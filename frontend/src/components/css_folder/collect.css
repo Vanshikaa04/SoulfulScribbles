@@ -1,0 +1,17 @@
+/* Ensures proper spacing and centering */
+.product-col {
+  margin-bottom: 1.5rem;
+}
+
+/* Adjust margins or layout further on small screens */
+@media (max-width: 576px) {
+  .product-col {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .product-display-container {
+    margin-left: 0 !important;
+    padding: 0 0.5rem;
+  }
+}

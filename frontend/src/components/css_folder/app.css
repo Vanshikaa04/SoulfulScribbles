@@ -1,0 +1,24 @@
+:root{
+    --maincolor:  rgb(154, 52, 108);
+    --productcolor: rgb(137, 97, 123);
+     /* --maincolor: linear-gradient(rgb(203, 104, 121), rgb(107, 151, 227)); */
+    --dualcolor :linear-gradient(rgb(252, 248, 248),rgb(173, 173, 173));
+
+}
+
+/* Ensures no weird body restrictions */
+body, html {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  margin-top: 3rem;
+
+  }
+  
+  /* Optional: prevent shrinking on small devices */
+  .main-content {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  

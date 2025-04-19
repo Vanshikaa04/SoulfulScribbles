@@ -1,0 +1,20 @@
+# Ignore dependencies and environments
+node_modules/
+venv/
+
+# Ignore secret or config files
+*.env
+
+# Ignore specific folders
+chatbot/
+chatbackup/
+
+# Ignore specific files
+blueprint.txt
+bootstraprule.txt
+
+# (Optional) Ignore build or OS-generated files
+dist/
+build/
+.DS_Store
+Thumbs.db

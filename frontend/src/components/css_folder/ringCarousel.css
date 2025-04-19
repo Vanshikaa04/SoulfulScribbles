@@ -1,0 +1,51 @@
+/* General carousel styling */
+.ring-carousel {
+    position: relative;
+    perspective: 1000px;
+  }
+  
+  /* Card Container */
+  .ring-card {
+    transition: transform 0.5s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  /* Left and Right Cards (Tilted Effect) */
+  .ring-card.left {
+    transform: rotateY(-20deg) translateX(-20px);
+    opacity: 0.8;
+  }
+  
+  .ring-card.right {
+    transform: rotateY(20deg) translateX(20px);
+    opacity: 0.8;
+  }
+  
+  /* Middle Card (Pops Out) */
+  .ring-card.center {
+    transform: scale(1.1);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Hover Effect */
+  .ring-card:hover {
+    transform: scale(1.15) !important;
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.4);
+    opacity: 1;
+  }
+  
+  /* Image Styling */
+  .ring-card .img-fluid {
+    object-fit: cover;
+    aspect-ratio: 1 / 1.2;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  /* Responsive Design Tweaks */
+  @media (max-width: 768px) {
+    .ring-card.left,
+    .ring-card.right {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  
