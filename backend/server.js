@@ -19,16 +19,28 @@ connectCloudinary()
 
 //middlewares
 app.use(express.json())
-app.use(cors({
-    origin: [
-      'http://localhost:3080',
-     'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app/',
-     'https://www.soulfulscribble.in/',
-     
-    ],
-    // credentials: true // if you use cookies or auth headers
+
+// Allowed origins
+const allowedOrigins = [
+    'http://localhost:3080',
+    'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app/',
+    'https://www.soulfulscribble.in/',
+    
+  ];
+  
+  //  CORS middleware
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   }));
   
+  app.options("*", cors());
 
 // //api endpoints
 app.use('/api/user',router)
