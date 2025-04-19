@@ -15,16 +15,16 @@ const app =express()
 const port = process.env.PORT || 3080
 
 connectDB()
-// connectCloudinary()
+connectCloudinary()
 
 //middlewares
 app.use(express.json())
 app.use(cors({
     origin: [
       'http://localhost:3080',
-      'https://https://soulful-scribbles-backend.vercel.app/',
-      'https://soulfulscribbles.in', 
-      'https://www.soulfulscribbles.in' // 👈 and this if you're using www
+      'https://https://soulful-scribble-backend.vercel.app/',
+      'https://soulfulscribble.in', 
+      'https://www.soulfulscribble.in' // 👈 and this if you're using www
     ],
     // credentials: true // if you use cookies or auth headers
   }));
