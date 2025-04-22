@@ -3,4 +3,45 @@
     background-color: #f06595;
     color: white;
     }
+    .transition-sidebar {
+        transition: transform 0.3s ease-in-out;
+      }
+      
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+      
+        .sidebar.open {
+          transform: translateX(0);
+          display: block !important;
+        }
+      }
+      
+      /* Make sure nav-link styles are clean and active class highlights links */
+.nav-link {
+    color: #333;
+    font-weight: 500;
+    transition: background 0.2s ease-in-out;
+    overflow: hidden;
+  }
+  
+  .nav-link:hover {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .nav-link.active {
+    background-color: #f06595;
+    color: #fff !important;
+    border-radius: 8px;
+  }
+  
+  .sidebar-desktop {
+    width: 300px;
+    height: 100vh;
+    top: 90px;
+    left: 0;
+    z-index: 1030;
+  }
   

@@ -15,3 +15,17 @@
     color: rgba(99, 8, 8, 0.7);
     font-weight: normal;
   }
+  .dashboard-card {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .dashboard-card:hover {
+    transform: scale(1.02);
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-card .fs-6 {
+      font-size: 0.9rem;
+    }
+  }
+  

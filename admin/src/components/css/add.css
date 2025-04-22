@@ -27,3 +27,62 @@
     margin-left:20% ;
 }
 
+/* add.css */
+
+.maincard {
+    width: 100%;
+    max-width: 780px;
+    margin: 20px auto;
+    border-radius: 15px;
+    padding: 20px;
+  }
+  
+  .formlabel {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .addbtn {
+    display: block;
+    margin: 0 auto;
+    background-color: #f06595;
+    border: none;
+  }
+  
+  @media (max-width: 768px) {
+    .maincard {
+      padding: 15px;
+    }
+  
+    .formlabel {
+      font-size: 14px;
+    }
+  
+    .form-control,
+    .form-select {
+      font-size: 14px;
+    }
+  
+    .addbtn {
+      font-size: 16px;
+      width: 100% !important;
+    }
+  
+    .form-check {
+      flex: 1 1 45%;
+    }
+  
+    .form-check-label {
+      font-size: 14px;
+    }
+  }
+  
+  /* Responsive Rows */
+  @media (min-width: 768px) {
+    .row .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+  

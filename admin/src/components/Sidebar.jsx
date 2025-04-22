@@ -1,37 +1,55 @@
 import React from "react";
-import { ListGroup, Container } from "react-bootstrap";
+import { ListGroup, Offcanvas } from "react-bootstrap";
 import { FaPlus, FaList, FaShoppingCart, FaHome } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { NavLink } from "react-router-dom";
-import "./css/sidebar.css"
-const Sidebar = () => {
+import "./css/sidebar.css";
+
+const Sidebar = ({ show, handleClose }) => {
+  const links = [
+    { to: "/", icon: <FaHome />, label: "Home" },
+    { to: "/add", icon: <FaPlus />, label: "Add Products" },
+    { to: "/list", icon: <FaList />, label: "List Products" },
+    { to: "/orders", icon: <FaShoppingCart />, label: "Orders" },
+  ];
+
   return (
-    <Container fluid className="p-3 bg-white shadow-sm position-fixed  " style={{ width: "250px" , height:"100vh" }}>
-      <ListGroup variant="flush" className="p-2">
-      
-            <NavLink to ="/" style={{textDecoration:"none" }} activeclassname="active" className="nav-link d-flex align-items-center gap-3 p-3 my-2">
+    <>
+      {/* Desktop Sidebar */}
+      <div className="d-none d-md-block bg-white shadow-sm position-fixed sidebar-desktop">
+        <ListGroup variant="flush" className="p-2">
+          {links.map((link, index) => (
+            <NavLink
+              key={index}
+              to={link.to}
+              className="nav-link d-flex align-items-center gap-3 p-3 my-2"
+            >
+              {link.icon} {link.label}
+            </NavLink>
+          ))}
+        </ListGroup>
+      </div>
 
-          <FaHome /> Home
-        </NavLink>
-
-        <NavLink to ="/add" style={{textDecoration:"none" }} activeclassname="active" className="nav-link d-flex align-items-center gap-3 p-3 my-2">
-
-<FaPlus /> Add Products
-</NavLink>
-
-        <NavLink to ="/list" style={{textDecoration:"none"}} activeclassname="active" className="nav-link d-flex align-items-center gap-3 p-3 my-2">
-          <FaList /> List Products
-        </NavLink>
-
-
-        <NavLink to ="/orders" style={{textDecoration:"none"}} activeclassname="active" className="nav-link d-flex align-items-center gap-3 p-3 my-2">
-          <FaShoppingCart /> Orders
-        </NavLink>
-
-
-        
-      </ListGroup>
-    </Container>
+      {/* Mobile Offcanvas Sidebar */}
+      <Offcanvas show={show} onHide={handleClose} responsive="md">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menu</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <ListGroup variant="flush">
+            {links.map((link, index) => (
+              <NavLink
+                key={index}
+                to={link.to}
+                className="nav-link d-flex align-items-center gap-3 p-3 my-2"
+                onClick={handleClose}
+              >
+                {link.icon} {link.label}
+              </NavLink>
+            ))}
+          </ListGroup>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
   );
 };
 

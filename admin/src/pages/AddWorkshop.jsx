@@ -74,20 +74,20 @@ const AddWorkshop = ({token}) => {
     return (
       <Container className="d-flex flex-column justify-content-center align-items-center ">
   
-        <Card style={{ width: "780px" ,}} className=" shadow maincard">
+      <Card className="shadow maincard w-100" style={{ maxWidth: "780px" ,width: "100%"}} >
         <Title text1={"Add"} text2={"Workshop"}/>
   
           <Form onSubmit={handleSubmit} className="p-4">
             <Row className="mb-3">
              
-              <Col>
+                 <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">Title</Form.Label>
                   <Form.Control type="text" name="title" onChange={handleChange} required />
                 </Form.Group>
               </Col>
 
-              <Col>
+                 <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">Image</Form.Label>
                   <Form.Control type="file" name="image"  accept="image/*" onChange={handleChange} />
@@ -98,14 +98,14 @@ const AddWorkshop = ({token}) => {
 
             <Row className="mb-3">
              
-              <Col>
+                 <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">Date</Form.Label>
                   <Form.Control type="date" name="date" onChange={handleChange} required />
                 </Form.Group>
               </Col>
 
-              <Col>
+                  <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">Location</Form.Label>
                   <Form.Control type="text" name="location" onChange={handleChange} placeholder="null" required />
@@ -115,14 +115,14 @@ const AddWorkshop = ({token}) => {
             </Row>
   
   <Row className="mb-3">
-            <Col>
+               <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">Start Time</Form.Label>
                   <Form.Control type="time" name="starttime"   onChange={handleChange} />
                </Form.Group>
               </Col>
 
-              <Col>
+                 <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">End Time</Form.Label>
                   <Form.Control type="time" name="endtime"   onChange={handleChange} />
@@ -132,14 +132,14 @@ const AddWorkshop = ({token}) => {
               </Row>
   
             <Row className="mb-3">
-              <Col>
+                 <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label className="formlabel">Workshop Fees</Form.Label>
                   <Form.Control type="number" name="fees" onChange={handleChange} required />
                 </Form.Group>
               </Col>
 
-              <Col >
+                 <Col xs={12} md={6}>
               <Form.Label className="formlabel">Mode</Form.Label>
             <Row>
               {['Remote', 'Offline'].map((modes) => (
