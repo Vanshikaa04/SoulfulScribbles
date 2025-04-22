@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Title from '../../../frontend/src/components/Title';
 import { Container, Row, Col, Form, Card, Button, ButtonGroup, Modal } from 'react-bootstrap';
+import "../components/css/orders.css"
 
 const AdminOrders = ({ token }) => {
   const [orders, setOrders] = useState([]);
@@ -68,24 +69,26 @@ const AdminOrders = ({ token }) => {
 
   return (
     <Container fluid className="d-flex flex-column justify-content-center align-items-center py-5 px-1">
-      <Card className="shadow maincard p-4 w-100" style={{ maxWidth: '1100px', marginLeft: '12rem' }}>
+    <Card className="shadow maincard w-100" style={{ maxWidth: "780px" }}>
         <Title text1="All" text2="Orders" />
 
         <div className="d-flex justify-content-center mb-4">
           <ButtonGroup>
             {statusTabs.map((tab) => (
-              <Button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 mx-1 mb-2 fw-semibold border rounded-pill ${
-                  activeTab === tab ? "text-white border-secondary" : "text-dark bg-white border-secondary"
-                }`}
-                style={{
-                  backgroundColor: activeTab === tab ? " rgb(240, 101, 149)" : "transparent",
-                }}
-              >
-                {tab}
-              </Button>
+             <Button
+             key={tab}
+             onClick={() => setActiveTab(tab)}
+             className={`px-4 mx-1 mb-2 fw-semibold border rounded-pill mobile-button 
+               ${activeTab === tab ? "text-white border-secondary" : "text-dark bg-white border-secondary"}`}
+             style={{
+               backgroundColor: activeTab === tab ? "rgb(240, 101, 149)" : "transparent",
+             }}
+           >
+             {tab}
+           </Button>
+           
+            
+
             ))}
           </ButtonGroup>
         </div>
@@ -120,7 +123,7 @@ const AdminOrders = ({ token }) => {
                   <p className="mb-1"><strong>Address:</strong> {order.address.address}, {order.address.city} - {order.address.pincode}</p>
                 </Col>
 
-                <Col xs={6} md={3}>
+                <Col xs={6} md={3} >
                   <Form.Select value={order.status} onChange={(e) => handleStatusChange(order, e.target.value)}>
                     <option value="Order Placed">Order Placed</option>
                     <option value="Ready to Ship">Ready to Ship</option>
