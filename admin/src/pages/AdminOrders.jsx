@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { backendurl, currency } from '../App';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import Title from '../../../frontend/src/components/Title';
+import Title from '../components/Title';
 import { Container, Row, Col, Form, Card, Button, ButtonGroup, Modal } from 'react-bootstrap';
 import "../components/css/orders.css"
 

@@ -11,7 +11,7 @@ import {
 import "../components/css/add.css";
 import axios from "axios";
 import { backendurl } from "../App";
-import Title from "../../../frontend/src/components/Title";
+import Title from "../components/Title";
 import { toast } from "react-toastify";
 const AddItem = ({ token }) => {
   const [itemData, setItemData] = useState({

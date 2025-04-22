@@ -3,7 +3,7 @@ import { Form, Button, Container, Card, Row, Col, Modal } from "react-bootstrap"
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { backendurl, currency } from '../App';
-import Title from '../../../frontend/src/components/Title';
+import Title from '../components/Title';
 import { FaPen, FaTrash } from "react-icons/fa";
 
 const ProductList = ({ token }) => {
