@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import {motion} from "framer-motion"
 import { fadeIn } from "../../../variants"
-import "./css_folder/title.css"
+import "./css/title.css"
 
 const Title = ({text1, text2}) => {
   return (
