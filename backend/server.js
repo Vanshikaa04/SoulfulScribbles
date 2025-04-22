@@ -29,7 +29,8 @@ const allowedOrigins = [
       "http://localhost:3080",
     'https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app',
    " https://soulful-scribblesadmin.vercel.app/",
-   
+   " https://soulful-scribblesadmin.vercel.app",
+
     'https://www.soulfulscribble.in',
     'https://www.soulfulscribble.in/'
   ];

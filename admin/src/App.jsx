@@ -10,7 +10,7 @@ import WorkshopList from "./pages/WorkshopList";
 import AddWorkshop from "./pages/AddWorkshop";
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const backendurl = import.meta.env.VITE_backendurl || "http://localhost:3080";
+export const backendurl = import.meta.env.VITE_backendurl 
 export const currency ="₹";
 
 const App = () => {
