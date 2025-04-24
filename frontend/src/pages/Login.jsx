@@ -31,7 +31,7 @@ const Login = () => {
         sessionStorage.setItem("token", response.data.token);
        sessionStorage.setItem("user", JSON.stringify(response.data.user));
       } else {
-        toast.warn("Invalid Credentials");
+        toast.warn(response.data.message);
       }
     } catch (error) {
       console.log(error);

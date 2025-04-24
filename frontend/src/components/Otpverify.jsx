@@ -8,7 +8,7 @@ import { ShopContext } from "../context/ShopContext";
 const Otpverify=()=> {
 
   const [otp, setOtp] = useState("");
-  const {backendurl,setToken} = useContext(ShopContext)
+  const {backendurl,setToken, setUser} = useContext(ShopContext)
   const location = useLocation();
   const { formData } = location.state || {};
   const navigate = useNavigate()
@@ -24,12 +24,13 @@ const Otpverify=()=> {
         const registerRes = await axios.post(backendurl+"/api/user/register", formData);
         toast.success("Signup successful!");
         setToken( registerRes.data.token);
-        navigate("/login");
+        setUser(registerRes.data.user)
+        navigate("/");
       } else {
         toast.error("Invalid OTP");
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("User Already Exists");
       console.log("Error :" ,error)
     }
   };

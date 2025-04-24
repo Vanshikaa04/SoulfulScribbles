@@ -47,7 +47,7 @@ const Signup = () => {
       sessionStorage.setItem('token',token)
       sessionStorage.setItem('user',JSON.stringify(user))
         console.log("SIgnUp Token :" + token+ "User Token: "+user)
-      navigate("/");
+      // navigate("/");
     }
   });
   return (
