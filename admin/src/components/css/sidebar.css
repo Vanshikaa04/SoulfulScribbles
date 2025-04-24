@@ -38,7 +38,7 @@
   }
   
   .sidebar-desktop {
-    width: 300px;
+    width: fit-content;
     height: 100vh;
     top: 90px;
     left: 0;

@@ -10,15 +10,17 @@ import WorkshopList from "./pages/WorkshopList";
 import AddWorkshop from "./pages/AddWorkshop";
 
 // eslint-disable-next-line react-refresh/only-export-components
-export const backendurl = import.meta.env.VITE_backendurl 
-export const currency ="₹";
+ export const backendurl = import.meta.env.VITE_backendurl 
+
+ export const currency ="₹";
+
 
 const App = () => {
   const [token,setToken] =useState(localStorage.getItem("token")? localStorage.getItem("token"): "");
 
   useEffect(()=>{
     localStorage.setItem("token" ,token)    //refresh krne per logout nhi honge localstorage m rhega save
-  // console.log("TOKEN:",token)
+  console.log(backendurl)
 
   },[token])
   return (

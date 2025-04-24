@@ -30,7 +30,7 @@ const Sidebar = ({ show, handleClose }) => {
       </div>
 
       {/* Mobile Offcanvas Sidebar */}
-      <Offcanvas show={show} onHide={handleClose} responsive="md">
+      <Offcanvas show={show} onHide={handleClose} >
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Menu</Offcanvas.Title>
         </Offcanvas.Header>

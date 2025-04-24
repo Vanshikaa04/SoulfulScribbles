@@ -15,7 +15,7 @@ const app =express()
 const port = process.env.PORT || 3080
 
 connectDB()
-// connectCloudinary()
+connectCloudinary()
 
 //middlewares
 app.use(express.json())

@@ -40,8 +40,7 @@ const Layout = ({ setToken }) => {
         }}
       >
         {/* <div className="mt-3 mt-md-0 d-flex flex-column align-items-center align-items-md-stretch"> */}
-        <Container style={{marginTop: window.innerWidth >= 768 ? "-200px" : "0px",
-        }}>
+        <Container >
           {isHome ? (
             <Row className="g-4 justify-content-center text-center mb-5">
               {dashboardItems.map((item, index) => (

@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FiShoppingCart ,FiMenu} from "react-icons/fi";
-import { fadeIn } from "../../variants";
+import { fadeIn } from "../../../variants";
 import { motion } from "framer-motion";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
