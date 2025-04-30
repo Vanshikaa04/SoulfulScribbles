@@ -151,8 +151,7 @@ const Collection = () => {
 
       {/* Offcanvas Filters for Mobile */}
       <Offcanvas show={showFilters} onHide={() => setShowFilters(false)} placement="start">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Filters</Offcanvas.Title>
+        <Offcanvas.Header closeButton style={{marginTop:"5rem"}}>
         </Offcanvas.Header>
         <Offcanvas.Body>{renderFilters()}</Offcanvas.Body>
       </Offcanvas>

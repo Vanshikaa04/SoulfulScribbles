@@ -21,6 +21,8 @@ import ChatPage from './pages/ChatPage';
 import ChatIcon from './components/Chaticon';
 import WorkshopsF from './pages/WorkshopsF';
 import Otpverify from './components/Otpverify';
+import TrackOrder from './components/TrackOrder';
+import ScrollToTop from './components/ScrollToTop';
 
  
 const App = () => {
@@ -28,7 +30,7 @@ const App = () => {
   return (
     <>
     <BrowserRouter>
-
+    <ScrollToTop/>
       <Navtab />
       <ChatIcon/>
 
@@ -57,6 +59,8 @@ theme="light"
           <Route path ='/chat' element={<ChatPage/>}/>
           <Route path ='/workshops' element={<WorkshopsF/>}/>
           <Route path="/otp" element={<Otpverify/>} />
+          <Route path='/trackorder/:orderID' element={<TrackOrder/> }/>
+
 
       </Routes>
 

@@ -244,5 +244,18 @@ const updateStatus = async (req, res) => {
 };
 
 
+const getStatus = async (req, res) => {
+  const {orderId}= req.body
+  try {
+      const orders =await OrdersModel.findById(orderId);
+     const status= orders.status
+      res.json({success:true,status })
+  
+  } catch (error) {
+      console.log(error);
+  return res.json({ success: false, message: error.message });
+  }
+};
 
-export {verifyRazor, placeorder,placeorderRazor,placeorderStripe,allOrders,userorder,updateStatus ,cancelorder}
+
+export {verifyRazor, placeorder,placeorderRazor,placeorderStripe,allOrders,userorder,updateStatus ,cancelorder ,getStatus}

@@ -1,9 +1,10 @@
-import { Card } from "react-bootstrap";
+import { Card,Row, Col } from "react-bootstrap";
 import { Image, Container } from "react-bootstrap";
 import exchange from "../assets/exchange.png";
 import returnimg from "../assets/return.png";
 import report from "../assets/report.png";
 import "./css_folder/policy.css";
+import { FiInstagram, FiMail } from "react-icons/fi";
 
 const Footer = () => {
   return (
@@ -40,7 +41,7 @@ const Footer = () => {
           </div>
           <div className="col-md-3 mx-5 ">
            
-            At Soulful Scribbles, we take pride in offering a wide range of
+            At Soulful Scribbles, we offer a wide range of
             beautifully handcrafted products, designed with passion and
             precision. Our mission is to bring you artistic, high-quality, and
             unique handmade items at affordable prices, ensuring that everyone
@@ -67,58 +68,31 @@ const Footer = () => {
       </div>
 
       <Container
-        fluid
-        className="text-white my-2 h-auto w-100 p-0"
-        style={{ backgroundColor: "var(--maincolor" }}
-      >
-        <h1 className="mx-3 my-4">Our Pride</h1>
-        <div>
-          <p className="my-2 mx-3 mb-5">
-            We use safe, qualitative, and long-lasting materials in all our
-            products, ensuring that they are not only visually appealing but
-            also durable and comfortable to use. Most of our items are
-            waterproof, making them resistant to everyday wear and tear while
-            maintaining their beauty over time. Our range includes a variety of
-            stunning products, such as handmade candles, resin keychains, resin
-            jewelry, resin clocks, wall pieces, and mandala art. For art lovers,
-            we offer unique bookmarks, canvas paintings, and beautifully
-            decorated glassware and bottles that add a touch of elegance to any
-            space. We also specialize in traditional and festive decor such as
-            pooja thalis, diyas, aasan, aarti thalis, and Karwa Chauth pooja
-            thalis, which make perfect additions to your celebrations. One of
-            our standout features is our customization option, allowing
-            customers to personalize their orders according to their
-            preferences. Whether it’s selecting a specific size, shape, or
-            design, we go the extra mile to create pieces that reflect your
-            unique taste and style. Our customization service ensures that your
-            product is truly one of a kind, tailored to your specific needs and
-            desires. To make your shopping experience smooth and enjoyable, we
-            offer fast and reliable PAN India shipping, ensuring that your
-            orders are delivered within 3 to 5 days. We understand the
-            importance of flexibility, which is why we provide multiple payment
-            options, including Cash on Delivery (COD) and secure online
-            payments, giving you the convenience to shop without any worries.
-            Additionally, we value customer satisfaction and offer a hassle-free
-            7-day return and exchange policy, allowing you to shop with
-            confidence. At Soulful Scribbles, we prioritize transparency and
-            community engagement. Customers can read and leave reviews on each
-            product, helping others make informed decisions while also sharing
-            their own experiences. This allows us to continually improve and
-            provide you with the best handcrafted creations. Your privacy and
-            security are extremely important to us. Our website is built with
-            strong encryption protocols to ensure that your personal information
-            and payment details remain safe and protected at all times. We are
-            committed to maintaining a secure and seamless shopping environment,
-            allowing you to browse and order with complete peace of mind. With
-            Soulful Scribbles, you are not just purchasing a product—you are
-            investing in art, craftsmanship, and heartfelt creativity. Whether
-            you are looking for a thoughtful gift, a custom home decor piece, or
-            a festive essential, we have something special for you. Experience
-            the magic of handcrafted artistry—shop with Soulful Scribbles today
-            and bring home creativity with a personal touch! ✨🎨🛍
-          </p>
-        </div>
-      </Container>
+  fluid
+  className="text-white my-2 py-4"
+  style={{ backgroundColor: "var(--maincolor)" }}
+>
+  <Row className=" justify-content-center text-center  px-3">
+    <Col xs={12} md={6}>
+      <h4 className="mb-3 ">Get in Touch With Us:</h4>
+    </Col>
+    </Row>
+    <Row className=" justify-content-center text-center  px-3">
+    <Col xs={3} md={1} className=" justify-content-center">
+      <a href="https://www.instagram.com/soulful.scribble__?igsh=MXBmaGlwcXRudnc3aA=="  className="text-white fs-3">
+        <FiInstagram />
+      </a>
+    </Col>  
+    <Col xs={3} md={1} className="justify-content-center ">
+      <a href="https://mail.google.com/mail/?view=cm&to=soulful.scribble234@gmail.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-white fs-3">
+        <FiMail />
+      </a>
+    </Col>
+  </Row>
+</Container>
 
       <p className="text-center my-5">
         &copy; 2025 Soulful Scribbles. All rights reserved.

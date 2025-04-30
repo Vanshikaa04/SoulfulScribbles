@@ -134,8 +134,8 @@ const Navtab = () => {
 
     {/* Drawer content */}
     <div className={`side-drawer ${showDrawer ? "open" : ""}`}>
-      <div className="d-flex justify-content-between align-items-center px-3 py-2 border-bottom mb-4">
-        <div className="nameclass m-0">Soulful Scribbles</div>
+      <div className="d-flex justify-content-between align-items-center px-3 py-2 border-bottom mb-4 ">
+        <div className="nameclass " style={{marginTop:"80px"}}>Soulful Scribbles</div>
         <Button variant="light" onClick={() => setShowDrawer(false)}>✕</Button>
       </div>
 
