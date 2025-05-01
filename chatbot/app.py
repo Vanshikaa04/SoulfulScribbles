@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import HTTPException,FastAPI,Query
+from fastapi import FastAPI
 import os
 import uvicorn
 
@@ -142,6 +143,10 @@ def get_answer(query_request : QueryRequest):
     return {
         "answer": answer
     }
+
+@app.get("/")
+def home():
+    return {"message": "Soulful Scribbles Chatbot API is running!"}
 
 
 # Run FastAPI Server
