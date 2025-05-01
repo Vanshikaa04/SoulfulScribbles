@@ -19,8 +19,11 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",  
+    "https://www.soulfulscribble.in/",
+   " https://soulfulscribblechatbot.vercel.app/",
     "http://localhost", 
     "http://127.0.0.1", 
+    "https://soulful-scribbles-backend.vercel.app/",
 ]
 
 app.add_middleware(
