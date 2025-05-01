@@ -200,6 +200,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function ChatPage() {
+  const chaturl=  import.meta.env.VITE_chaturl 
+
+
   const { token } = useContext(ShopContext);
   const navigate = useNavigate();
   const [question, setQuestion] = useState("");
@@ -221,7 +224,7 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8089/query", { question });
+      const res = await axios.post(chaturl+"/query", { question });
       const botMessage = { sender: "bot", text: res.data.answer };
 
       setMessages((prev) => {
