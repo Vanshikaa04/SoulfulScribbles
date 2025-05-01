@@ -145,8 +145,8 @@ def get_answer(query_request : QueryRequest):
 
 
 # Run FastAPI Server
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="localhost", port=8089, reload=True)
+# if __name__ == "__main__":
+#     uvicorn.run("app:app", host="localhost", port=8089, reload=True)
 
 # create_memory()
 # get_answer("Give me some ideas for customizable gifts.")
