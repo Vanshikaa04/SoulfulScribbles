@@ -6,7 +6,7 @@ venv/
 *.env
 
 # Ignore specific folders
-chatbot/
+# chatbot/
 chatbackup/
 
 # Ignore specific files
