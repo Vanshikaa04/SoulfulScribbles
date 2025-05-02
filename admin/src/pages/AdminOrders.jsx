@@ -17,6 +17,7 @@ const AdminOrders = ({ token }) => {
     if (!token) return;
     try {
       const response = await axios.get(`${backendurl}/api/order/list`, { headers: { token } });
+      console.log(response.data.orders)
       if (response.data.success) {
         setOrders(response.data.orders.reverse());
       } else {

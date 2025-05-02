@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 from fastapi import HTTPException,FastAPI,Query
-from fastapi import FastAPI
 import os
 import uvicorn
 
@@ -20,11 +19,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",  
-    "https://www.soulfulscribble.in/",
-   " https://soulfulscribblechatbot.vercel.app/",
     "http://localhost", 
     "http://127.0.0.1", 
-    "https://soulful-scribbles-backend.vercel.app/",
 ]
 
 app.add_middleware(
@@ -144,14 +140,10 @@ def get_answer(query_request : QueryRequest):
         "answer": answer
     }
 
-@app.get("/")
-def home():
-    return {"message": "Soulful Scribbles Chatbot API is running!"}
-
 
 # Run FastAPI Server
-# if __name__ == "__main__":
-#     uvicorn.run("app:app", host="localhost", port=8089, reload=True)
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="localhost", port=8089, reload=True)
 
 # create_memory()
 # get_answer("Give me some ideas for customizable gifts.")
