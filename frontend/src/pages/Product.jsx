@@ -8,7 +8,7 @@ import { IoArrowBackCircle } from "react-icons/io5";
 import RelatedProduct from "../components/RelatedProduct";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import ReviewsBox from "../components/ReviewsBox";
+// import ReviewsBox from "../components/ReviewsBox";
 import { toast } from "react-toastify";
 
 const Product = () => {
@@ -183,9 +183,9 @@ const Product = () => {
             this <b>{productData.subcategory}</b> is sure to impress. Available in multiple sizes and shapes,
             it’s a must-have for art lovers and décor enthusiasts alike!
           </Tab>
-          <Tab eventKey="reviews" title="Reviews (2)">
+          {/* <Tab eventKey="reviews" title="Reviews (2)">
             <ReviewsBox />
-          </Tab>
+          </Tab> */}
         </Tabs>
 
 

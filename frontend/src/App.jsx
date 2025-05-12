@@ -17,8 +17,8 @@ import { ToastContainer } from'react-toastify';
 import Signup from './pages/Signup';
 import CategoryProducts from './components/CategoryProducts';
 import UserProfile from './pages/UserProfile';
-import ChatPage from './pages/ChatPage';
-import ChatIcon from './components/Chaticon';
+// import ChatPage from './pages/ChatPage';
+// import ChatIcon from './components/Chaticon';
 import WorkshopsF from './pages/WorkshopsF';
 import Otpverify from './components/Otpverify';
 import TrackOrder from './components/TrackOrder';
@@ -32,7 +32,7 @@ const App = () => {
     <BrowserRouter>
     <ScrollToTop/>
       <Navtab />
-      <ChatIcon/>
+      {/* <ChatIcon/> */}
 
       <ToastContainer  position="top-center"
 autoClose={2000}
@@ -56,7 +56,7 @@ theme="light"
           <Route path='/place-order' element={<PlaceOrder /> }/>
           <Route path='/categoryproducts' element={<CategoryProducts /> }/>
           <Route path='/profile' element={<UserProfile/> }/>
-          <Route path ='/chat' element={<ChatPage/>}/>
+          {/* <Route path ='/chat' element={<ChatPage/>}/> */}
           <Route path ='/workshops' element={<WorkshopsF/>}/>
           <Route path="/otp" element={<Otpverify/>} />
           <Route path='/trackorder/:orderID' element={<TrackOrder/> }/>
