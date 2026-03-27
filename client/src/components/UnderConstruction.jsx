@@ -27,7 +27,7 @@ const UnderConstruction = () => {
             <FaInstagram size={32} />
           </a>
           <a
-            href="https://wa.me/7202052004"
+            href="https://wa.me/917202052004"
             target="_blank"
             rel="noopener noreferrer"
             className="text-darkBrown hover:text-accentPink transition-colors duration-300"
