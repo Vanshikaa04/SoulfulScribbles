@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 const UnderConstruction = () => {
   return (
@@ -16,10 +17,23 @@ const UnderConstruction = () => {
         <p className="text-darkBrown/70 mb-6">
           We're giving Soulful Scribble a fresh new look. Please check back soon!
         </p>
-        <div className="flex justify-center gap-4">
-          <a href="https://www.instagram.com/soulful.scribble_" target="_blank" rel="noopener" className="text-darkBrown hover:text-accentPink">Instagram</a>
-          <a href="mailto:hello@soulfulscribble.com" className="text-darkBrown hover:text-accentPink">Email</a>
-          <a href="https://wa.me/1234567890" target="_blank" rel="noopener" className="text-darkBrown hover:text-accentPink">WhatsApp</a>
+        <div className="flex justify-center gap-6">
+          <a
+            href="https://www.instagram.com/soulful.scribble_"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-darkBrown hover:text-accentPink transition-colors duration-300"
+          >
+            <FaInstagram size={32} />
+          </a>
+          <a
+            href="https://wa.me/7202052004"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-darkBrown hover:text-accentPink transition-colors duration-300"
+          >
+            <FaWhatsapp size={32} />
+          </a>
         </div>
       </motion.div>
     </div>
