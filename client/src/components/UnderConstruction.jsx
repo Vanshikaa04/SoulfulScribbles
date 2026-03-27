@@ -11,7 +11,7 @@ const UnderConstruction = () => {
       >
         <div className="text-accentPink text-6xl mb-4">🛠️</div>
         <h1 className="text-3xl font-bold text-darkBrown mb-2">
-          Under Construction
+          Under Construction!
         </h1>
         <p className="text-darkBrown/70 mb-6">
           We're giving Soulful Scribble a fresh new look. Please check back soon!
