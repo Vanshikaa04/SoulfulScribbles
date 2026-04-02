@@ -40,7 +40,7 @@ const CategoryCarousel = () => {
         </h2>
         <Slider {...settings}>
           {categories.map((cat, idx) => (
-            <div key={idx} className="px-2">
+            <div key={idx} className="px-2 ">
               <div
                 className="relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-sm mx-auto"
                 onMouseEnter={() => setHoveredIndex(idx)}

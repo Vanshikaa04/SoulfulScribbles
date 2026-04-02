@@ -5,16 +5,15 @@ import connectDB from "./config/db.js";
 import connectCloudinary from "./config/cloudinary.js";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.js";
-import categoryRoutes from "./routes/categories.js";
-import productRoutes from "./routes/products.js";
-import settingRoutes from "./routes/settings.js";
-import uploadRoutes from "./routes/upload.js";
+import productRoutes from "./routes/productRoutes.js";
+import uploadRoutes from './routes/upload.js';
+import cloudinary from "./config/cloudinary.js";
 
 const app = express();
-const port = process.env.PORT || 3080;
+const port = process.env.PORT || 5000;
 
 connectDB();
-connectCloudinary();
+
 
 // Middlewares
 app.use(express.json());
@@ -33,7 +32,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
-      console.log("✅ CORS allowed origin:", origin);
+      // console.log("✅ CORS allowed origin:", origin);
       callback(null, true);
     } else {
       console.error("❌ CORS blocked origin:", origin);
@@ -41,7 +40,7 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS",  "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
@@ -49,9 +48,9 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
 app.use('/api/auth', authRoutes);
-app.use('/api/categories', categoryRoutes);
+// app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/settings', settingRoutes);
+// app.use('/api/settings', settingRoutes);
 app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
