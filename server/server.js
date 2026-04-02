@@ -26,6 +26,7 @@ const allowedOrigins = [
   "https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app",
   "https://soulful-scribblesadmin.vercel.app",
   "https://www.soulfulscribble.in",
+  "https://soulful-scribbles-backend.vercel.app/"
 ];
 
 const corsOptions = {
