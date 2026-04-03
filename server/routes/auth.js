@@ -38,5 +38,7 @@ router.get('/me', authMiddleware, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
+router.post('/test', (req, res) => {
+  res.json({ message: 'POST works' });
+});
 export default router;
