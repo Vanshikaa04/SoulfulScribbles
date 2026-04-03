@@ -22,12 +22,14 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "http://localhost:3080",
-  "https://soulful-scribbles-backend.vercel.app/",
+  "http://localhost:5000",
+  "https://soulful-scribbles-backend.vercel.app",
   "https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app",
   "https://soulful-scribblesadmin.vercel.app",
   "https://www.soulfulscribble.in",
+  "https://soulful-scribbles-backend.vercel.app/api",
  
+
 ];
 
 const corsOptions = {
