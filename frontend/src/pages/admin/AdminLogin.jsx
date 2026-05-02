@@ -44,7 +44,7 @@ export default function AdminLogin() {
           {/* Logo */}
           <div style={{ textAlign:'center', marginBottom:'36px' }}>
             <div style={{ display:'flex', justifyContent:'center', marginBottom:'14px' }}>
-              <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:`linear-gradient(135deg,${A.burgundy},${A.rose})`, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:`0 8px 24px rgba(107,26,42,0.3)` }}>
+              <div style={{ width:'64px', height:'64px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:`0 8px 24px rgba(107,26,42,0.3)` }}>
                 <img src="/logo.png" alt="SS" style={{ width:'46px', height:'46px', objectFit:'contain' }}
                   onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='block'; }} />
                 <span style={{ display:'none', fontFamily:'Cormorant Garamond', fontSize:'30px', color:'#FFF8FA', fontStyle:'italic', fontWeight:700 }}>S</span>

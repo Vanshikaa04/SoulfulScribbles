@@ -39,7 +39,7 @@ export default function AdminDashboard() {
     <>
       {/* Logo */}
       <div style={{ padding: '20px 18px', borderBottom: `1px solid ${A.border}`, display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: `linear-gradient(135deg,${A.burgundy},${A.rose})`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: `0 3px 12px rgba(92,19,34,0.22)` }}>
+        <div style={{ width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: `0 3px 12px rgba(92,19,34,0.22)` }}>
           <img src="/logo.png" alt="SS" style={{ width: '28px', height: '28px', objectFit: 'contain' }}
             onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='block'; }} />
           <span style={{ display:'none', fontFamily:'Cormorant Garamond', fontSize:'20px', color:'#FFF', fontStyle:'italic', fontWeight:700 }}>S</span>
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
           <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: `linear-gradient(135deg,${A.burgundy},${A.rose})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', flexShrink: 0 }}>👤</div>
           <div style={{ overflow: 'hidden' }}>
             <p style={{ fontSize: '13px', fontWeight: 700, color: A.textMain, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{admin?.email?.split('@')[0] || 'Admin'}</p>
-            <p style={{ fontSize: '10px', color: A.rose, marginTop: '1px' }}>Administrator</p>
+            <p style={{ fontSize: '10px', color: A.rose, marginTop: '1px' }}>Vanshika Wadhwani</p>
           </div>
         </div>
         <button onClick={logout}
