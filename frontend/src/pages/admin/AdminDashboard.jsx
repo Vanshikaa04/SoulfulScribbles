@@ -145,9 +145,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pass lastRefresh as key so children re-mount on refresh */}
-        {/* <div style={{ padding: 'clamp(16px,2.5vw,28px)' }} key={Math.floor(lastRefresh / 60000)}>
-          <Outlet context={{ lastRefresh }} />
-        </div> */}
+        <div style={{ padding: 'clamp(16px,2.5vw,28px)' }} >
+           <Outlet />
+        </div> 
       </main>
 
       <style>{`
