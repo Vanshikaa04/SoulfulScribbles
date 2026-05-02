@@ -7,7 +7,7 @@ export default function AdminDashboard() {
   const { admin, setAdmin } = useContext(AuthContext);
   const navigate            = useNavigate();
   const [open, setOpen]     = useState(false);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
+  // const [lastRefresh, setLastRefresh] = useState(new Date());
  const backendurl = import.meta.env.VITE_backendurl ;
 
 
@@ -86,14 +86,14 @@ export default function AdminDashboard() {
         </div>
 
         {/* Auto-refresh indicator */}
-        <div style={{ padding: '8px 12px', borderRadius: '10px', background: A.petal, border: `1px solid ${A.border}`, marginTop: '8px' }}>
+        {/* <div style={{ padding: '8px 12px', borderRadius: '10px', background: A.petal, border: `1px solid ${A.border}`, marginTop: '8px' }}>
           <p style={{ fontSize: '10px', color: A.textLight, letterSpacing: '1px' }}>
             🔄 Auto-refresh every 60s
           </p>
           <p style={{ fontSize: '10px', color: A.textMuted, marginTop: '2px' }}>
             Last: {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
-        </div>
+        </div> */}
       </nav>
 
       {/* User */}
