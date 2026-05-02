@@ -12,10 +12,10 @@ export default function AdminDashboard() {
 
 
   // Auto-refresh every 60 seconds — bumps lastRefresh so child pages can react
-  useEffect(() => {
-    const id = setInterval(() => setLastRefresh(new Date()), 60_000);
-    return () => clearInterval(id);
-  }, []);
+  // useEffect(() => {
+  //   const id = setInterval(() => setLastRefresh(new Date()), 60_000);
+  //   return () => clearInterval(id);
+  // }, []);
 
   const logout = async () => {
     await fetch(`${backendurl}/api/auth/logout`, { method: 'POST', credentials: 'include' });
@@ -145,9 +145,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pass lastRefresh as key so children re-mount on refresh */}
-        <div style={{ padding: 'clamp(16px,2.5vw,28px)' }} key={Math.floor(lastRefresh / 60000)}>
+        {/* <div style={{ padding: 'clamp(16px,2.5vw,28px)' }} key={Math.floor(lastRefresh / 60000)}>
           <Outlet context={{ lastRefresh }} />
-        </div>
+        </div> */}
       </main>
 
       <style>{`
