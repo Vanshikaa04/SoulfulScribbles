@@ -1,0 +1,89 @@
+/* ============================================
+   SOULFUL SCRIBBLE — DESIGN SYSTEM
+   Logo colors: Burgundy #6B1A2A, Deep Wine #8B2535
+   Gifting: light pastel pink + white + blush
+   Techno: deep brown + burgundy → pastel pink/white
+============================================ */
+
+:root {
+  --burgundy: #6B1A2A;
+  --burgundy-light: #8B2535;
+  --burgundy-deep: #4A1020;
+  --wine: #9B2335;
+  --blush: #F7E8EC;
+  --petal: #F0D5DC;
+  --rose-mist: #FFF8FA;
+
+  --gift-bg: #FFF8FA;
+  --gift-bg-2: #FFF0F4;
+  --gift-card: #FFFFFF;
+  --gift-accent: #6B1A2A;
+  --gift-accent-soft: #C4758A;
+  --gift-pink: #E8A0B0;
+  --gift-blush: #F7E8EC;
+  --gift-border: rgba(107,26,42,0.12);
+  --gift-text: #2A0A12;
+  --gift-muted: #8B6070;
+
+  --tech-bg: #1A0A0E;
+  --tech-bg-2: #120608;
+  --tech-card: #221215;
+  --tech-accent: #C4758A;
+  --tech-accent-2: #6B1A2A;
+  --tech-gold: #D4956A;
+  --tech-text: #FAF0F2;
+  --tech-muted: #9B7080;
+  --tech-border: rgba(196,117,138,0.15);
+  --tech-glow: rgba(196,117,138,0.3);
+
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-accent: 'Playfair Display', serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --nav-h: 72px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; border: none; outline: none; font-family: var(--font-body); }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--burgundy-light); border-radius: 4px; }
+
+.container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 768px) { .container { padding: 0 16px; } }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -400% 0; }
+  100% { background-position:  400% 0; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes glow-pulse {
+  0%,100% { box-shadow: 0 0 16px var(--tech-glow); }
+  50%      { box-shadow: 0 0 36px var(--tech-glow); }
+}
+
+.fade-up { animation: fadeUp 0.65s ease forwards; }
+.float   { animation: float 4s ease-in-out infinite; }
