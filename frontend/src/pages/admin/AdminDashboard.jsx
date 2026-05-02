@@ -8,6 +8,8 @@ export default function AdminDashboard() {
   const navigate            = useNavigate();
   const [open, setOpen]     = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
+ const backendurl = import.meta.env.VITE_backendurl ;
+
 
   // Auto-refresh every 60 seconds — bumps lastRefresh so child pages can react
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function AdminDashboard() {
   }, []);
 
   const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    await fetch(`${backendurl}/api/auth/logout`, { method: 'POST', credentials: 'include' });
     setAdmin(null);
     navigate('/admin/login');
   };

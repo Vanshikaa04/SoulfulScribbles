@@ -38,7 +38,7 @@ export default function AdminProjects() {
 
   const fetchProjects = () => {
     setLoading(true);
-    fetch('/api/projects', { credentials:'include' })
+    fetch(`${backendurl}/api/projects`, { credentials:'include' })
       .then(r => r.json())
       .then(d => { setProjects(Array.isArray(d)?d:[]); setLoading(false); })
       .catch(() => setLoading(false));
@@ -65,12 +65,12 @@ export default function AdminProjects() {
       if (imgFile) {
         setUploading(true);
         const fd = new FormData(); fd.append('file', imgFile);
-        const r = await fetch('/api/upload', { method:'POST', credentials:'include', body:fd });
+        const r = await fetch(`${backendurl}/api/upload`, { method:'POST', credentials:'include', body:fd });
         const d = await r.json(); if (!d.url) throw new Error('Upload failed');
         imageUrl = d.url; setUploading(false);
       }
       const body = { ...form, image:imageUrl, tech:form.tech.split(',').map(t=>t.trim()).filter(Boolean), order:Number(form.order)||0 };
-      const url  = editId ? `${backendurl}/api/projects/${editId}` : '/api/projects';
+      const url  = editId ? `${backendurl}/api/projects/${editId}` : `${backendurl}/api/projects`;
       const res  = await fetch(url, { method:editId?'PUT':'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
       if (!res.ok) throw new Error((await res.json()).message||'Save failed');
       fetchProjects(); setShowForm(false); toast(editId?'Project updated!':'Project created!');

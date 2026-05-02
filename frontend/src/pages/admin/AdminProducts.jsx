@@ -90,7 +90,7 @@ export default function AdminProducts() {
         const urls = [];
         for (const file of newFiles) {
           const fd = new FormData(); fd.append('file', file);
-          const r = await fetch('/api/upload', { method:'POST', credentials:'include', body:fd });
+          const r = await fetch(`${backendurl}/api/upload`, { method:'POST', credentials:'include', body:fd });
           const d = await r.json(); if (d.url) urls.push(d.url);
         }
         if (urls.length) await fetch(`${backendurl}/api/products/${pid}/images`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ imageUrls:urls }) });
