@@ -1,32 +1,34 @@
-// ── Admin design tokens ── light pastel pink theme
+// ── Admin Design Tokens ── light background, dark readable text
 export const A = {
-  // backgrounds
-  pageBg:   '#FDF5F7',
-  sidebarBg:'#FFFFFF',
-  cardBg:   '#FFFFFF',
-  inputBg:  '#FFF8FA',
-  modalBg:  '#FFFFFF',
+  // ── backgrounds ──
+  pageBg:    '#FAF5F7',      // very light pinkish white
+  sidebarBg: '#FFFFFF',
+  cardBg:    '#FFFFFF',
+  inputBg:   '#FDF8FA',
+  modalBg:   '#FFFFFF',
+  hoverBg:   '#FFF0F4',
 
-  // brand
-  burgundy: '#6B1A2A',
-  rose:     '#C4758A',
-  blush:    '#F7E8EC',
-  petal:    '#F0D5DC',
-  softPink: '#FDF5F7',
+  // ── brand ──
+  burgundy:  '#5C1322',      // deep burgundy for text / accents
+  rose:      '#B05070',      // medium rose
+  roseSoft:  '#D4849A',      // softer rose
+  blush:     '#F5E0E6',      // light blush fill
+  petal:     '#FDEEF2',      // very light petal
 
-  // text
-  textMain:  '#2A0A12',
-  textMuted: 'rgba(42,10,18,0.45)',
-  textLight: 'rgba(42,10,18,0.3)',
+  // ── text ──
+  textMain:  '#2A0A12',      // very dark, high contrast
+  textSub:   '#5C2030',      // medium dark
+  textMuted: '#8B4558',      // readable muted
+  textLight: '#B07080',      // light label
 
-  // borders
-  border:       'rgba(196,117,138,0.18)',
-  borderStrong: 'rgba(107,26,42,0.22)',
+  // ── borders ──
+  border:       'rgba(92,19,34,0.12)',
+  borderStrong: 'rgba(92,19,34,0.24)',
 
-  // status
-  success: { bg:'rgba(16,185,129,0.08)', bd:'rgba(16,185,129,0.25)', tx:'#065F46' },
-  error:   { bg:'rgba(239,68,68,0.08)',  bd:'rgba(239,68,68,0.25)',  tx:'#991B1B' },
-  info:    { bg:'rgba(196,117,138,0.08)',bd:'rgba(196,117,138,0.25)',tx:'#6B1A2A' },
+  // ── status ──
+  success: { bg:'#ECFDF5', bd:'#6EE7B7', tx:'#065F46' },
+  error:   { bg:'#FEF2F2', bd:'#FCA5A5', tx:'#991B1B' },
+  info:    { bg:'#FFF5F7', bd:'#D4849A', tx:'#5C1322' },
 };
 
 export const inp = (extra = {}) => ({
@@ -34,12 +36,12 @@ export const inp = (extra = {}) => ({
   padding: '11px 14px',
   borderRadius: '10px',
   background: A.inputBg,
-  border: `1px solid ${A.border}`,
+  border: `1.5px solid ${A.border}`,
   color: A.textMain,
   fontSize: '14px',
   outline: 'none',
   fontFamily: 'DM Sans',
   boxSizing: 'border-box',
-  transition: 'border-color 0.22s, box-shadow 0.22s',
+  transition: 'border-color 0.2s, box-shadow 0.2s',
   ...extra,
 });

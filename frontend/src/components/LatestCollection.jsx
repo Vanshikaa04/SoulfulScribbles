@@ -11,9 +11,11 @@ function buildWaLink(product) {
 export default function LatestCollection() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+ const backendurl = import.meta.env.VITE_backendurl ;
+
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${backendurl}/api/products`)
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data)) {

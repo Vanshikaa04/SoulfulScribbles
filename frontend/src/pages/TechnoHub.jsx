@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 const WA = '919876543210';
 
+
 const SERVICES = [
   { icon:'🌐', title:'Website Building',       desc:'Custom, responsive, high-performance websites — from landing pages to full-stack MERN apps tailored to your brand.', tags:['React','Next.js','MERN','WordPress'],  color:'#C4758A' },
   { icon:'✏️', title:'Logo Designing',          desc:'Logos that are the visual soul of your brand — timeless, versatile, delivered with a full branding kit.',              tags:['Figma','Vector','Branding Kit'],       color:'#D4956A' },
@@ -41,9 +42,11 @@ const fv = (delay = 0) => ({
 export default function TechnoHub() {
   const [projects, setProjects]   = useState([]);
   const [loadingP, setLoadingP]   = useState(true);
+ const backendurl = import.meta.env.VITE_backendurl ;
+
 
   useEffect(() => {
-    fetch('/api/projects')
+    fetch(`${backendurl}/api/projects`)
       .then(r => r.json())
       .then(d => { if (Array.isArray(d)) setProjects(d); setLoadingP(false); })
       .catch(() => setLoadingP(false));
@@ -93,11 +96,22 @@ function HeroSection() {
               style={{ padding:'13px 30px', borderRadius:'50px', background:'linear-gradient(135deg,#6B1A2A,#C4758A)', color:'#fff', fontWeight:600, fontSize:'14px', boxShadow:'0 8px 24px rgba(107,26,42,0.35)' }}>
               Explore Services
             </a>
-            <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi Vanshika! I'd like to discuss a tech project 💻")}`}
-              target="_blank" rel="noopener noreferrer"
-              style={{ padding:'13px 30px', borderRadius:'50px', background:'transparent', color:'#C4758A', border:'1px solid rgba(196,117,138,0.35)', fontSize:'14px', fontWeight:600 }}>
-              💬 Let's Talk
-            </a>
+          <a
+  href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi Vanshika! I\'d like to discuss a tech project 💻")}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    padding: '13px 30px',
+    borderRadius: '50px',
+    background: 'transparent',
+    color: '#C4758A',
+    border: '1px solid rgba(196,117,138,0.35)',
+    fontSize: '14px',
+    fontWeight: 600
+  }}
+>
+  💬 Let's Talk
+</a>
           </div>
         </motion.div>
       </div>

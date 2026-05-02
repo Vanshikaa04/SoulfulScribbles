@@ -36,9 +36,11 @@ export default function GiftingHub() {
   const [loading, setLoading] = useState(true);
   const [cat, setCat] = useState('All');
   const [search, setSearch] = useState('');
+  const backendurl = import.meta.env.VITE_backendurl ;
+
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${backendurl}/api/products`)
       .then(r => r.json())
       .then(d => { setProducts(Array.isArray(d) ? d : []); setLoading(false); })
       .catch(() => { setProducts([]); setLoading(false); });

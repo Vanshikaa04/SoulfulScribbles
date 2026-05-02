@@ -4,6 +4,7 @@ import { AuthContext } from '../../App.jsx';
 import { A } from './theme.js';
 
 export default function AdminLogin() {
+  const backendurl = import.meta.env.VITE_backendurl ;
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading]   = useState(false);
@@ -16,10 +17,10 @@ export default function AdminLogin() {
     e.preventDefault();
     setLoading(true); setError('');
     try {
-      const res  = await fetch('/api/auth/login', { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email, password }) });
+      const res  = await fetch(`${backendurl}/api/auth/login`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email, password }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
-      const me   = await fetch('/api/auth/me', { credentials:'include' });
+      const me   = await fetch(`${backendurl}/api/auth/me`, { credentials:'include' });
       setAdmin(await me.json());
       navigate('/admin');
     } catch (err) { setError(err.message); }

@@ -1,173 +1,210 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useOutletContext } from 'react-router-dom';
+import { A, inp } from './theme.js';
 
-const CATEGORIES = ['Magazine', 'Bouquets', 'Hampers', 'Keychains', 'Trousseau Packing', 'Crochet'];
-const EMPTY_FORM = { name: '', description: '', price: '', category: '', tags: '', featured: false, images: [] };
+const CATEGORIES = ['Magazine','Bouquets','Hampers','Keychains','Trousseau Packing','Crochet'];
+const ALL_TAGS   = ['for-him','for-her','money','anniversary','birthday','bride/groom','brochure','keychain','flowers','chocolates','surprises','dosti','return-gifts','pictures'];
+const EMPTY      = { name:'', description:'', price:'', category:'', tags:[], featured:false };
+
+function Toast({ msg }) {
+  if (!msg.text) return null;
+  const map = { ok:A.success, err:A.error, info:A.info };
+  const c = map[msg.type] || A.info;
+  return <div style={{ padding:'10px 16px', borderRadius:'10px', marginBottom:'18px', background:c.bg, border:`1.5px solid ${c.bd}`, color:c.tx, fontSize:'13px', fontWeight:500 }}>{msg.text}</div>;
+}
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState(EMPTY_FORM);
-  const [editId, setEditId] = useState(null);
-  const [saving, setSaving] = useState(false);
-  const [search, setSearch] = useState('');
-  const [deleteId, setDeleteId] = useState(null);
-  const [imageInput, setImageInput] = useState('');
-  const [msg, setMsg] = useState({ text: '', type: '' });
+ const backendurl = import.meta.env.VITE_backendurl ;
+  const ctx = useOutletContext() || {};
+  const [products, setProducts]   = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [showForm, setShowForm]   = useState(false);
+  const [form, setForm]           = useState(EMPTY);
+  const [editId, setEditId]       = useState(null);
+  const [saving, setSaving]       = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [catF, setCatF]           = useState('All');
+  const [search, setSearch]       = useState('');
+  const [deleteId, setDeleteId]   = useState(null);
+  const [msg, setMsg]             = useState({ text:'', type:'' });
+  const [existingImages, setExistingImages] = useState([]);
+  const [newFiles, setNewFiles]             = useState([]);
+  const [previews, setPreviews]             = useState([]);
+  const fileRef = useRef();
 
-  const fetchProducts = () => {
+  useEffect(() => () => previews.forEach(URL.revokeObjectURL), []);
+
+  const fetchProds = () => {
     setLoading(true);
-    fetch('/api/products', { credentials: 'include' })
-      .then(r => r.json())
-      .then(data => { setProducts(Array.isArray(data) ? data : []); setLoading(false); })
+    fetch(`${backendurl}/api/products`, { credentials:'include' })
+      .then(r => r.json()).then(d => { setProducts(Array.isArray(d)?d:[]); setLoading(false); })
       .catch(() => setLoading(false));
   };
+  // re-fetch when parent auto-refreshes
+  useEffect(fetchProds, [ctx.lastRefresh]);
 
-  useEffect(() => { fetchProducts(); }, []);
+  const toast = (text, type='ok') => { setMsg({ text, type }); setTimeout(()=>setMsg({ text:'', type:'' }), 3500); };
 
-  const showMsg = (text, type = 'success') => {
-    setMsg({ text, type });
-    setTimeout(() => setMsg({ text: '', type: '' }), 3000);
+  const openCreate = () => { setForm(EMPTY); setEditId(null); setExistingImages([]); setNewFiles([]); setPreviews([]); setShowForm(true); };
+  const openEdit = p => {
+    setForm({ name:p.name||'', description:p.description||'', price:p.price||'', category:p.category||'', tags:p.tags||[], featured:p.featured||false });
+    setEditId(p._id); setExistingImages(p.images||[]); setNewFiles([]); setPreviews([]); setShowForm(true);
   };
 
-  const openCreate = () => { setForm(EMPTY_FORM); setEditId(null); setImageInput(''); setShowForm(true); };
-  const openEdit = (p) => {
-    setForm({ name: p.name || '', description: p.description || '', price: p.price || '', category: p.category || '', tags: (p.tags || []).join(', '), featured: p.featured || false, images: p.images || [] });
-    setEditId(p._id); setImageInput(''); setShowForm(true);
+  const toggleTag = tag => setForm(f => ({ ...f, tags: f.tags.includes(tag) ? f.tags.filter(t=>t!==tag) : [...f.tags, tag] }));
+
+  const handleFiles = e => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setPreviews(p => [...p, ...files.map(f => URL.createObjectURL(f))]);
+    setNewFiles(p => [...p, ...files]);
+    e.target.value = '';
   };
 
-  const addImageUrl = () => {
-    if (imageInput.trim()) {
-      setForm(f => ({ ...f, images: [...f.images, imageInput.trim()] }));
-      setImageInput('');
+  const removeExisting = async url => {
+    if (editId) {
+      try {
+        await fetch(`${backendurl}/api/products/${editId}/images`, { method:'DELETE', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ imageUrl:url }) });
+        toast('Image removed');
+      } catch { toast('Remove failed','err'); return; }
     }
+    setExistingImages(p => p.filter(u => u !== url));
   };
-
-  const removeImage = (idx) => setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+  const removeNew = i => { URL.revokeObjectURL(previews[i]); setPreviews(p=>p.filter((_,x)=>x!==i)); setNewFiles(p=>p.filter((_,x)=>x!==i)); };
 
   const save = async () => {
+    if (!form.name.trim()) return toast('Product name is required','err');
+    if (!form.category)    return toast('Please select a category','err');
     setSaving(true);
     try {
-      const body = { ...form, price: Number(form.price), tags: form.tags.split(',').map(t => t.trim()).filter(Boolean) };
-      const url = editId ? `/api/products/${editId}` : '/api/products';
-      const method = editId ? 'PUT' : 'POST';
-      const res = await fetch(url, { method, credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-      if (!res.ok) throw new Error('Failed to save');
-      fetchProducts();
-      setShowForm(false);
-      showMsg(editId ? 'Product updated!' : 'Product created!');
-    } catch (err) {
-      showMsg(err.message, 'error');
-    } finally {
-      setSaving(false);
-    }
+      let pid = editId;
+      if (!editId) {
+        const res = await fetch(`${backendurl}/api/products`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ ...form, price:Number(form.price)||0, images:[] }) });
+        const d = await res.json(); if (!res.ok) throw new Error(d.message||'Create failed'); pid = d._id;
+      } else {
+        const res = await fetch(`${backendurl}/api/products/${editId}`, { method:'PUT', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ ...form, price:Number(form.price)||0 }) });
+        if (!res.ok) throw new Error('Update failed');
+      }
+      if (newFiles.length) {
+        setUploading(true);
+        const urls = [];
+        for (const file of newFiles) {
+          const fd = new FormData(); fd.append('file', file);
+          const r = await fetch('/api/upload', { method:'POST', credentials:'include', body:fd });
+          const d = await r.json(); if (d.url) urls.push(d.url);
+        }
+        if (urls.length) await fetch(`${backendurl}/api/products/${pid}/images`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ imageUrls:urls }) });
+        setUploading(false);
+      }
+      fetchProds(); setShowForm(false); toast(editId?'Product updated!':'Product created!');
+    } catch(err) { toast(err.message,'err'); setUploading(false); } finally { setSaving(false); }
   };
 
-  const toggleFeatured = async (id) => {
-    await fetch(`/api/products/${id}/featured`, { method: 'PATCH', credentials: 'include' });
-    fetchProducts();
+  const toggleFeatured = async id => { await fetch(`${backendurl}/api/products/${id}/featured`, { method:'PATCH', credentials:'include' }); fetchProds(); };
+  const confirmDelete  = async () => {
+    try { await fetch(`${backendurl}/api/products/${deleteId}`, { method:'DELETE', credentials:'include' }); fetchProds(); setDeleteId(null); toast('Deleted!'); }
+    catch { toast('Delete failed','err'); }
   };
 
-  const confirmDelete = async () => {
-    try {
-      await fetch(`/api/products/${deleteId}`, { method: 'DELETE', credentials: 'include' });
-      fetchProducts();
-      setDeleteId(null);
-      showMsg('Product deleted!');
-    } catch { showMsg('Delete failed', 'error'); }
-  };
+  const filtered = products.filter(p => (catF==='All'||p.category===catF) && (!search||p.name?.toLowerCase().includes(search.toLowerCase())));
 
-  const filtered = products.filter(p => !search || p.name?.toLowerCase().includes(search.toLowerCase()) || p.category?.toLowerCase().includes(search.toLowerCase()));
+  const imgCell = p => (
+    <div style={{ width:'40px', height:'40px', borderRadius:'9px', overflow:'hidden', background:A.blush, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'16px', flexShrink:0 }}>
+      {p.images?.[0] ? <img src={p.images[0]} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} /> : '🎁'}
+    </div>
+  );
 
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'22px', flexWrap:'wrap', gap:'10px' }}>
         <div>
-          <p style={{ fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: '#C9877A', fontFamily: 'Space Mono', marginBottom: '6px' }}>Gifting Hub</p>
-          <h1 style={{ fontSize: '28px', fontFamily: 'Cormorant Garamond', color: '#E2E8F0', fontWeight: 400 }}>Manage Products</h1>
+          <p style={{ fontSize:'11px', letterSpacing:'3px', textTransform:'uppercase', color:A.rose, marginBottom:'3px' }}>Gifting Hub</p>
+          <h1 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(20px,3vw,26px)', color:A.textMain, fontWeight:700 }}>Manage Products</h1>
         </div>
-        <button onClick={openCreate} style={{ padding: '12px 24px', borderRadius: '12px', background: 'linear-gradient(135deg, #C9877A, #C8A96E)', color: '#fff', fontWeight: 600, fontSize: '14px', fontFamily: 'DM Sans', cursor: 'pointer', boxShadow: '0 4px 16px rgba(201,135,122,0.3)' }}>
+        <button onClick={openCreate} style={{ padding:'9px 20px', borderRadius:'11px', background:`linear-gradient(135deg,${A.burgundy},${A.rose})`, color:'#fff', fontWeight:700, fontSize:'13px', cursor:'pointer', border:'none', boxShadow:`0 3px 12px rgba(92,19,34,0.22)` }}>
           + Add Product
         </button>
       </div>
 
-      {/* Toast */}
-      {msg.text && (
-        <div style={{ padding: '14px 20px', borderRadius: '12px', marginBottom: '24px', background: msg.type === 'error' ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)', border: `1px solid ${msg.type === 'error' ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}`, color: msg.type === 'error' ? '#FCA5A5' : '#6EE7B7' }}>
-          {msg.text}
-        </div>
-      )}
+      <Toast msg={msg} />
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '16px', marginBottom: '32px' }}>
-        {[
-          { label: 'Total Products', value: products.length, color: '#C8A96E' },
-          { label: 'Featured', value: products.filter(p => p.featured).length, color: '#C9877A' },
-          ...CATEGORIES.map(c => ({ label: c, value: products.filter(p => p.category === c).length, color: '#8B6E6B' }))
-        ].slice(0, 6).map(stat => (
-          <div key={stat.label} style={{ padding: '20px', borderRadius: '16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <p style={{ fontSize: '28px', fontWeight: 700, color: stat.color, fontFamily: 'Cormorant Garamond' }}>{stat.value}</p>
-            <p style={{ fontSize: '12px', color: 'rgba(226,232,240,0.4)', marginTop: '4px' }}>{stat.label}</p>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(110px,1fr))', gap:'10px', marginBottom:'20px' }}>
+        {[{ label:'Total', value:products.length, color:A.burgundy },{ label:'Featured', value:products.filter(p=>p.featured).length, color:A.rose }, ...CATEGORIES.map(c=>({ label:c, value:products.filter(p=>p.category===c).length, color:A.textMuted }))].map(s=>(
+          <div key={s.label} style={{ padding:'12px 14px', borderRadius:'12px', background:A.cardBg, border:`1.5px solid ${A.border}`, boxShadow:'0 1px 6px rgba(92,19,34,0.05)' }}>
+            <p style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(18px,3vw,24px)', fontWeight:700, color:s.color, lineHeight:1 }}>{s.value}</p>
+            <p style={{ fontSize:'10px', color:A.textLight, marginTop:'3px' }}>{s.label}</p>
           </div>
         ))}
       </div>
 
-      {/* Search */}
-      <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..."
-        style={{ width: '100%', maxWidth: '360px', padding: '12px 20px', borderRadius: '12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', fontSize: '14px', outline: 'none', fontFamily: 'DM Sans', marginBottom: '24px', boxSizing: 'border-box' }}
-      />
+      {/* Filters */}
+      <div style={{ display:'flex', gap:'7px', marginBottom:'16px', flexWrap:'wrap', alignItems:'center' }}>
+        {['All',...CATEGORIES].map(c=>(
+          <button key={c} onClick={()=>setCatF(c)} style={{ padding:'6px 12px', borderRadius:'40px', fontSize:'12px', cursor:'pointer', fontFamily:'DM Sans', transition:'all 0.18s', background:catF===c?`linear-gradient(135deg,${A.burgundy},${A.rose})`:A.blush, color:catF===c?'#fff':A.textMuted, border:catF===c?'none':`1.5px solid ${A.border}`, fontWeight:catF===c?700:400 }}>{c}</button>
+        ))}
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search…"
+          style={{ ...inp(), maxWidth:'170px', padding:'7px 12px', marginLeft:'auto' }}
+          onFocus={e=>{ e.target.style.borderColor=A.rose; e.target.style.boxShadow=`0 0 0 3px rgba(176,80,112,0.1)`; }}
+          onBlur={e=>{ e.target.style.borderColor=A.border; e.target.style.boxShadow='none'; }}
+        />
+      </div>
 
-      {/* Table */}
+      {/* ── PRODUCTS TABLE
+           Desktop (≥769px): full 5-col table
+           Mobile (<768px):  3 cols only — image | name | edit+delete
+      ── */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: 'rgba(226,232,240,0.3)' }}>Loading...</div>
+        <div style={{ textAlign:'center', padding:'48px', color:A.textLight }}>Loading…</div>
       ) : (
-        <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div style={{ background:A.cardBg, borderRadius:'16px', border:`1.5px solid ${A.border}`, overflow:'hidden', boxShadow:'0 3px 16px rgba(92,19,34,0.06)' }}>
+          <div style={{ overflowX:'auto' }}>
+            <table style={{ width:'100%', borderCollapse:'collapse' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  {['Product', 'Category', 'Price', 'Featured', 'Actions'].map(h => (
-                    <th key={h} style={{ padding: '16px 20px', textAlign: 'left', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(226,232,240,0.3)', fontFamily: 'Space Mono', whiteSpace: 'nowrap' }}>{h}</th>
-                  ))}
+                <tr style={{ background:A.petal, borderBottom:`1.5px solid ${A.border}` }}>
+                  {/* Always visible */}
+                  <th style={TH}>Image</th>
+                  <th style={TH}>Product</th>
+                  {/* Hide on mobile */}
+                  <th style={{ ...TH, ...hideMobile }}>Category</th>
+                  <th style={{ ...TH, ...hideMobile }}>Price</th>
+                  <th style={{ ...TH, ...hideMobile }}>Featured</th>
+                  <th style={TH}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: '48px', textAlign: 'center', color: 'rgba(226,232,240,0.25)' }}>No products found</td></tr>
+                  <tr><td colSpan={6} style={{ padding:'40px', textAlign:'center', color:A.textLight, fontFamily:'Cormorant Garamond', fontSize:'18px', fontStyle:'italic' }}>No products found</td></tr>
                 ) : filtered.map(p => (
-                  <tr key={p._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.2s' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        {p.images?.[0] ? (
-                          <img src={p.images[0]} alt="" style={{ width: '44px', height: '44px', borderRadius: '10px', objectFit: 'cover' }} />
-                        ) : (
-                          <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(201,135,122,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>🎁</div>
-                        )}
-                        <div>
-                          <p style={{ fontSize: '14px', color: '#E2E8F0', fontWeight: 500 }}>{p.name}</p>
-                          <p style={{ fontSize: '12px', color: 'rgba(226,232,240,0.35)', marginTop: '2px', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.description}</p>
-                        </div>
-                      </div>
+                  <tr key={p._id} style={{ borderBottom:`1px solid rgba(92,19,34,0.07)`, transition:'background 0.15s' }}
+                    onMouseEnter={e=>e.currentTarget.style.background=A.petal}
+                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                    {/* Image */}
+                    <td style={{ padding:'10px 12px', width:'52px' }}>{imgCell(p)}</td>
+                    {/* Name */}
+                    <td style={{ padding:'10px 12px' }}>
+                      <p style={{ fontSize:'13px', color:A.textMain, fontWeight:600, lineHeight:1.3 }}>{p.name}</p>
+                      {/* Show category/price inline on mobile */}
+                      <p style={{ fontSize:'11px', color:A.textMuted, marginTop:'2px' }} className="mobile-sub">{p.category} {p.price ? `· ₹${Number(p.price).toLocaleString('en-IN')}` : ''}</p>
                     </td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <span style={{ padding: '4px 12px', borderRadius: '20px', background: 'rgba(201,135,122,0.12)', color: '#C9877A', fontSize: '12px' }}>{p.category}</span>
+                    {/* Desktop-only cols */}
+                    <td style={{ padding:'10px 12px', ...hideMobile }}>
+                      <span style={{ padding:'3px 10px', borderRadius:'20px', background:A.blush, color:A.burgundy, fontSize:'11px', fontWeight:600 }}>{p.category}</span>
                     </td>
-                    <td style={{ padding: '16px 20px', fontSize: '15px', color: '#C8A96E', fontFamily: 'Cormorant Garamond', fontWeight: 600 }}>
-                      {p.price ? `₹${p.price.toLocaleString('en-IN')}` : '—'}
+                    <td style={{ padding:'10px 12px', fontFamily:'Cormorant Garamond', fontSize:'17px', color:A.burgundy, fontWeight:700, whiteSpace:'nowrap', ...hideMobile }}>
+                      {p.price ? `₹${Number(p.price).toLocaleString('en-IN')}` : '—'}
                     </td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <button onClick={() => toggleFeatured(p._id)} style={{ padding: '6px 14px', borderRadius: '20px', background: p.featured ? 'rgba(200,169,110,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${p.featured ? 'rgba(200,169,110,0.4)' : 'rgba(255,255,255,0.1)'}`, color: p.featured ? '#C8A96E' : 'rgba(226,232,240,0.4)', fontSize: '12px', cursor: 'pointer', fontFamily: 'DM Sans' }}>
-                        {p.featured ? '✨ Yes' : 'No'}
+                    <td style={{ padding:'10px 12px', ...hideMobile }}>
+                      <button onClick={()=>toggleFeatured(p._id)} style={{ padding:'4px 11px', borderRadius:'20px', background:p.featured?A.blush:'transparent', border:`1.5px solid ${p.featured?A.borderStrong:A.border}`, color:p.featured?A.burgundy:A.textMuted, fontSize:'11px', cursor:'pointer', fontWeight:p.featured?700:400 }}>
+                        {p.featured?'✨ Yes':'No'}
                       </button>
                     </td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button onClick={() => openEdit(p)} style={{ padding: '8px 16px', borderRadius: '8px', background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)', color: '#A78BFA', fontSize: '13px', cursor: 'pointer', fontFamily: 'DM Sans' }}>Edit</button>
-                        <button onClick={() => setDeleteId(p._id)} style={{ padding: '8px 16px', borderRadius: '8px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#FCA5A5', fontSize: '13px', cursor: 'pointer', fontFamily: 'DM Sans' }}>Delete</button>
+                    {/* Actions */}
+                    <td style={{ padding:'10px 12px' }}>
+                      <div style={{ display:'flex', gap:'6px' }}>
+                        <button onClick={()=>openEdit(p)} style={{ padding:'6px 12px', borderRadius:'8px', background:A.blush, border:`1.5px solid ${A.border}`, color:A.burgundy, fontSize:'12px', cursor:'pointer', fontWeight:600, whiteSpace:'nowrap' }}>Edit</button>
+                        <button onClick={()=>setDeleteId(p._id)} style={{ padding:'6px 10px', borderRadius:'8px', background:'#FEF2F2', border:'1.5px solid #FCA5A5', color:'#991B1B', fontSize:'12px', cursor:'pointer', whiteSpace:'nowrap' }}>Del</button>
                       </div>
                     </td>
                   </tr>
@@ -178,82 +215,131 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* Form Modal */}
+      {/* ══ FORM MODAL ══ */}
       {showForm && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-          <div style={{ background: '#111827', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', padding: '40px', width: '100%', maxWidth: '580px', maxHeight: '90vh', overflowY: 'auto' }}>
-            <h2 style={{ fontSize: '24px', fontFamily: 'Cormorant Garamond', color: '#E2E8F0', marginBottom: '32px' }}>{editId ? 'Edit Product' : 'New Product'}</h2>
+        <div style={{ position:'fixed', inset:0, background:'rgba(42,10,18,0.3)', backdropFilter:'blur(8px)', zIndex:200, display:'flex', alignItems:'flex-start', justifyContent:'center', padding:'16px', overflowY:'auto' }}>
+          <div style={{ background:A.modalBg, borderRadius:'22px', border:`1.5px solid ${A.border}`, padding:'clamp(20px,3.5vw,36px)', width:'100%', maxWidth:'620px', marginTop:'20px', marginBottom:'20px', boxShadow:'0 24px 60px rgba(92,19,34,0.14)' }}>
 
-            {[
-              { label: 'Product Name', key: 'name', type: 'text', placeholder: 'e.g. Custom Love Magazine' },
-              { label: 'Price (₹)', key: 'price', type: 'number', placeholder: 'e.g. 599' },
-            ].map(f => (
-              <div key={f.key} style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: 'rgba(226,232,240,0.5)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px', fontFamily: 'Space Mono' }}>{f.label}</label>
-                <input type={f.type} value={form[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))} placeholder={f.placeholder}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', fontSize: '14px', outline: 'none', fontFamily: 'DM Sans', boxSizing: 'border-box' }}
-                />
+            {/* Modal header */}
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'24px' }}>
+              <div>
+                <p style={{ fontSize:'11px', letterSpacing:'3px', textTransform:'uppercase', color:A.rose, marginBottom:'3px' }}>Gifting Hub</p>
+                <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'22px', color:A.textMain, fontWeight:700 }}>{editId?'Edit Product':'Add New Product'}</h2>
               </div>
-            ))}
+              <button onClick={()=>setShowForm(false)} style={{ width:'32px', height:'32px', borderRadius:'50%', background:A.blush, border:`1.5px solid ${A.border}`, color:A.burgundy, fontSize:'15px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>✕</button>
+            </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: 'rgba(226,232,240,0.5)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px', fontFamily: 'Space Mono' }}>Category</label>
-              <select value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: '#1E293B', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', fontSize: '14px', outline: 'none', fontFamily: 'DM Sans', boxSizing: 'border-box' }}>
-                <option value="">Select category</option>
-                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            {/* Name + Price */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px', marginBottom:'14px' }}>
+              <div>
+                <label style={LBL}>Product Name *</label>
+                <input value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder="e.g. Custom Love Magazine" style={inp()}
+                  onFocus={e=>{ e.target.style.borderColor=A.rose; e.target.style.boxShadow=`0 0 0 3px rgba(176,80,112,0.1)`; }}
+                  onBlur={e=>{ e.target.style.borderColor=A.border; e.target.style.boxShadow='none'; }} />
+              </div>
+              <div>
+                <label style={LBL}>Price (₹)</label>
+                <input type="number" value={form.price} onChange={e=>setForm(f=>({...f,price:e.target.value}))} placeholder="599" style={inp()}
+                  onFocus={e=>{ e.target.style.borderColor=A.rose; e.target.style.boxShadow=`0 0 0 3px rgba(176,80,112,0.1)`; }}
+                  onBlur={e=>{ e.target.style.borderColor=A.border; e.target.style.boxShadow='none'; }} />
+              </div>
+            </div>
+
+            {/* Category */}
+            <div style={{ marginBottom:'14px' }}>
+              <label style={LBL}>Category *</label>
+              <select value={form.category} onChange={e=>setForm(f=>({...f,category:e.target.value}))} style={{ ...inp(), background:A.inputBg }}
+                onFocus={e=>e.target.style.borderColor=A.rose} onBlur={e=>e.target.style.borderColor=A.border}>
+                <option value="">Select a category…</option>
+                {CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
               </select>
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: 'rgba(226,232,240,0.5)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px', fontFamily: 'Space Mono' }}>Description</label>
-              <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={3} placeholder="Describe this product..."
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', fontSize: '14px', outline: 'none', fontFamily: 'DM Sans', resize: 'vertical', boxSizing: 'border-box' }}
-              />
+            {/* Description */}
+            <div style={{ marginBottom:'14px' }}>
+              <label style={LBL}>Description</label>
+              <textarea value={form.description} onChange={e=>setForm(f=>({...f,description:e.target.value}))} rows={3} placeholder="Describe this product…" style={{ ...inp(), resize:'vertical' }}
+                onFocus={e=>{ e.target.style.borderColor=A.rose; e.target.style.boxShadow=`0 0 0 3px rgba(176,80,112,0.1)`; }}
+                onBlur={e=>{ e.target.style.borderColor=A.border; e.target.style.boxShadow='none'; }} />
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: 'rgba(226,232,240,0.5)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px', fontFamily: 'Space Mono' }}>Tags (comma separated)</label>
-              <input value={form.tags} onChange={e => setForm(p => ({ ...p, tags: e.target.value }))} placeholder="for-her, birthday, custom"
-                style={{ width: '100%', padding: '12px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', fontSize: '14px', outline: 'none', fontFamily: 'DM Sans', boxSizing: 'border-box' }}
-              />
+            {/* Tags */}
+            <div style={{ marginBottom:'14px' }}>
+              <label style={LBL}>Tags</label>
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(100px,1fr))', gap:'6px' }}>
+                {ALL_TAGS.map(tag=>(
+                  <button key={tag} type="button" onClick={()=>toggleTag(tag)} style={{ padding:'6px 8px', borderRadius:'8px', fontSize:'12px', cursor:'pointer', fontFamily:'DM Sans', transition:'all 0.15s', border:'none', background:form.tags.includes(tag)?`linear-gradient(135deg,${A.burgundy},${A.rose})`:A.blush, color:form.tags.includes(tag)?'#fff':A.textMuted, fontWeight:form.tags.includes(tag)?700:400 }}>{tag}</button>
+                ))}
+              </div>
             </div>
 
             {/* Images */}
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: 'rgba(226,232,240,0.5)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px', fontFamily: 'Space Mono' }}>Cloudinary Image URLs</label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-                <input value={imageInput} onChange={e => setImageInput(e.target.value)} placeholder="https://res.cloudinary.com/..."
-                  style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', fontSize: '13px', outline: 'none', fontFamily: 'DM Sans' }}
-                  onKeyDown={e => e.key === 'Enter' && addImageUrl()}
-                />
-                <button onClick={addImageUrl} style={{ padding: '10px 16px', borderRadius: '8px', background: 'rgba(201,135,122,0.15)', border: '1px solid rgba(201,135,122,0.3)', color: '#C9877A', cursor: 'pointer', fontSize: '13px', fontFamily: 'DM Sans' }}>Add</button>
-              </div>
-              {form.images.length > 0 && (
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {form.images.map((url, i) => (
-                    <div key={i} style={{ position: 'relative' }}>
-                      <img src={url} alt="" style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
-                        onError={e => { e.target.style.background = '#1E293B'; e.target.alt = '❌'; }}
-                      />
-                      <button onClick={() => removeImage(i)} style={{ position: 'absolute', top: '-6px', right: '-6px', width: '20px', height: '20px', borderRadius: '50%', background: '#EF4444', color: '#fff', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none' }}>×</button>
-                    </div>
-                  ))}
+            <div style={{ marginBottom:'14px' }}>
+              <label style={LBL}>Images</label>
+
+              {/* Existing */}
+              {existingImages.length > 0 && (
+                <div style={{ marginBottom:'10px' }}>
+                  <p style={{ fontSize:'11px', color:A.textLight, marginBottom:'6px' }}>Current images (hover to remove):</p>
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:'7px' }}>
+                    {existingImages.map((url,i)=>(
+                      <div key={i} style={{ position:'relative', width:'60px', height:'60px', borderRadius:'9px', overflow:'hidden', border:`1.5px solid ${A.border}` }}
+                        onMouseEnter={e=>e.currentTarget.querySelector('.del-ov').style.opacity='1'}
+                        onMouseLeave={e=>e.currentTarget.querySelector('.del-ov').style.opacity='0'}>
+                        <img src={url} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                        <button className="del-ov" onClick={()=>removeExisting(url)} style={{ position:'absolute', inset:0, background:'rgba(153,27,27,0.7)', border:'none', color:'#fff', fontSize:'18px', cursor:'pointer', opacity:0, transition:'opacity 0.2s', display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+                        {i===0 && <span style={{ position:'absolute', bottom:'2px', left:'2px', fontSize:'8px', background:'rgba(92,19,34,0.8)', color:'#fff', padding:'1px 4px', borderRadius:'3px' }}>Cover</span>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
+
+              {/* Previews */}
+              {previews.length > 0 && (
+                <div style={{ marginBottom:'10px' }}>
+                  <p style={{ fontSize:'11px', color:A.textLight, marginBottom:'6px' }}>New (uploads on save):</p>
+                  <div style={{ display:'flex', flexWrap:'wrap', gap:'7px' }}>
+                    {previews.map((url,i)=>(
+                      <div key={i} style={{ position:'relative', width:'60px', height:'60px', borderRadius:'9px', overflow:'hidden', border:`2px dashed ${A.rose}` }}
+                        onMouseEnter={e=>e.currentTarget.querySelector('.del-ov').style.opacity='1'}
+                        onMouseLeave={e=>e.currentTarget.querySelector('.del-ov').style.opacity='0'}>
+                        <img src={url} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                        <button className="del-ov" onClick={()=>removeNew(i)} style={{ position:'absolute', inset:0, background:'rgba(153,27,27,0.7)', border:'none', color:'#fff', fontSize:'18px', cursor:'pointer', opacity:0, transition:'opacity 0.2s', display:'flex', alignItems:'center', justifyContent:'center' }}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Upload button */}
+              <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFiles} style={{ display:'none' }} />
+              <button type="button" onClick={()=>fileRef.current?.click()} style={{ width:'100%', padding:'20px', borderRadius:'11px', border:`2px dashed rgba(176,80,112,0.28)`, background:A.petal, color:A.rose, fontSize:'13px', cursor:'pointer', fontFamily:'DM Sans', fontWeight:600, display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', transition:'all 0.18s' }}
+                onMouseEnter={e=>e.currentTarget.style.borderColor=A.rose}
+                onMouseLeave={e=>e.currentTarget.style.borderColor='rgba(176,80,112,0.28)'}>
+                <span style={{ fontSize:'22px' }}>📁</span>
+                Click to select images
+                <span style={{ fontSize:'11px', color:A.textLight, fontWeight:400 }}>PNG · JPG · WebP · multiple allowed</span>
+              </button>
             </div>
 
             {/* Featured */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
-              <input type="checkbox" id="featured" checked={form.featured} onChange={e => setForm(p => ({ ...p, featured: e.target.checked }))} style={{ width: '18px', height: '18px', accentColor: '#C8A96E' }} />
-              <label htmlFor="featured" style={{ fontSize: '14px', color: '#E2E8F0', cursor: 'pointer' }}>Mark as Featured ✨</label>
+            <div onClick={()=>setForm(f=>({...f,featured:!f.featured}))} style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'24px', padding:'12px 14px', borderRadius:'11px', background:form.featured?A.blush:'transparent', border:`1.5px solid ${form.featured?A.borderStrong:A.border}`, cursor:'pointer', transition:'all 0.18s' }}>
+              <div style={{ width:'19px', height:'19px', borderRadius:'5px', background:form.featured?`linear-gradient(135deg,${A.burgundy},${A.rose})`:'transparent', border:`2px solid ${form.featured?A.rose:A.border}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                {form.featured && <span style={{ color:'#fff', fontSize:'11px', fontWeight:700 }}>✓</span>}
+              </div>
+              <div>
+                <p style={{ fontSize:'13px', color:A.textMain, fontWeight:form.featured?700:400 }}>Mark as Featured ✨</p>
+                <p style={{ fontSize:'11px', color:A.textLight, marginTop:'1px' }}>Shows at the top of the Gifting Hub page</p>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={save} disabled={saving} style={{ flex: 1, padding: '14px', borderRadius: '12px', background: 'linear-gradient(135deg, #C9877A, #C8A96E)', color: '#fff', fontWeight: 600, fontSize: '15px', cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'DM Sans', opacity: saving ? 0.7 : 1 }}>
-                {saving ? 'Saving...' : editId ? 'Update Product' : 'Create Product'}
+            {/* Actions */}
+            <div style={{ display:'flex', gap:'10px' }}>
+              <button onClick={save} disabled={saving||uploading} style={{ flex:1, padding:'13px', borderRadius:'12px', background:(saving||uploading)?'rgba(92,19,34,0.4)':`linear-gradient(135deg,${A.burgundy},${A.rose})`, color:'#fff', fontWeight:700, fontSize:'14px', cursor:(saving||uploading)?'not-allowed':'pointer', opacity:(saving||uploading)?0.7:1, border:'none', boxShadow:`0 4px 16px rgba(92,19,34,0.2)` }}>
+                {uploading?'Uploading…':saving?'Saving…':editId?'Update Product':'Create Product'}
               </button>
-              <button onClick={() => setShowForm(false)} style={{ padding: '14px 24px', borderRadius: '12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', cursor: 'pointer', fontSize: '15px', fontFamily: 'DM Sans' }}>Cancel</button>
+              <button onClick={()=>setShowForm(false)} style={{ padding:'13px 18px', borderRadius:'12px', background:A.blush, border:`1.5px solid ${A.border}`, color:A.textMain, cursor:'pointer', fontSize:'14px', fontWeight:600 }}>Cancel</button>
             </div>
           </div>
         </div>
@@ -261,18 +347,31 @@ export default function AdminProducts() {
 
       {/* Delete confirm */}
       {deleteId && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#111827', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.3)', padding: '40px', maxWidth: '380px', textAlign: 'center' }}>
-            <span style={{ fontSize: '48px' }}>🗑️</span>
-            <h3 style={{ fontSize: '22px', color: '#E2E8F0', fontFamily: 'Cormorant Garamond', margin: '16px 0 8px' }}>Delete Product?</h3>
-            <p style={{ color: 'rgba(226,232,240,0.5)', fontSize: '14px', marginBottom: '28px' }}>This will also remove images from Cloudinary. This action cannot be undone.</p>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={confirmDelete} style={{ flex: 1, padding: '12px', borderRadius: '10px', background: '#EF4444', color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'DM Sans' }}>Delete</button>
-              <button onClick={() => setDeleteId(null)} style={{ flex: 1, padding: '12px', borderRadius: '10px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#E2E8F0', cursor: 'pointer', fontFamily: 'DM Sans' }}>Cancel</button>
+        <div style={{ position:'fixed', inset:0, background:'rgba(42,10,18,0.3)', backdropFilter:'blur(8px)', zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:'16px' }}>
+          <div style={{ background:A.modalBg, borderRadius:'20px', border:'1.5px solid #FCA5A5', padding:'32px', maxWidth:'340px', width:'100%', textAlign:'center', boxShadow:'0 20px 50px rgba(92,19,34,0.12)' }}>
+            <span style={{ fontSize:'40px' }}>🗑️</span>
+            <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'21px', color:A.textMain, margin:'12px 0 6px', fontWeight:700 }}>Delete Product?</h3>
+            <p style={{ color:A.textMuted, fontSize:'13px', marginBottom:'22px', lineHeight:1.6 }}>Permanently removes the product and all Cloudinary images. Cannot be undone.</p>
+            <div style={{ display:'flex', gap:'10px' }}>
+              <button onClick={confirmDelete} style={{ flex:1, padding:'11px', borderRadius:'10px', background:'#EF4444', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:'13px', border:'none' }}>Delete</button>
+              <button onClick={()=>setDeleteId(null)} style={{ flex:1, padding:'11px', borderRadius:'10px', background:A.blush, border:`1.5px solid ${A.border}`, color:A.textMain, cursor:'pointer', fontSize:'13px', fontWeight:600 }}>Cancel</button>
             </div>
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .mobile-sub { display: block !important; }
+        }
+        @media (min-width: 769px) {
+          .mobile-sub { display: none !important; }
+        }
+      `}</style>
     </div>
   );
 }
+
+const TH = { padding:'11px 12px', textAlign:'left', fontSize:'10px', letterSpacing:'2px', textTransform:'uppercase', color:'rgba(92,19,34,0.55)', whiteSpace:'nowrap', fontWeight:700 };
+const hideMobile = { '@media(max-width:768px)': { display:'none' } };
+const LBL = { display:'block', fontSize:'11px', color:'rgba(92,19,34,0.55)', letterSpacing:'2px', textTransform:'uppercase', marginBottom:'6px' };

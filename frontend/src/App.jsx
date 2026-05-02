@@ -36,12 +36,13 @@ function PublicLayout({ children }) {
 
 export default function App() {
   const isUnderConstruction = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
-
+ const backendurl = import.meta.env.VITE_backendurl ;
+   
   const [admin, setAdmin] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/auth/me', { credentials: 'include' })
+    fetch(`${backendurl}/api/auth/me`, { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(data => { setAdmin(data); setAuthLoading(false); })
       .catch(() => setAuthLoading(false));
