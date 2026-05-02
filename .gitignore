@@ -1,0 +1,16 @@
+# Ignore dependencies and environments
+node_modules/
+venv/
+
+# Ignore secret or config files
+*.env
+
+
+
+
+
+# (Optional) Ignore build or OS-generated files
+dist/
+build/
+.DS_Store
+Thumbs.db
