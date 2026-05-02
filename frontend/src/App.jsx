@@ -12,8 +12,9 @@ import AdminProjects from './pages/admin/AdminProjects.jsx';
 
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
-import ScrollToTop from './components/ScrollToTop.jsx';
+
 import UnderConstruction from './components/UnderConstruction';
+import Scrolling from './components/Scrolling.jsx';
 
 export const AuthContext = createContext(null);
 
@@ -79,7 +80,7 @@ export default function App() {
   return (
     <AuthContext.Provider value={{ admin, setAdmin }}>
       <BrowserRouter>
-        <ScrollToTop />
+        <Scrolling />
 
         <Routes>
           {/* 🔐 ADMIN ROUTES (ALWAYS WORK) */}
