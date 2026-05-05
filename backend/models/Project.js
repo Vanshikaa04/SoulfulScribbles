@@ -9,7 +9,13 @@ const projectSchema = new mongoose.Schema({
     required: true,
   },
   org:       { type: String, default: '' },        // e.g. "Code Master Technology" or "Freelance"
-  image:     { type: String, default: '' },        // Cloudinary URL
+media: [
+  {
+    url: String,
+    public_id: String,
+    type: { type: String, enum: ['image', 'video'], required: true }
+  }
+],
   link:      { type: String, default: '' },        // Live / GitHub link
   tech:      [String],                             // tech stack tags
   featured:  { type: Boolean, default: false },

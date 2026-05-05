@@ -22,6 +22,7 @@ router.post('/', authMiddleware, upload.single('file'), async (req, res) => {
 
     const result = await cloudinary.uploader.upload(dataURI, {
       folder: 'soulful-scribble/products',
+        resource_type: 'auto'
     });
 
     res.json({ url: result.secure_url });

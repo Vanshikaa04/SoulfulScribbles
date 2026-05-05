@@ -255,15 +255,14 @@ function HubCardsSection() {
             borderColor="rgba(196,117,138,0.18)"
             ctaBg="linear-gradient(135deg,#6B1A2A,#C4758A)"
           />
-          <HubCard delay={0.1} emoji="⚡" tag="Techno Hub" tagColor="#D4956A"
+          <HubCard delay={0.1} emoji="⚡" tag="Techno Hub" tagColor="#5C1322"
             title="Your Digital Presence, Crafted with Precision"
             desc="Solo freelance tech services by Vanshika Wadhwani — ex Full Stack Developer & Tech Educator at Code Master Technology. Websites, data analysis, ML projects, marketing and more — directly from me, no middlemen."
             features={['Website Building','Logo Designing','Digital Marketing','Data Analysis','Machine Learning','SEO & Social Media']}
             cta="Stalk Techno Hub" ctaLink="/techno"
-            gradient="linear-gradient(160deg,#1A0A0E 0%,#221215 100%)"
-            borderColor="rgba(196,117,138,0.15)"
-            ctaBg="linear-gradient(135deg,#4A1020,#C4758A)"
-            dark
+            gradient="linear-gradient(160deg,#FFFFFF 0%,#FDF5F7 60%,#FFF0F4 100%)"
+            borderColor="rgba(92,19,34,0.13)"
+            ctaBg="linear-gradient(135deg,#5C1322,#C4758A)"
           />
         </div>
       </div>
@@ -271,24 +270,22 @@ function HubCardsSection() {
   );
 }
 
-function HubCard({ delay, emoji, tag, tagColor, title, desc, features, cta, ctaLink, gradient, borderColor, ctaBg, dark }) {
-  const textColor  = dark ? '#FAF0F2' : '#2A0A12';
-  const mutedColor = dark ? 'rgba(250,240,242,0.55)' : '#8B6070';
+function HubCard({ delay, emoji, tag, tagColor, title, desc, features, cta, ctaLink, gradient, borderColor, ctaBg }) {
   return (
     <motion.div {...fv(delay)}>
-      <motion.div whileHover={{ y:-6, boxShadow: dark ? '0 28px 60px rgba(0,0,0,0.4)' : '0 28px 60px rgba(107,26,42,0.1)' }}
-        style={{ background:gradient, borderRadius:'28px', padding:'clamp(28px,5vw,50px) clamp(22px,4vw,42px)', border:`1px solid ${borderColor}`, boxShadow:'0 4px 20px rgba(0,0,0,0.04)', transition:'all 0.4s ease', display:'flex', flexDirection:'column', height:'100%' }}>
+      <motion.div whileHover={{ y:-6, boxShadow:'0 28px 60px rgba(92,19,34,0.1)' }}
+        style={{ background:gradient, borderRadius:'28px', padding:'clamp(28px,5vw,50px) clamp(22px,4vw,42px)', border:`1.5px solid ${borderColor}`, boxShadow:'0 4px 16px rgba(92,19,34,0.05)', transition:'all 0.4s ease', display:'flex', flexDirection:'column', height:'100%' }}>
         <div style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'20px' }}>
           <motion.span animate={{ y:[0,-8,0] }} transition={{ duration:4, repeat:Infinity, ease:'easeInOut' }} style={{ fontSize:'34px' }}>{emoji}</motion.span>
-          <span style={{ padding:'4px 14px', borderRadius:'40px', background:`${tagColor}18`, border:`1px solid ${tagColor}35`, fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', color:tagColor, fontWeight:500 }}>{tag}</span>
+          <span style={{ padding:'4px 14px', borderRadius:'40px', background:`${tagColor}12`, border:`1.5px solid ${tagColor}30`, fontSize:'11px', letterSpacing:'2px', textTransform:'uppercase', color:tagColor, fontWeight:600 }}>{tag}</span>
         </div>
-        <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(20px,3.5vw,28px)', fontWeight:400, color:textColor, marginBottom:'14px', lineHeight:1.3, fontStyle:'italic' }}>{title}</h3>
-        <p style={{ fontSize:'14px', color:mutedColor, lineHeight:1.85, marginBottom:'24px', fontWeight:300, flex:1 }}>{desc}</p>
+        <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(20px,3.5vw,28px)', fontWeight:400, color:'#2A0A12', marginBottom:'14px', lineHeight:1.3, fontStyle:'italic' }}>{title}</h3>
+        <p style={{ fontSize:'14px', color:'#8B4558', lineHeight:1.85, marginBottom:'24px', fontWeight:300, flex:1 }}>{desc}</p>
         <div style={{ display:'flex', flexWrap:'wrap', gap:'7px', marginBottom:'28px' }}>
-          {features.map(f=><span key={f} style={{ padding:'5px 13px', borderRadius:'40px', fontSize:'12px', background:dark?'rgba(255,255,255,0.06)':'rgba(107,26,42,0.05)', color:tagColor, border:`1px solid ${tagColor}22` }}>{f}</span>)}
+          {features.map(f=><span key={f} style={{ padding:'5px 13px', borderRadius:'40px', fontSize:'12px', background:`${tagColor}0D`, color:tagColor, border:`1px solid ${tagColor}22`, fontWeight:500 }}>{f}</span>)}
         </div>
         <motion.div whileHover={{ x:4 }}>
-          <Link to={ctaLink} style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'12px 26px', borderRadius:'50px', background:ctaBg, color:'#fff', fontSize:'14px', fontWeight:600, alignSelf:'flex-start', boxShadow:'0 6px 20px rgba(107,26,42,0.25)' }}>{cta} →</Link>
+          <Link to={ctaLink} style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'12px 26px', borderRadius:'50px', background:ctaBg, color:'#fff', fontSize:'14px', fontWeight:700, alignSelf:'flex-start', boxShadow:'0 6px 20px rgba(92,19,34,0.22)' }}>{cta} →</Link>
         </motion.div>
       </motion.div>
     </motion.div>
@@ -370,33 +367,33 @@ function OccasionsSection() {
   );
 }
 
-/* ════ TECH SERVICES ════ */
+/* ════ TECH SERVICES — white bg, burgundy text ════ */
 function TechServicesSection() {
   return (
-    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:'#1A0A0E' }}>
+    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:'#FFFFFF' }}>
       <div className="container">
         <motion.div {...fv(0)} style={{ textAlign:'center', marginBottom:'48px' }}>
-          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:'#C4758A', marginBottom:'10px' }}>Techno Hub</p>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(26px,5vw,48px)', fontWeight:400, color:'#FAF0F2' }}>
-            <em style={{ fontStyle:'italic', color:'#C4758A' }}>Digital services</em> that move the needle
+          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:'#B05070', marginBottom:'10px' }}>Techno Hub</p>
+          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(26px,5vw,48px)', fontWeight:400, color:'#2A0A12' }}>
+            <em style={{ fontStyle:'italic', color:'#5C1322' }}>Digital services</em> that move the needle
           </h2>
-          <p style={{ fontSize:'14px', color:'rgba(250,240,242,0.38)', marginTop:'10px' }}>Every service delivered personally — no outsourcing, no middlemen.</p>
+          <p style={{ fontSize:'14px', color:'#8B4558', marginTop:'10px' }}>Every service delivered personally — no outsourcing, no middlemen.</p>
         </motion.div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,150px),1fr))', gap:'14px' }}>
           {techServices.map((svc,i)=>(
             <motion.div key={svc.label} {...fv(i*0.04)}>
-              <motion.div whileHover={{ y:-5, boxShadow:`0 14px 32px rgba(0,0,0,0.28)`, borderColor:`${svc.color}45` }}>
-                <Link to="/techno" style={{ display:'block', padding:'clamp(18px,3vw,26px) 14px', borderRadius:'18px', background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.07)', textAlign:'center', transition:'all 0.3s', position:'relative', overflow:'hidden' }}>
-                  <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 50% 0%,${svc.color}10 0%,transparent 60%)`, pointerEvents:'none' }} />
+              <motion.div whileHover={{ y:-5, boxShadow:`0 12px 28px rgba(92,19,34,0.1)`, borderColor:`rgba(92,19,34,0.22)` }}>
+                <Link to="/techno" style={{ display:'block', padding:'clamp(18px,3vw,26px) 14px', borderRadius:'18px', background:'#FDF5F7', border:'1.5px solid rgba(92,19,34,0.09)', textAlign:'center', transition:'all 0.3s', position:'relative', overflow:'hidden' }}>
+                  <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 50% 0%,${svc.color}14 0%,transparent 65%)`, pointerEvents:'none' }} />
                   <div style={{ fontSize:'30px', marginBottom:'10px' }}>{svc.icon}</div>
-                  <p style={{ fontSize:'12px', fontWeight:600, color:'#FAF0F2', lineHeight:1.4 }}>{svc.label}</p>
+                  <p style={{ fontSize:'12px', fontWeight:700, color:'#2A0A12', lineHeight:1.4 }}>{svc.label}</p>
                 </Link>
               </motion.div>
             </motion.div>
           ))}
         </div>
         <motion.div {...fv(0.3)} style={{ textAlign:'center', marginTop:'36px' }}>
-          <Link to="/techno" style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'12px 26px', borderRadius:'50px', background:'linear-gradient(135deg,#6B1A2A,#C4758A)', color:'#fff', fontSize:'14px', fontWeight:600, boxShadow:'0 6px 20px rgba(107,26,42,0.3)' }}>
+          <Link to="/techno" style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'12px 26px', borderRadius:'50px', background:'linear-gradient(135deg,#5C1322,#C4758A)', color:'#fff', fontSize:'14px', fontWeight:600, boxShadow:'0 6px 20px rgba(92,19,34,0.22)' }}>
             See All Services & Projects →
           </Link>
         </motion.div>

@@ -3,23 +3,68 @@ import { motion } from 'framer-motion';
 
 const WA = '919876543210';
 
+/* ─────────────────────────────────────────────
+   PALETTE
+   bg      = pure white        #FFFFFF
+   bg2     = lightest pink     #FDF5F7
+   bg3     = soft blush pink   #FFF0F4
+   bg4     = deeper blush      #F9E4EB
+   text    = near-black        #1A0408
+   textSub = dark burgundy     #5C1322
+   textMid = medium            #7A3040
+   textMut = muted             #9B5868
+   rose    = accent rose       #C4758A
+   burg    = burgundy accent   #8B2535  ← used sparingly as accent, NOT bg
+───────────────────────────────────────────── */
+const C = {
+  white:   '#FFFFFF',
+  bg2:     '#FDF5F7',
+  bg3:     '#FFF0F4',
+  bg4:     '#F9E4EB',
+  text:    '#1A0408',
+  textSub: '#5C1322',
+  textMid: '#7A3040',
+  textMut: '#9B5868',
+  textLt:  '#BF8090',
+  rose:    '#C4758A',
+  roseDk:  '#A85870',
+  burg:    '#8B2535',
+  blush:   '#F7E8EC',
+  petal:   '#FDEEF2',
+  border:  'rgba(92,19,34,0.1)',
+  bdHov:   'rgba(92,19,34,0.22)',
+};
+
+/* section bg alternates */
+const SEC = {
+  white: C.white,
+  pink:  C.bg3,
+  blush: C.bg2,
+};
+
+/* category colours on light bg */
+const CAT_COLOR = {
+  'Web Dev':          '#7C1F3A',
+  'Design':           '#9C3A10',
+  'Digital Marketing':'#5C2A80',
+  'SEO':              '#183A7C',
+  'Video':            '#8C1A3A',
+  'Social Media':     '#0A5C4A',
+  'Data Analysis':    '#7C4A08',
+  'Machine Learning': '#0C4A50',
+  'Other':            '#403050',
+};
 
 const SERVICES = [
-  { icon:'🌐', title:'Website Building',       desc:'Custom, responsive, high-performance websites — from landing pages to full-stack MERN apps tailored to your brand.', tags:['React','Next.js','MERN','WordPress'],  color:'#C4758A' },
-  { icon:'✏️', title:'Logo Designing',          desc:'Logos that are the visual soul of your brand — timeless, versatile, delivered with a full branding kit.',              tags:['Figma','Vector','Branding Kit'],       color:'#D4956A' },
-  { icon:'📣', title:'Digital Marketing',       desc:'Data-driven campaigns that actually convert. Strategy to execution — your brands growth is in good hands.',           tags:['Meta Ads','Google Ads','Analytics'],  color:'#A67CC5' },
-  { icon:'🔍', title:'SEO Optimization',        desc:'Get found by the right people. On-page, off-page and technical SEO that moves you up the rankings sustainably.',       tags:['On-Page','Technical SEO','Local SEO'],color:'#6B8FD4' },
-  { icon:'🎬', title:'Video Editing',            desc:'Cinematic reels, polished ads, YouTube content — edits that captivate and convert.',                                   tags:['Reels','YouTube','Motion Graphics'],  color:'#D46B8F' },
-  { icon:'📱', title:'Social Media Marketing',  desc:'Full social management — content calendars, creatives, engagement and growth strategy across platforms.',               tags:['Instagram','LinkedIn','Facebook'],    color:'#6BC4B0' },
-  { icon:'📊', title:'Data Analysis',           desc:'Turn raw data into clear decisions. Exploratory analysis, dashboards, visualisations and insight reports for businesses.', tags:['Python','Pandas','Power BI','Excel'], color:'#E8A56A' },
-  { icon:'🤖', title:'Machine Learning',        desc:'Predictive models, recommendation engines and NLP solutions — bringing intelligent automation to real business problems.',  tags:['Python','Scikit-learn','TensorFlow','Jupyter'], color:'#7CC4A6' },
+  { icon:'🌐', title:'Website Building',       desc:'Custom, responsive, high-performance websites — from landing pages to full-stack MERN apps built exactly for your brand.',  tags:['React','Next.js','MERN','WordPress'],    cat:'Web Dev' },
+  { icon:'✏️', title:'Logo Designing',          desc:'Logos that are the visual soul of your brand — timeless, versatile, delivered with a full branding kit.',                  tags:['Figma','Vector','Branding Kit'],         cat:'Design' },
+  { icon:'📣', title:'Digital Marketing',       desc:'Data-driven campaigns that convert. Strategy to execution — your brand\'s growth handled personally.',                     tags:['Meta Ads','Google Ads','Analytics'],     cat:'Digital Marketing' },
+  { icon:'🔍', title:'SEO Optimization',        desc:'Get found by the right people. On-page, off-page and technical SEO that moves your rankings sustainably.',                 tags:['On-Page','Technical SEO','Local SEO'],   cat:'SEO' },
+  { icon:'🎬', title:'Video Editing',            desc:'Cinematic reels, polished ads, YouTube content — professional edits that captivate and convert.',                          tags:['Reels','YouTube','Motion Graphics'],     cat:'Video' },
+  { icon:'📱', title:'Social Media Marketing',  desc:'Full social management — content calendars, creatives, engagement and growth strategy across all key platforms.',           tags:['Instagram','LinkedIn','Facebook'],       cat:'Social Media' },
+  { icon:'📊', title:'Data Analysis',           desc:'Turn raw data into clear decisions. Exploratory analysis, dashboards, visualisations and insight reports for businesses.',  tags:['Python','Pandas','Power BI','Excel'],    cat:'Data Analysis' },
+  { icon:'🤖', title:'Machine Learning',        desc:'Predictive models, recommendation engines and NLP — intelligent automation for real business problems.',                    tags:['Python','Scikit-learn','TensorFlow'],    cat:'Machine Learning' },
 ];
-
-const CAT_COLORS = {
-  'Web Dev':'#C4758A','Design':'#D4956A','Digital Marketing':'#A67CC5',
-  'SEO':'#6B8FD4','Video':'#D46B8F','Social Media':'#6BC4B0',
-  'Data Analysis':'#E8A56A','Machine Learning':'#7CC4A6','Other':'#9BA8C0',
-};
 
 function useInView(thresh = 0.1) {
   const [v, setV] = useState(false);
@@ -33,103 +78,153 @@ function useInView(thresh = 0.1) {
 }
 
 const fv = (delay = 0) => ({
-  initial:{ opacity:0, y:28 },
-  whileInView:{ opacity:1, y:0 },
-  viewport:{ once:true },
-  transition:{ duration:0.65, delay, ease:[0.22,1,0.36,1] },
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] },
+});
+const fa = (delay = 0) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
 });
 
+/* ═══════════════════════════════════════════════════════════ */
 export default function TechnoHub() {
-  const [projects, setProjects]   = useState([]);
-  const [loadingP, setLoadingP]   = useState(true);
- const backendurl = import.meta.env.VITE_backendurl ;
-
+  const [projects, setProjects] = useState([]);
+  const [loadingP, setLoadingP] = useState(true);
 
   useEffect(() => {
-    fetch(`${backendurl}/api/projects`)
+    fetch('/api/projects')
       .then(r => r.json())
       .then(d => { if (Array.isArray(d)) setProjects(d); setLoadingP(false); })
       .catch(() => setLoadingP(false));
   }, []);
 
   return (
-    <div style={{ background:'#1A0A0E', color:'#FAF0F2', minHeight:'100vh', overflowX:'hidden' }}>
+    <div style={{ background: C.white, color: C.text, minHeight: '100vh', overflowX: 'hidden' }}>
       <HeroSection />
       <StatsBar />
       <AboutSection />
       <ServicesSection />
       <ProjectsSection projects={projects} loading={loadingP} />
       <JoinSection />
-      <TechnoCTA />
+      <CtaSection />
     </div>
   );
 }
 
-/* ════ HERO ════ */
+/* ════════════════ HERO ════════════════ */
 function HeroSection() {
   return (
-    <section style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', background:'linear-gradient(160deg,#1A0A0E 0%,#2A1218 50%,#1A0A0E 100%)', paddingTop:'72px', position:'relative', overflow:'hidden' }}>
-      <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(196,117,138,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(196,117,138,0.04) 1px,transparent 1px)', backgroundSize:'64px 64px', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', top:'25%', left:'15%', width:'400px', height:'400px', borderRadius:'50%', background:'radial-gradient(circle,rgba(107,26,42,0.3) 0%,transparent 70%)', filter:'blur(60px)', pointerEvents:'none' }} />
-      <div style={{ position:'absolute', bottom:'20%', right:'10%', width:'320px', height:'320px', borderRadius:'50%', background:'radial-gradient(circle,rgba(196,117,138,0.18) 0%,transparent 70%)', filter:'blur(50px)', pointerEvents:'none' }} />
+    <section style={{
+      minHeight: '100vh',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      /* white → lightest pink → soft blush — all very light */
+      background: `linear-gradient(155deg, ${C.white} 0%, ${C.bg2} 55%, ${C.bg3} 100%)`,
+      paddingTop: '72px', position: 'relative', overflow: 'hidden',
+    }}>
+      {/* Decorative soft blobs */}
+      <div style={{ position:'absolute', top:'-100px', right:'-80px', width:'420px', height:'420px', borderRadius:'50%', background:'radial-gradient(circle, rgba(196,117,138,0.1) 0%, transparent 70%)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', bottom:'-80px', left:'-60px', width:'360px', height:'360px', borderRadius:'50%', background:'radial-gradient(circle, rgba(139,37,53,0.05) 0%, transparent 70%)', pointerEvents:'none' }} />
 
-      <div style={{ textAlign:'center', padding:'0 20px', position:'relative', zIndex:1, maxWidth:'860px', width:'100%' }}>
-        <motion.div initial={{ opacity:0, y:32 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.8 }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'7px 20px', borderRadius:'40px', background:'rgba(196,117,138,0.08)', border:'1px solid rgba(196,117,138,0.22)', marginBottom:'30px' }}>
-            <div style={{ width:'7px', height:'7px', borderRadius:'50%', background:'#C4758A', animation:'glow-pulse 2s infinite' }} />
-            <span style={{ fontSize:'11px', letterSpacing:'3px', textTransform:'uppercase', color:'#C4758A', fontFamily:'Space Mono' }}>Techno Hub — Available for Projects</span>
+      {/* Very faint grid */}
+      <div style={{ position:'absolute', inset:0, backgroundImage:`linear-gradient(rgba(92,19,34,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(92,19,34,0.04) 1px, transparent 1px)`, backgroundSize:'60px 60px', pointerEvents:'none' }} />
+
+      {/* Big faint letter */}
+      <span style={{ position:'absolute', top:'12%', left:'1%', fontFamily:'Cormorant Garamond', fontSize:'clamp(90px,16vw,200px)', color:'rgba(92,19,34,0.035)', fontStyle:'italic', lineHeight:1, userSelect:'none', pointerEvents:'none' }}>S</span>
+
+      <div className="container" style={{ position:'relative', zIndex:1 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr auto', gap:'clamp(32px,5vw,80px)', alignItems:'center' }} className="techno-hero-grid">
+
+          {/* LEFT text */}
+          <div>
+            <motion.div {...fa(0)}>
+              {/* Badge */}
+              <div style={{ display:'inline-flex', alignItems:'center', gap:'8px', padding:'6px 18px', borderRadius:'40px', background:C.petal, border:`1.5px solid rgba(92,19,34,0.14)`, marginBottom:'28px' }}>
+                <div style={{ width:'7px', height:'7px', borderRadius:'50%', background:C.textSub }} />
+                <span style={{ fontSize:'11px', letterSpacing:'3px', textTransform:'uppercase', color:C.textSub, fontWeight:600 }}>Techno Hub — Available for Projects</span>
+              </div>
+            </motion.div>
+
+            <motion.h1 {...fa(0.08)} style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(40px,7.5vw,82px)', fontWeight:300, color:C.text, lineHeight:1.0, marginBottom:'20px' }}>
+              Your Digital Presence,<br />
+              <em style={{ fontStyle:'italic', color:C.textSub }}>Crafted with Precision</em>
+            </motion.h1>
+
+            <motion.div {...fa(0.14)} style={{ display:'flex', alignItems:'center', gap:'14px', marginBottom:'20px' }}>
+              <div style={{ width:'56px', height:'1.5px', background:`linear-gradient(to right, transparent, ${C.rose})` }} />
+              <span style={{ fontSize:'11px', color:C.textMut, letterSpacing:'3px', textTransform:'uppercase' }}>Solo · Freelance · Personal</span>
+            </motion.div>
+
+            <motion.p {...fa(0.2)} style={{ fontSize:'clamp(14px,2vw,17px)', color:C.textMid, lineHeight:1.9, fontWeight:300, maxWidth:'520px', marginBottom:'32px' }}>
+              Freelance tech services by <strong style={{ color:C.text }}>Vanshika Wadhwani</strong> — ex Full Stack Developer &amp; Tech Educator at Code Master Technology. Personalized. Professional. Passionate.
+            </motion.p>
+
+            <motion.div {...fa(0.26)} style={{ display:'flex', gap:'14px', flexWrap:'wrap' }}>
+              <a href="#services" style={{ padding:'13px 28px', borderRadius:'50px', background:`linear-gradient(135deg,${C.textSub},${C.rose})`, color:'#fff', fontWeight:600, fontSize:'14px', boxShadow:`0 8px 24px rgba(92,19,34,0.22)`, transition:'all 0.28s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow=`0 12px 32px rgba(92,19,34,0.32)`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=`0 8px 24px rgba(92,19,34,0.22)`; }}>
+                Explore Services
+              </a>
+              <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi Vanshika! I'd like to discuss a tech project 💻")}`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ padding:'13px 28px', borderRadius:'50px', background:'transparent', color:C.textSub, border:`1.5px solid rgba(92,19,34,0.2)`, fontSize:'14px', fontWeight:600, transition:'all 0.28s' }}
+                onMouseEnter={e => { e.currentTarget.style.background=C.petal; e.currentTarget.style.borderColor=`rgba(92,19,34,0.35)`; }}
+                onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor=`rgba(92,19,34,0.2)`; }}>
+                💬 Let's Talk
+              </a>
+            </motion.div>
           </div>
 
-          <h1 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(44px,9vw,88px)', fontWeight:300, color:'#FAF0F2', lineHeight:1.0, marginBottom:'24px' }}>
-            Your Digital Presence,<br />
-            <em style={{ fontStyle:'italic', background:'linear-gradient(135deg,#6B1A2A,#C4758A,#F0D5DC)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>
-              Crafted with Precision
-            </em>
-          </h1>
-
-          <p style={{ fontSize:'clamp(14px,2.2vw,18px)', color:'rgba(250,240,242,0.55)', maxWidth:'540px', margin:'0 auto 44px', lineHeight:1.9, fontWeight:300 }}>
-            Solo freelance tech services by <strong style={{ color:'#FAF0F2' }}>Vanshika Wadhwani</strong> — ex Full Stack Developer &amp; Tech Educator at Code Master Technology. Personalized. Professional. Passionate.
-          </p>
-
-          <div style={{ display:'flex', gap:'14px', justifyContent:'center', flexWrap:'wrap' }}>
-            <a href="#services"
-              style={{ padding:'13px 30px', borderRadius:'50px', background:'linear-gradient(135deg,#6B1A2A,#C4758A)', color:'#fff', fontWeight:600, fontSize:'14px', boxShadow:'0 8px 24px rgba(107,26,42,0.35)' }}>
-              Explore Services
-            </a>
-          <a
-  href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi Vanshika! I\'d like to discuss a tech project 💻")}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  style={{
-    padding: '13px 30px',
-    borderRadius: '50px',
-    background: 'transparent',
-    color: '#C4758A',
-    border: '1px solid rgba(196,117,138,0.35)',
-    fontSize: '14px',
-    fontWeight: 600
-  }}
->
-  💬 Let's Talk
-</a>
-          </div>
-        </motion.div>
+          {/* RIGHT — floating skill pill card */}
+          <motion.div {...fa(0.32)} className="techno-hero-right">
+            <div style={{ display:'flex', flexDirection:'column', gap:'12px', minWidth:'220px' }}>
+              {[
+                { icon:'💻', label:'Full Stack Dev',      sub:'React · Node · MongoDB' },
+                { icon:'📊', label:'Data Analysis',       sub:'Python · Power BI · Pandas' },
+                { icon:'🤖', label:'Machine Learning',    sub:'Scikit-learn · TensorFlow' },
+                { icon:'🎓', label:'Ex Tech Educator',    sub:'Code Master Technology' },
+              ].map(({ icon, label, sub }) => (
+                <div key={label} style={{ display:'flex', alignItems:'center', gap:'12px', padding:'14px 18px', borderRadius:'16px', background:C.white, border:`1.5px solid ${C.border}`, boxShadow:`0 2px 12px rgba(92,19,34,0.06)`, transition:'all 0.22s' }}
+                  onMouseEnter={e => { e.currentTarget.style.background=C.blush; e.currentTarget.style.borderColor=C.bdHov; e.currentTarget.style.transform='translateX(4px)'; e.currentTarget.style.boxShadow=`0 6px 20px rgba(92,19,34,0.1)`; }}
+                  onMouseLeave={e => { e.currentTarget.style.background=C.white; e.currentTarget.style.borderColor=C.border; e.currentTarget.style.transform='translateX(0)'; e.currentTarget.style.boxShadow=`0 2px 12px rgba(92,19,34,0.06)`; }}>
+                  <span style={{ fontSize:'22px', flexShrink:0 }}>{icon}</span>
+                  <div>
+                    <p style={{ fontSize:'13px', fontWeight:700, color:C.text, lineHeight:1.2 }}>{label}</p>
+                    <p style={{ fontSize:'11px', color:C.textMut, marginTop:'2px' }}>{sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .techno-hero-grid { grid-template-columns: 1fr !important; }
+          .techno-hero-right { min-width: unset !important; }
+          .techno-hero-right > div { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; }
+          .techno-hero-right > div > div { flex: 1; min-width: 140px; }
+        }
+      `}</style>
     </section>
   );
 }
 
-/* ════ STATS ════ */
+/* ════════════════ STATS ════════════════ */
+/* pastel pink strip */
 function StatsBar() {
-  const stats = [['1yr+','Industry Experience'],['8+','Services Offered'],['50+','Projects Delivered'],['1:1','Personal Attention']];
+  const stats = [['1yr+','Experience'],['8+','Services'],['50+','Projects'],['1:1','Attention']];
   return (
-    <div style={{ background:'#120608', borderTop:'1px solid rgba(196,117,138,0.1)', borderBottom:'1px solid rgba(196,117,138,0.1)', padding:'28px 0' }}>
+    <div style={{ background:C.bg4, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, padding:'32px 0' }}>
       <div className="container">
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))', gap:'20px', textAlign:'center' }}>
-          {stats.map(([num,label]) => (
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(110px,1fr))', gap:'16px', textAlign:'center' }}>
+          {stats.map(([num, label]) => (
             <div key={label}>
-              <p style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(26px,4vw,38px)', color:'#C4758A', fontWeight:700, lineHeight:1 }}>{num}</p>
-              <p style={{ fontSize:'11px', color:'rgba(250,240,242,0.35)', letterSpacing:'2px', textTransform:'uppercase', marginTop:'5px' }}>{label}</p>
+              <p style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,4vw,42px)', color:C.textSub, fontWeight:700, lineHeight:1 }}>{num}</p>
+              <p style={{ fontSize:'11px', color:C.textMut, letterSpacing:'2px', textTransform:'uppercase', marginTop:'5px' }}>{label}</p>
             </div>
           ))}
         </div>
@@ -138,35 +233,45 @@ function StatsBar() {
   );
 }
 
-/* ════ ABOUT ════ */
+/* ════════════════ ABOUT ════════════════ */
+/* white background */
 function AboutSection() {
   const [ref, v] = useInView();
   return (
-    <section style={{ padding:'clamp(60px,8vw,100px) 0' }}>
+    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:C.white }}>
       <div className="container">
-        <div ref={ref} style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap:'clamp(36px,6vw,72px)', alignItems:'center', opacity:v?1:0, transform:v?'translateY(0)':'translateY(32px)', transition:'all 0.8s' }}>
+        <div ref={ref} style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,300px),1fr))', gap:'clamp(36px,6vw,72px)', alignItems:'center', opacity:v?1:0, transform:v?'translateY(0)':'translateY(26px)', transition:'all 0.75s ease' }}>
+
+          {/* Text */}
           <div>
-            <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:'#C4758A', marginBottom:'14px', fontFamily:'Space Mono' }}>// Who I Am</p>
-            <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,50px)', color:'#FAF0F2', fontWeight:300, marginBottom:'24px', lineHeight:1.2 }}>
+            <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:C.rose, marginBottom:'14px', fontWeight:600 }}>About Me</p>
+            <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,50px)', color:C.text, fontWeight:300, marginBottom:'18px', lineHeight:1.2 }}>
               Not an agency.<br />
-              <em style={{ fontStyle:'italic', color:'#C4758A' }}>Just me — and I mean it.</em>
+              <em style={{ fontStyle:'italic', color:C.textSub }}>Just me — and I mean it.</em>
             </h2>
-            <p style={{ fontSize:'15px', color:'rgba(250,240,242,0.58)', lineHeight:1.95, marginBottom:'16px', fontWeight:300 }}>
-              I'm <strong style={{ color:'#FAF0F2' }}>Vanshika Wadhwani</strong> — Full Stack Developer, designer, data analyst and digital strategist. I spent a year as a <span style={{ color:'#D4956A' }}>Full Stack Developer &amp; Tech Educator at Code Master Technology</span>, building real-world projects and teaching developers.
+            <div style={{ width:'48px', height:'2px', background:`linear-gradient(to right,${C.textSub},${C.rose})`, marginBottom:'20px', borderRadius:'2px' }} />
+            <p style={{ fontSize:'15px', color:C.textMid, lineHeight:1.95, marginBottom:'14px', fontWeight:300 }}>
+              I'm <strong style={{ color:C.text }}>Vanshika Wadhwani</strong> — Full Stack Developer, designer, data analyst and digital strategist. I spent a year as a <span style={{ color:C.textSub, fontWeight:600 }}>Full Stack Developer &amp; Tech Educator at Code Master Technology</span>, building real projects and teaching developers.
             </p>
-            <p style={{ fontSize:'15px', color:'rgba(250,240,242,0.58)', lineHeight:1.95, fontWeight:300 }}>
-              Now I bring that expertise directly to you as a solo freelancer. From sleek websites to predictive ML models — when you hire me, you get <em style={{ color:'#C4758A', fontStyle:'italic' }}>me</em>, not a junior.
+            <p style={{ fontSize:'15px', color:C.textMid, lineHeight:1.95, fontWeight:300 }}>
+              Now I bring that expertise directly to you. From sleek websites to predictive ML models — when you hire me, you get <em style={{ color:C.textSub, fontStyle:'italic' }}>me</em>, not a junior.
             </p>
           </div>
+
+          {/* Skill grid */}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'12px' }}>
-            {[['💻','Full Stack Dev','React, Node, MongoDB'],['📊','Data Analysis','Python, Power BI, Pandas'],['🤖','Machine Learning','Scikit-learn, TensorFlow'],['🎓','Tech Educator','Code Master Technology']].map(([icon,title,sub]) => (
-              <div key={title} style={{ padding:'18px', borderRadius:'16px', background:'rgba(255,255,255,0.03)', border:'1px solid rgba(196,117,138,0.12)', transition:'all 0.25s' }}
-                onMouseEnter={e=>{ e.currentTarget.style.background='rgba(196,117,138,0.06)'; e.currentTarget.style.borderColor='rgba(196,117,138,0.25)'; }}
-                onMouseLeave={e=>{ e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor='rgba(196,117,138,0.12)'; }}>
-                <span style={{ fontSize:'24px', marginBottom:'8px', display:'block' }}>{icon}</span>
-                <p style={{ fontSize:'13px', fontWeight:600, color:'#FAF0F2', marginBottom:'3px' }}>{title}</p>
-                <p style={{ fontSize:'11px', color:'rgba(250,240,242,0.38)' }}>{sub}</p>
-              </div>
+            {[
+              ['💻','Full Stack Dev','React, Node, MongoDB'],
+              ['📊','Data Analysis','Python, Power BI, Pandas'],
+              ['🤖','Machine Learning','Scikit-learn, TensorFlow'],
+              ['🎓','Tech Educator','Code Master Technology'],
+            ].map(([icon, title, sub]) => (
+              <motion.div key={title} whileHover={{ y:-4, boxShadow:`0 10px 24px rgba(92,19,34,0.1)` }}
+                style={{ padding:'20px 16px', borderRadius:'18px', background:C.bg2, border:`1.5px solid ${C.border}`, transition:'all 0.22s', cursor:'default' }}>
+                <span style={{ fontSize:'26px', display:'block', marginBottom:'10px' }}>{icon}</span>
+                <p style={{ fontSize:'13px', fontWeight:700, color:C.text, marginBottom:'4px' }}>{title}</p>
+                <p style={{ fontSize:'11px', color:C.textMut, lineHeight:1.5 }}>{sub}</p>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -175,22 +280,22 @@ function AboutSection() {
   );
 }
 
-/* ════ SERVICES ════ */
+/* ════════════════ SERVICES ════════════════ */
+/* pastel pink section */
 function ServicesSection() {
-  const [ref, v] = useInView();
   return (
-    <section id="services" style={{ padding:'clamp(60px,8vw,100px) 0', background:'#120608' }}>
+    <section id="services" style={{ padding:'clamp(60px,8vw,100px) 0', background:C.bg3 }}>
       <div className="container">
-        <motion.div {...fv(0)} style={{ marginBottom:'56px' }}>
-          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:'#C4758A', marginBottom:'10px', fontFamily:'Space Mono' }}>// What I Offer</p>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,50px)', color:'#FAF0F2', fontWeight:300 }}>
-            Services <em style={{ fontStyle:'italic', color:'#C4758A' }}>à la carte</em>
+        <motion.div {...fv(0)} style={{ textAlign:'center', marginBottom:'52px' }}>
+          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:C.rose, marginBottom:'10px', fontWeight:600 }}>What I Offer</p>
+          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,52px)', color:C.text, fontWeight:300 }}>
+            Services <em style={{ fontStyle:'italic', color:C.textSub }}>à la carte</em>
           </h2>
-          <p style={{ fontSize:'14px', color:'rgba(250,240,242,0.4)', marginTop:'10px' }}>Each service delivered personally. No outsourcing, no middlemen.</p>
+          <p style={{ fontSize:'14px', color:C.textMut, marginTop:'10px' }}>Each service delivered personally — no outsourcing, no middlemen.</p>
         </motion.div>
 
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,290px),1fr))', gap:'18px' }}>
-          {SERVICES.map((s,i) => <ServiceCard key={s.title} service={s} delay={i*0.05} />)}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,260px),1fr))', gap:'16px' }}>
+          {SERVICES.map((s, i) => <ServiceCard key={s.title} service={s} delay={i * 0.05} />)}
         </div>
       </div>
     </section>
@@ -199,172 +304,237 @@ function ServicesSection() {
 
 function ServiceCard({ service, delay }) {
   const [hov, setHov] = useState(false);
+  const accent = CAT_COLOR[service.cat] || C.textSub;
   return (
-    <motion.div {...fv(delay)}
-      onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{
-        padding:'clamp(22px,3vw,34px)', borderRadius:'20px', height:'100%',
-        background:hov?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.02)',
-        border:hov?`1px solid ${service.color}40`:'1px solid rgba(255,255,255,0.06)',
-        transition:'all 0.32s', transform:hov?'translateY(-5px)':'translateY(0)',
-        boxShadow:hov?`0 18px 44px rgba(0,0,0,0.32),inset 0 1px 0 ${service.color}18`:'none',
-        position:'relative', overflow:'hidden', display:'flex', flexDirection:'column',
-      }}>
-      {hov && <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background:`linear-gradient(90deg,transparent,${service.color},transparent)` }} />}
-      <span style={{ fontSize:'32px', marginBottom:'16px', display:'block' }}>{service.icon}</span>
-      <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'20px', fontWeight:600, color:'#FAF0F2', marginBottom:'10px' }}>{service.title}</h3>
-      <p style={{ fontSize:'13px', color:'rgba(250,240,242,0.5)', lineHeight:1.82, marginBottom:'18px', fontWeight:300, flex:1 }}>{service.desc}</p>
-      <div style={{ display:'flex', flexWrap:'wrap', gap:'5px', marginBottom:'16px' }}>
-        {service.tags.map(t=>(
-          <span key={t} style={{ padding:'3px 10px', borderRadius:'20px', fontSize:'11px', background:`${service.color}12`, color:service.color, border:`1px solid ${service.color}20`, fontFamily:'Space Mono' }}>{t}</span>
-        ))}
+    <motion.div {...fv(delay)}>
+      <div
+        onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+        style={{
+          padding:'clamp(20px,2.5vw,28px)', borderRadius:'20px', height:'100%',
+          background: hov ? C.white : C.white,
+          border: `1.5px solid ${hov ? C.bdHov : C.border}`,
+          transition:'all 0.28s ease',
+          transform: hov ? 'translateY(-5px)' : 'translateY(0)',
+          boxShadow: hov ? `0 14px 36px rgba(92,19,34,0.1)` : '0 2px 8px rgba(92,19,34,0.04)',
+          position:'relative', overflow:'hidden', display:'flex', flexDirection:'column', cursor:'default',
+        }}
+      >
+        {/* Top colour bar on hover */}
+        <div style={{ position:'absolute', top:0, left:0, right:0, height:'3px', background:`linear-gradient(90deg,${C.textSub},${accent},${C.rose})`, borderRadius:'20px 20px 0 0', opacity: hov ? 1 : 0, transition:'opacity 0.28s' }} />
+
+        <span style={{ fontSize:'30px', marginBottom:'14px', display:'block' }}>{service.icon}</span>
+        <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'19px', fontWeight:700, color:C.text, marginBottom:'9px' }}>{service.title}</h3>
+        <p style={{ fontSize:'13px', color:C.textMut, lineHeight:1.8, marginBottom:'16px', fontWeight:300, flex:1 }}>{service.desc}</p>
+
+        {/* Tags */}
+        <div style={{ display:'flex', flexWrap:'wrap', gap:'5px', marginBottom:'16px' }}>
+          {service.tags.map(t => (
+            <span key={t} style={{ padding:'3px 10px', borderRadius:'20px', fontSize:'11px', background:`${accent}10`, color:accent, border:`1px solid ${accent}25`, fontWeight:500 }}>{t}</span>
+          ))}
+        </div>
+
+        <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi Vanshika! I'm interested in your ${service.title} service 💻`)}`}
+          target="_blank" rel="noopener noreferrer"
+          style={{ fontSize:'13px', color:accent, fontWeight:700, display:'flex', alignItems:'center', gap:'5px', transition:'gap 0.2s' }}
+          onMouseEnter={e => e.currentTarget.style.gap='9px'}
+          onMouseLeave={e => e.currentTarget.style.gap='5px'}>
+          Get a Quote →
+        </a>
       </div>
-      <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi Vanshika! I'm interested in your ${service.title} service 💻`)}`}
-        target="_blank" rel="noopener noreferrer"
-        style={{ fontSize:'13px', color:service.color, display:'flex', alignItems:'center', gap:'6px', transition:'gap 0.2s' }}
-        onMouseEnter={e=>e.currentTarget.style.gap='10px'}
-        onMouseLeave={e=>e.currentTarget.style.gap='6px'}>
-        Get a Quote →
-      </a>
     </motion.div>
   );
 }
 
-/* ════ PROJECTS ════ */
+/* ════════════════ PROJECTS ════════════════ */
+/* white background */
 function ProjectsSection({ projects, loading }) {
   const [filter, setFilter] = useState('All');
   const allCats = ['All', ...new Set(projects.map(p => p.category).filter(Boolean))];
-  const filtered = filter === 'All' ? projects : projects.filter(p => p.category === filter);
+
+  const isCMT  = p => p.org?.toLowerCase().includes('code master');
+  const cmtList  = projects.filter(p => (filter === 'All' || p.category === filter) && isCMT(p));
+  const freeList = projects.filter(p => (filter === 'All' || p.category === filter) && !isCMT(p));
 
   return (
-    <section style={{ padding:'clamp(60px,8vw,100px) 0' }}>
+    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:C.white }}>
       <div className="container">
-        <motion.div {...fv(0)} style={{ marginBottom:'44px' }}>
-          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:'#D4956A', marginBottom:'10px', fontFamily:'Space Mono' }}>// Portfolio</p>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,50px)', color:'#FAF0F2', fontWeight:300, lineHeight:1.15 }}>
-            Projects at <em style={{ fontStyle:'italic', color:'#D4956A' }}>Code Master Technology</em><br />
-            <span style={{ fontSize:'55%', color:'rgba(250,240,242,0.38)', fontStyle:'normal' }}>&amp; Freelance Work</span>
-          </h2>
+        <motion.div {...fv(0)} style={{ marginBottom:'36px' }}>
+          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:C.rose, marginBottom:'10px', fontWeight:600 }}>Portfolio</p>
+          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,52px)', color:C.text, fontWeight:300, lineHeight:1.15 }}>My Work</h2>
+          <p style={{ fontSize:'15px', color:C.textMut, marginTop:'8px' }}>Projects at Code Master Technology &amp; freelance engagements</p>
         </motion.div>
 
-        {/* Category filter */}
-        <div style={{ display:'flex', gap:'8px', flexWrap:'wrap', marginBottom:'32px' }}>
+        {/* Filter pills */}
+        <div style={{ display:'flex', gap:'7px', flexWrap:'wrap', marginBottom:'36px' }}>
           {allCats.map(c => (
-            <button key={c} onClick={()=>setFilter(c)}
-              style={{ padding:'7px 16px', borderRadius:'40px', fontSize:'12px', cursor:'pointer', fontFamily:'DM Sans', transition:'all 0.22s', background:filter===c?'linear-gradient(135deg,#6B1A2A,#C4758A)':'rgba(255,255,255,0.04)', color:filter===c?'#fff':'rgba(250,240,242,0.5)', border:filter===c?'none':'1px solid rgba(255,255,255,0.08)', fontWeight:filter===c?600:400, display:'flex', alignItems:'center', gap:'5px' }}>
-              {CAT_COLORS[c] && c!=='All' && <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:CAT_COLORS[c], display:'inline-block' }} />}
+            <button key={c} onClick={() => setFilter(c)}
+              style={{ padding:'7px 16px', borderRadius:'40px', fontSize:'12px', cursor:'pointer', fontFamily:'DM Sans', transition:'all 0.2s', background:filter===c?`linear-gradient(135deg,${C.textSub},${C.rose})`:C.bg2, color:filter===c?'#fff':C.textMid, border:filter===c?'none':`1.5px solid ${C.border}`, fontWeight:filter===c?700:400 }}>
               {c}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,300px),1fr))', gap:'20px' }}>
-            {[1,2,3,4,5,6].map(i=>(
-              <div key={i} style={{ borderRadius:'18px', overflow:'hidden', background:'#221215', border:'1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ height:'160px', background:'linear-gradient(90deg,#221215,#2A1218,#221215)', backgroundSize:'200% 100%', animation:'shimmer 1.5s infinite' }} />
-                <div style={{ padding:'18px' }}>
-                  <div style={{ height:'16px', background:'#2A1218', borderRadius:'4px', marginBottom:'8px' }} />
-                  <div style={{ height:'12px', width:'60%', background:'#1E0C10', borderRadius:'4px' }} />
+          <SkeletonGrid />
+        ) : (
+          <>
+            {cmtList.length > 0 && (
+              <div style={{ marginBottom:'52px' }}>
+                <SectionDivider icon="🏢" title="Code Master Technology" sub="During my tenure as Full Stack Developer & Tech Educator" count={cmtList.length} />
+                <div className="proj-grid-4">
+                  {cmtList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div style={{ textAlign:'center', padding:'60px 0', color:'rgba(250,240,242,0.35)' }}>
-            <span style={{ fontSize:'48px', display:'block', marginBottom:'12px' }}>💻</span>
-            <p style={{ fontFamily:'Cormorant Garamond', fontSize:'22px', fontStyle:'italic' }}>No projects in this category yet</p>
-          </div>
-        ) : (
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,300px),1fr))', gap:'20px' }}>
-            {filtered.map((p,i) => <ProjectCard key={p._id} project={p} delay={i*0.05} />)}
-          </div>
+            )}
+
+            {freeList.length > 0 && (
+              <div>
+                <SectionDivider icon="💼" title="Freelance Work" sub="Independent projects and client engagements" count={freeList.length} />
+                <div className="proj-grid-4">
+                  {freeList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
+                </div>
+              </div>
+            )}
+
+            {cmtList.length === 0 && freeList.length === 0 && (
+              <div style={{ textAlign:'center', padding:'60px 0' }}>
+                <span style={{ fontSize:'44px', display:'block', marginBottom:'12px' }}>💻</span>
+                <p style={{ fontFamily:'Cormorant Garamond', fontSize:'22px', color:C.textMid, fontStyle:'italic' }}>No projects in this category yet</p>
+              </div>
+            )}
+          </>
         )}
       </div>
+
+      <style>{`
+        .proj-grid-4 {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+        }
+        @media (max-width: 1100px) { .proj-grid-4 { grid-template-columns: repeat(3,1fr); } }
+        @media (max-width:  768px) { .proj-grid-4 { grid-template-columns: repeat(2,1fr); gap:12px; } }
+        @media (max-width:  420px) { .proj-grid-4 { grid-template-columns: repeat(2,1fr); gap:10px; } }
+      `}</style>
     </section>
   );
 }
 
-function ProjectCard({ project, delay }) {
-  const [hov, setHov] = useState(false);
-  const accentColor = CAT_COLORS[project.category] || '#C4758A';
+function SectionDivider({ icon, title, sub, count }) {
   return (
-    <motion.div {...fv(delay)}
-      onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{ borderRadius:'20px', overflow:'hidden', background:'#221215', border:hov?`1px solid ${accentColor}40`:'1px solid rgba(255,255,255,0.06)', transition:'all 0.35s', transform:hov?'translateY(-6px)':'translateY(0)', boxShadow:hov?'0 22px 50px rgba(0,0,0,0.4)':'0 2px 10px rgba(0,0,0,0.2)' }}>
-      {/* Image */}
-      <div style={{ height:'170px', background:`linear-gradient(135deg,#2A1218,#3D1020)`, position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
-        {project.image
-          ? <img src={project.image} alt={project.title} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.45s', transform:hov?'scale(1.06)':'scale(1)' }} />
-          : <span style={{ fontSize:'44px', opacity:0.18 }}>💻</span>}
-        {/* Category */}
-        <div style={{ position:'absolute', top:'11px', right:'11px', padding:'4px 11px', borderRadius:'20px', background:`rgba(34,18,21,0.85)`, backdropFilter:'blur(8px)', color:accentColor, fontSize:'11px', fontFamily:'Space Mono', border:`1px solid ${accentColor}30` }}>
-          {project.category}
-        </div>
-        {/* Org */}
-        {project.org && (
-          <div style={{ position:'absolute', bottom:'11px', left:'11px', padding:'3px 10px', borderRadius:'20px', background:'rgba(212,149,106,0.15)', border:'1px solid rgba(212,149,106,0.3)', color:'#D4956A', fontSize:'10px' }}>
-            🏢 {project.org}
-          </div>
-        )}
-        {project.featured && (
-          <div style={{ position:'absolute', top:'11px', left:'11px', padding:'3px 10px', borderRadius:'20px', background:'linear-gradient(135deg,#6B1A2A,#C4758A)', color:'#fff', fontSize:'10px', fontWeight:600 }}>⭐ Featured</div>
-        )}
+    <div style={{ display:'flex', alignItems:'center', gap:'12px', marginBottom:'22px', paddingBottom:'14px', borderBottom:`1.5px solid ${C.border}` }}>
+      <div style={{ width:'36px', height:'36px', borderRadius:'10px', background:`linear-gradient(135deg,${C.textSub},${C.rose})`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'18px', flexShrink:0 }}>{icon}</div>
+      <div>
+        <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(17px,2.5vw,22px)', color:C.text, fontWeight:700 }}>{title}</h3>
+        <p style={{ fontSize:'12px', color:C.textMut, marginTop:'2px' }}>{sub}</p>
       </div>
+      <span style={{ marginLeft:'auto', padding:'3px 12px', borderRadius:'20px', background:C.bg3, color:C.textSub, fontSize:'12px', fontWeight:700, flexShrink:0 }}>{count}</span>
+    </div>
+  );
+}
 
-      <div style={{ padding:'18px 20px' }}>
-        <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'18px', color:'#FAF0F2', marginBottom:'7px', fontWeight:600, lineHeight:1.3 }}>{project.title}</h3>
-        <p style={{ fontSize:'13px', color:'rgba(250,240,242,0.45)', lineHeight:1.72, marginBottom:'14px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{project.description}</p>
-        {project.tech?.length > 0 && (
-          <div style={{ display:'flex', flexWrap:'wrap', gap:'5px', marginBottom:'14px' }}>
-            {project.tech.slice(0,4).map(t=>(
-              <span key={t} style={{ padding:'2px 9px', borderRadius:'20px', fontSize:'11px', background:`${accentColor}12`, color:accentColor, fontFamily:'Space Mono' }}>{t}</span>
-            ))}
-          </div>
-        )}
-        {project.link && (
-          <a href={project.link} target="_blank" rel="noopener noreferrer"
-            style={{ fontSize:'13px', color:accentColor, display:'flex', alignItems:'center', gap:'5px', transition:'gap 0.18s' }}
-            onMouseEnter={e=>e.currentTarget.style.gap='9px'}
-            onMouseLeave={e=>e.currentTarget.style.gap='5px'}>
-            View Project →
-          </a>
-        )}
+function ProjectCard({ project: p, delay }) {
+  const [hov, setHov] = useState(false);
+  const accent = CAT_COLOR[p.category] || C.textSub;
+  return (
+    <motion.div {...fv(delay)}>
+      <div
+        onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+        style={{ borderRadius:'16px', overflow:'hidden', background:C.white, border:`1.5px solid ${hov ? C.bdHov : C.border}`, transition:'all 0.28s', transform:hov?'translateY(-5px)':'translateY(0)', boxShadow:hov?`0 14px 36px rgba(92,19,34,0.1)`:'0 2px 8px rgba(92,19,34,0.04)' }}>
+
+        {/* Thumbnail */}
+        <div style={{ height:'130px', background:`linear-gradient(135deg,${C.bg3},${C.bg2})`, position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          {p.image
+            ? <img src={p.image} alt={p.title} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.4s', transform:hov?'scale(1.06)':'scale(1)' }} />
+            : <span style={{ fontSize:'34px', opacity:0.22 }}>💻</span>}
+          {p.category && (
+            <div style={{ position:'absolute', top:'8px', right:'8px', padding:'3px 9px', borderRadius:'20px', background:'rgba(255,255,255,0.9)', backdropFilter:'blur(6px)', color:C.textSub, fontSize:'10px', fontWeight:700, border:`1px solid ${C.border}` }}>
+              {p.category}
+            </div>
+          )}
+          {p.featured && (
+            <div style={{ position:'absolute', top:'8px', left:'8px', padding:'3px 9px', borderRadius:'20px', background:`linear-gradient(135deg,${C.textSub},${C.rose})`, color:'#fff', fontSize:'10px', fontWeight:700 }}>⭐</div>
+          )}
+        </div>
+
+        <div style={{ padding:'13px 15px' }}>
+          <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'15px', color:C.text, fontWeight:700, marginBottom:'5px', lineHeight:1.3, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.title}</h3>
+          {p.org && <p style={{ fontSize:'10px', color:C.textMut, marginBottom:'6px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>🏢 {p.org}</p>}
+          <p style={{ fontSize:'12px', color:C.textMut, lineHeight:1.65, marginBottom:'10px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{p.description}</p>
+          {p.tech?.length > 0 && (
+            <div style={{ display:'flex', flexWrap:'wrap', gap:'4px', marginBottom:'10px' }}>
+              {p.tech.slice(0,3).map(t => (
+                <span key={t} style={{ padding:'2px 8px', borderRadius:'20px', fontSize:'10px', background:`${accent}0F`, color:accent, fontWeight:600 }}>{t}</span>
+              ))}
+              {p.tech.length > 3 && <span style={{ fontSize:'10px', color:C.textLt }}>+{p.tech.length-3}</span>}
+            </div>
+          )}
+          {p.link && (
+            <a href={p.link} target="_blank" rel="noopener noreferrer"
+              style={{ fontSize:'12px', color:accent, fontWeight:700, display:'flex', alignItems:'center', gap:'4px', transition:'gap 0.18s' }}
+              onMouseEnter={e => e.currentTarget.style.gap='7px'}
+              onMouseLeave={e => e.currentTarget.style.gap='4px'}>
+              View Project →
+            </a>
+          )}
+        </div>
       </div>
     </motion.div>
   );
 }
 
-/* ════ JOIN ════ */
+function SkeletonGrid() {
+  return (
+    <div className="proj-grid-4">
+      {[1,2,3,4,5,6,7,8].map(i => (
+        <div key={i} style={{ borderRadius:'16px', overflow:'hidden', background:C.bg2, border:`1.5px solid ${C.border}` }}>
+          <div style={{ height:'130px', background:`linear-gradient(90deg,${C.bg3},${C.petal},${C.bg3})`, backgroundSize:'200% 100%', animation:'shimmer 1.5s infinite' }} />
+          <div style={{ padding:'13px' }}>
+            <div style={{ height:'13px', background:C.bg3, borderRadius:'4px', marginBottom:'7px' }} />
+            <div style={{ height:'10px', width:'60%', background:C.petal, borderRadius:'4px' }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ════════════════ JOIN ════════════════ */
+/* pastel pink section */
 function JoinSection() {
   return (
-    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:'#120608' }}>
+    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:C.bg3 }}>
       <div className="container">
-        <motion.div {...fv(0)} style={{ maxWidth:'700px', margin:'0 auto', textAlign:'center' }}>
-          <div style={{ display:'inline-flex', gap:'8px', padding:'5px 18px', borderRadius:'40px', background:'rgba(212,149,106,0.08)', border:'1px solid rgba(212,149,106,0.2)', marginBottom:'24px' }}>
-            <span style={{ fontSize:'11px', letterSpacing:'3px', textTransform:'uppercase', color:'#D4956A', fontFamily:'Space Mono' }}>Collaborate</span>
+        <motion.div {...fv(0)} style={{ maxWidth:'680px', margin:'0 auto', textAlign:'center' }}>
+          <div style={{ display:'inline-flex', padding:'5px 18px', borderRadius:'40px', background:C.white, border:`1.5px solid ${C.border}`, marginBottom:'24px' }}>
+            <span style={{ fontSize:'11px', letterSpacing:'3px', textTransform:'uppercase', color:C.textSub, fontWeight:700 }}>Collaborate</span>
           </div>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,48px)', color:'#FAF0F2', fontWeight:300, marginBottom:'20px', lineHeight:1.2 }}>
+          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(26px,5vw,46px)', color:C.text, fontWeight:300, marginBottom:'18px', lineHeight:1.2 }}>
             Work as Part of My<br />
-            <em style={{ fontStyle:'italic', background:'linear-gradient(135deg,#D4956A,#C4758A)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>Freelance Network</em>
+            <em style={{ fontStyle:'italic', color:C.textSub }}>Freelance Network</em>
           </h2>
-          <p style={{ fontSize:'15px', color:'rgba(250,240,242,0.5)', lineHeight:1.95, marginBottom:'14px', fontWeight:300 }}>
-            I occasionally collaborate with fellow developers, designers, data analysts and content creators on client projects. If you're passionate and want real-world experience — let's connect.
+          <div style={{ width:'48px', height:'2px', background:`linear-gradient(to right,${C.textSub},${C.rose})`, margin:'0 auto 20px', borderRadius:'2px' }} />
+          <p style={{ fontSize:'15px', color:C.textMid, lineHeight:1.95, marginBottom:'14px', fontWeight:300 }}>
+            I occasionally collaborate with developers, designers, data analysts and content creators on real client projects. Passionate about your craft and want experience? Let's connect.
           </p>
-          <p style={{ fontSize:'15px', color:'rgba(250,240,242,0.5)', lineHeight:1.95, marginBottom:'40px', fontWeight:300 }}>
-            Fresher looking for mentorship or a professional wanting collaboration — I believe in building together.
+          <p style={{ fontSize:'15px', color:C.textMid, lineHeight:1.95, marginBottom:'36px', fontWeight:300 }}>
+            Fresher looking for mentorship or a professional wanting collaboration — I believe in building together, not just building products.
           </p>
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))', gap:'12px', marginBottom:'40px' }}>
-            {[['🚀','Real Projects'],['💡','Mentorship'],['🌐','Remote Work'],['📈','Portfolio Growth']].map(([e,l])=>(
-              <div key={l} style={{ padding:'16px 10px', borderRadius:'14px', background:'rgba(255,255,255,0.03)', border:'1px solid rgba(196,117,138,0.12)', textAlign:'center' }}>
+
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))', gap:'12px', marginBottom:'36px' }}>
+            {[['🚀','Real Projects'],['💡','Mentorship'],['🌐','Remote Work'],['📈','Portfolio Growth']].map(([e,l]) => (
+              <div key={l} style={{ padding:'16px 10px', borderRadius:'14px', background:C.white, border:`1.5px solid ${C.border}`, textAlign:'center', boxShadow:'0 2px 8px rgba(92,19,34,0.04)' }}>
                 <span style={{ fontSize:'22px', display:'block', marginBottom:'7px' }}>{e}</span>
-                <p style={{ fontSize:'12px', color:'rgba(250,240,242,0.42)', lineHeight:1.4 }}>{l}</p>
+                <p style={{ fontSize:'12px', color:C.textMut, lineHeight:1.4 }}>{l}</p>
               </div>
             ))}
           </div>
+
           <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi Vanshika! I'd love to collaborate with you 🙋")}`}
             target="_blank" rel="noopener noreferrer"
-            style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'14px 34px', borderRadius:'50px', background:'linear-gradient(135deg,#6B1A2A,#C4758A)', color:'#fff', fontWeight:600, fontSize:'15px', boxShadow:'0 8px 28px rgba(107,26,42,0.35)' }}>
+            style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'14px 34px', borderRadius:'50px', background:`linear-gradient(135deg,${C.textSub},${C.rose})`, color:'#fff', fontWeight:700, fontSize:'15px', boxShadow:`0 8px 24px rgba(92,19,34,0.22)`, transition:'all 0.28s' }}
+            onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow=`0 12px 32px rgba(92,19,34,0.32)`; }}
+            onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=`0 8px 24px rgba(92,19,34,0.22)`; }}>
             💬 Let's Connect on WhatsApp
           </a>
         </motion.div>
@@ -373,24 +543,38 @@ function JoinSection() {
   );
 }
 
-/* ════ FINAL CTA ════ */
-function TechnoCTA() {
+/* ════════════════ CTA ════════════════ */
+/* soft burgundy → rose gradient — the ONLY section with a coloured bg,
+   kept intentionally for contrast as a final call to action              */
+function CtaSection() {
   return (
-    <section style={{ padding:'clamp(56px,7vw,88px) 0', background:'linear-gradient(135deg,#2A0A12 0%,#6B1A2A 50%,#C4758A 100%)', textAlign:'center', position:'relative', overflow:'hidden' }}>
-      <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px)', backgroundSize:'48px 48px', pointerEvents:'none' }} />
+    <section style={{ padding:'clamp(56px,7vw,88px) 0', background:`linear-gradient(135deg,${C.textSub} 0%, #A84060 50%, ${C.rose} 100%)`, textAlign:'center', position:'relative', overflow:'hidden' }}>
+      <div style={{ position:'absolute', top:'-60px', right:'-60px', width:'260px', height:'260px', borderRadius:'50%', background:'rgba(255,255,255,0.07)', pointerEvents:'none' }} />
+      <div style={{ position:'absolute', bottom:'-40px', left:'-40px', width:'200px', height:'200px', borderRadius:'50%', background:'rgba(255,255,255,0.05)', pointerEvents:'none' }} />
+      {/* Light grid overlay */}
+      <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.06) 1px,transparent 1px)', backgroundSize:'52px 52px', pointerEvents:'none' }} />
+
       <div className="container" style={{ position:'relative', zIndex:1 }}>
         <motion.div {...fv(0)}>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,48px)', color:'#fff', fontWeight:300, marginBottom:'14px', fontStyle:'italic' }}>Ready to build something great?</h2>
-          <p style={{ color:'rgba(255,255,255,0.7)', fontSize:'16px', marginBottom:'34px', maxWidth:'440px', margin:'0 auto 34px', lineHeight:1.8 }}>
-            Let's have a conversation. No commitment, no pressure — just exploring what's possible for your brand.
+          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:'rgba(255,255,255,0.65)', marginBottom:'14px' }}>Get Started</p>
+          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,50px)', color:'#fff', fontWeight:300, marginBottom:'14px', fontStyle:'italic' }}>
+            Ready to build something great?
+          </h2>
+          <p style={{ color:'rgba(255,255,255,0.78)', fontSize:'16px', marginBottom:'36px', maxWidth:'440px', margin:'0 auto 36px', lineHeight:1.8 }}>
+            No commitment, no pressure — just a conversation about what's possible for your brand.
           </p>
           <div style={{ display:'flex', gap:'12px', justifyContent:'center', flexWrap:'wrap' }}>
-            <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I want to discuss a tech project 💻")}`} target="_blank" rel="noopener noreferrer"
-              style={{ padding:'13px 30px', borderRadius:'50px', background:'#25D366', color:'#fff', fontWeight:600, fontSize:'14px', boxShadow:'0 6px 18px rgba(0,0,0,0.2)', display:'flex', alignItems:'center', gap:'7px' }}>
+            <a href={`https://wa.me/${WA}?text=${encodeURIComponent("Hi! I want to discuss a tech project 💻")}`}
+              target="_blank" rel="noopener noreferrer"
+              style={{ padding:'13px 30px', borderRadius:'50px', background:'#25D366', color:'#fff', fontWeight:700, fontSize:'14px', boxShadow:'0 6px 18px rgba(0,0,0,0.18)', display:'flex', alignItems:'center', gap:'7px', transition:'all 0.25s' }}
+              onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
+              onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
               💬 WhatsApp
             </a>
             <a href="mailto:soulfulscribble@gmail.com"
-              style={{ padding:'13px 30px', borderRadius:'50px', background:'rgba(255,255,255,0.12)', color:'#fff', fontWeight:500, fontSize:'14px', border:'1px solid rgba(255,255,255,0.25)', backdropFilter:'blur(8px)' }}>
+              style={{ padding:'13px 30px', borderRadius:'50px', background:'rgba(255,255,255,0.15)', color:'#fff', fontWeight:500, fontSize:'14px', border:'1.5px solid rgba(255,255,255,0.32)', backdropFilter:'blur(8px)', transition:'all 0.25s' }}
+              onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.24)'}
+              onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.15)'}>
               ✉️ Email
             </a>
           </div>
