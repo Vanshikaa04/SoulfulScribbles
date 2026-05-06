@@ -58,13 +58,17 @@ export default function App() {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <div style={{ textAlign: 'center' }}>
+<div style={{ textAlign: 'center'  , justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'  }}>
+
+        <div style={{ borderRadius:'50%', background: '#ffffff',width:"100px",padding:"5%" ,height:"100px", display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+         
           <img
             src="/logo.png"
             alt="Soulful Scribble"
-            style={{ width: '80px', opacity: 0.8, marginBottom: '20px' }}
+            style={{ width: '80px', opacity: 0.8,  }}
             onError={e => e.target.style.display = 'none'}
           />
+          </div>
           <div style={{
             fontFamily: 'Cormorant Garamond',
             fontSize: '28px',
