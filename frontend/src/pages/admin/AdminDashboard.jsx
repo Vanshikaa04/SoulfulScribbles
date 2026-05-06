@@ -17,11 +17,28 @@ export default function AdminDashboard() {
   //   return () => clearInterval(id);
   // }, []);
 
-  const logout = async () => {
-    await fetch(`${backendurl}/api/auth/logout`, { method: 'POST', credentials: 'include' });
-    setAdmin(null);
-    navigate('/admin/login');
-  };
+const logout = async () => {
+  try {
+    // Optional: call backend if you want
+    await fetch(`${backendurl}/api/auth/logout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+  } catch (err) {
+    console.log("Logout API failed (safe to ignore)");
+  }
+
+  // ✅ IMPORTANT: remove token
+  localStorage.removeItem("token");
+
+  // ✅ clear admin state
+  setAdmin(null);
+
+  // ✅ redirect
+  navigate('/admin/login');
+};
 
   const navItems = [
     { path: '/admin/products', icon: '🎁', label: 'Products', sub: 'Gifting Hub' },

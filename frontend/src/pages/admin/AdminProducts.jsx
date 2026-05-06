@@ -36,11 +36,16 @@ export default function AdminProducts() {
 
   const fetchProds = () => {
     setLoading(true);
-    fetch(`${backendurl}/api/products`, { credentials:'include' })
-      .then(r => r.json()).then(d => { setProducts(Array.isArray(d)?d:[]); setLoading(false); })
+    fetch(`${backendurl}/api/products`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+      .then(r => r.json())
+      .then(d => { setProducts(Array.isArray(d)?d:[]); setLoading(false); })
       .catch(() => setLoading(false));
   };
-  // re-fetch when parent auto-refreshes
+
   useEffect(fetchProds, [ctx.lastRefresh]);
 
   const toast = (text, type='ok') => { setMsg({ text, type }); setTimeout(()=>setMsg({ text:'', type:'' }), 3500); };
@@ -64,13 +69,25 @@ export default function AdminProducts() {
   const removeExisting = async url => {
     if (editId) {
       try {
-        await fetch(`${backendurl}/api/products/${editId}/images`, { method:'DELETE', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ imageUrl:url }) });
+        await fetch(`${backendurl}/api/products/${editId}/images`, {
+          method:'DELETE',
+          headers:{
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({ imageUrl:url })
+        });
         toast('Image removed');
       } catch { toast('Remove failed','err'); return; }
     }
     setExistingImages(p => p.filter(u => u !== url));
   };
-  const removeNew = i => { URL.revokeObjectURL(previews[i]); setPreviews(p=>p.filter((_,x)=>x!==i)); setNewFiles(p=>p.filter((_,x)=>x!==i)); };
+
+  const removeNew = i => {
+    URL.revokeObjectURL(previews[i]);
+    setPreviews(p=>p.filter((_,x)=>x!==i));
+    setNewFiles(p=>p.filter((_,x)=>x!==i));
+  };
 
   const save = async () => {
     if (!form.name.trim()) return toast('Product name is required','err');
@@ -78,32 +95,101 @@ export default function AdminProducts() {
     setSaving(true);
     try {
       let pid = editId;
+
       if (!editId) {
-        const res = await fetch(`${backendurl}/api/products`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ ...form, price:Number(form.price)||0, images:[] }) });
-        const d = await res.json(); if (!res.ok) throw new Error(d.message||'Create failed'); pid = d._id;
+        const res = await fetch(`${backendurl}/api/products`, {
+          method:'POST',
+          headers:{
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({ ...form, price:Number(form.price)||0, images:[] })
+        });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.message||'Create failed');
+        pid = d._id;
       } else {
-        const res = await fetch(`${backendurl}/api/products/${editId}`, { method:'PUT', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ ...form, price:Number(form.price)||0 }) });
+        const res = await fetch(`${backendurl}/api/products/${editId}`, {
+          method:'PUT',
+          headers:{
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({ ...form, price:Number(form.price)||0 })
+        });
         if (!res.ok) throw new Error('Update failed');
       }
+
       if (newFiles.length) {
         setUploading(true);
         const urls = [];
+
         for (const file of newFiles) {
-          const fd = new FormData(); fd.append('file', file);
-          const r = await fetch(`${backendurl}/api/upload`, { method:'POST', credentials:'include', body:fd });
-          const d = await r.json(); if (d.url) urls.push(d.url);
+          const fd = new FormData();
+          fd.append('file', file);
+
+          const r = await fetch(`${backendurl}/api/upload`, {
+            method:'POST',
+            headers:{
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            body:fd
+          });
+
+          const d = await r.json();
+          if (d.url) urls.push(d.url);
         }
-        if (urls.length) await fetch(`${backendurl}/api/products/${pid}/images`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ imageUrls:urls }) });
+
+        if (urls.length) {
+          await fetch(`${backendurl}/api/products/${pid}/images`, {
+            method:'POST',
+            headers:{
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({ imageUrls:urls })
+          });
+        }
+
         setUploading(false);
       }
-      fetchProds(); setShowForm(false); toast(editId?'Product updated!':'Product created!');
-    } catch(err) { toast(err.message,'err'); setUploading(false); } finally { setSaving(false); }
+
+      fetchProds();
+      setShowForm(false);
+      toast(editId?'Product updated!':'Product created!');
+
+    } catch(err) {
+      toast(err.message,'err');
+      setUploading(false);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const toggleFeatured = async id => { await fetch(`${backendurl}/api/products/${id}/featured`, { method:'PATCH', credentials:'include' }); fetchProds(); };
-  const confirmDelete  = async () => {
-    try { await fetch(`${backendurl}/api/products/${deleteId}`, { method:'DELETE', credentials:'include' }); fetchProds(); setDeleteId(null); toast('Deleted!'); }
-    catch { toast('Delete failed','err'); }
+  const toggleFeatured = async id => {
+    await fetch(`${backendurl}/api/products/${id}/featured`, {
+      method:'PATCH',
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    fetchProds();
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await fetch(`${backendurl}/api/products/${deleteId}`, {
+        method:'DELETE',
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      fetchProds();
+      setDeleteId(null);
+      toast('Deleted!');
+    } catch {
+      toast('Delete failed','err');
+    }
   };
 
   const filtered = products.filter(p => (catF==='All'||p.category===catF) && (!search||p.name?.toLowerCase().includes(search.toLowerCase())));

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { A, inp } from './theme.js';
+import { apiFetch } from '../../utils/api.js'; // ✅ added
 
 const PROJ_CATS = ['Web Dev','Design','Digital Marketing','SEO','Video','Social Media','Data Analysis','Machine Learning','Other'];
 const CAT_ICONS = { 'Web Dev':'🌐','Design':'✏️','Digital Marketing':'📣','SEO':'🔍','Video':'🎬','Social Media':'📱','Data Analysis':'📊','Machine Learning':'🤖','Other':'📁' };
@@ -36,16 +37,19 @@ export default function AdminProjects() {
 
   const toast = (text, type='ok') => { setMsg({ text, type }); setTimeout(()=>setMsg({ text:'', type:'' }), 3500); };
 
+  // ✅ FIXED
   const fetchProjects = () => {
     setLoading(true);
-    fetch(`${backendurl}/api/projects`, { credentials:'include' })
+    apiFetch(`/api/projects`)
       .then(r => r.json())
       .then(d => { setProjects(Array.isArray(d)?d:[]); setLoading(false); })
       .catch(() => setLoading(false));
   };
+
   useEffect(fetchProjects, [ctx.lastRefresh]);
 
   const openCreate = () => { setForm(EMPTY); setEditId(null); setImgPreview(''); setImgFile(null); setShowForm(true); };
+
   const openEdit = p => {
     setForm({ title:p.title||'', description:p.description||'', category:p.category||'', org:p.org||'', image:p.image||'', link:p.link||'', tech:(p.tech||[]).join(', '), featured:p.featured||false, order:p.order||0 });
     setEditId(p._id); setImgPreview(p.image||''); setImgFile(null); setShowForm(true);
@@ -56,47 +60,64 @@ export default function AdminProjects() {
     setImgFile(file); setImgPreview(URL.createObjectURL(file)); e.target.value='';
   };
 
+  // ✅ FIXED
   const save = async () => {
     if (!form.title.trim()) return toast('Project title is required','err');
     if (!form.category)     return toast('Please select a category','err');
     setSaving(true);
     try {
       let imageUrl = form.image;
+
       if (imgFile) {
         setUploading(true);
         const fd = new FormData(); fd.append('file', imgFile);
-        const r = await fetch(`${backendurl}/api/upload`, { method:'POST', credentials:'include', body:fd });
+
+        const r = await apiFetch(`/api/upload`, { method:'POST', body:fd });
         const d = await r.json(); if (!d.url) throw new Error('Upload failed');
+
         imageUrl = d.url; setUploading(false);
       }
+
       const body = { ...form, image:imageUrl, tech:form.tech.split(',').map(t=>t.trim()).filter(Boolean), order:Number(form.order)||0 };
-      const url  = editId ? `${backendurl}/api/projects/${editId}` : `${backendurl}/api/projects`;
-      const res  = await fetch(url, { method:editId?'PUT':'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+
+      const res = await apiFetch(
+        editId ? `/api/projects/${editId}` : `/api/projects`,
+        {
+          method: editId ? 'PUT' : 'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(body)
+        }
+      );
+
       if (!res.ok) throw new Error((await res.json()).message||'Save failed');
+
       fetchProjects(); setShowForm(false); toast(editId?'Project updated!':'Project created!');
     } catch(err) { toast(err.message,'err'); setUploading(false); } finally { setSaving(false); }
   };
 
+  // ✅ FIXED
   const toggleFeatured = async id => {
-    await fetch(`${backendurl}/api/projects/${id}/featured`, { method:'PATCH', credentials:'include' });
+    await apiFetch(`/api/projects/${id}/featured`, { method:'PATCH' });
     fetchProjects();
   };
 
+  // ✅ FIXED
   const confirmDelete = async () => {
     try {
-      await fetch(`${backendurl}/api/projects/${deleteId}`, { method:'DELETE', credentials:'include' });
+      await apiFetch(`/api/projects/${deleteId}`, { method:'DELETE' });
       fetchProjects(); setDeleteId(null); toast('Deleted!');
     } catch { toast('Delete failed','err'); }
   };
 
-  // Filter logic
+  // ---- REMAINING UI CODE EXACTLY SAME ----
+  // (I am NOT touching your UI as requested)
+
   const all = projects.filter(p =>
     (catF==='All'||p.category===catF) &&
     (orgF==='All'||(orgF==='cmt'?p.org?.toLowerCase().includes('code master'):!p.org?.toLowerCase().includes('code master'))) &&
     (!search||p.title?.toLowerCase().includes(search.toLowerCase()))
   );
 
-  // Split into CMT vs Freelance for the display sections
   const cmtProjects       = all.filter(p => p.org?.toLowerCase().includes('code master'));
   const freelanceProjects = all.filter(p => !p.org?.toLowerCase().includes('code master'));
 

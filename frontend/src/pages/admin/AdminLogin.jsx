@@ -13,19 +13,45 @@ export default function AdminLogin() {
   const { setAdmin }            = useContext(AuthContext);
   const navigate                = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true); setError('');
-    try {
-      const res  = await fetch(`${backendurl}/api/auth/login`, { method:'POST', credentials:'include', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email, password }) });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Login failed');
-      const me   = await fetch(`${backendurl}/api/auth/me`, { credentials:'include' });
-      setAdmin(await me.json());
-      navigate('/admin');
-    } catch (err) { setError(err.message); }
-    finally { setLoading(false); }
-  };
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
+
+  try {
+    const res = await fetch(`${backendurl}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Login failed');
+
+    // ✅ STORE TOKEN FIRST
+    localStorage.setItem("token", data.token);
+
+    // ✅ NOW CALL /auth/me WITH TOKEN
+    const meRes = await fetch(`${backendurl}/api/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${data.token}`
+      }
+    });
+
+    const meData = await meRes.json();
+
+    // ✅ SET ADMIN
+    setAdmin(meData);
+
+    // ✅ NAVIGATE
+    navigate('/admin');
+
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fieldStyle = { display:'flex', flexDirection:'column', gap:'6px', marginBottom:'18px' };
   const labelStyle = { fontSize:'11px', color:A.textMuted, letterSpacing:'2px', textTransform:'uppercase' };
@@ -93,7 +119,7 @@ export default function AdminLogin() {
           </form>
 
           <p style={{ textAlign:'center', marginTop:'22px', fontSize:'12px', color:A.textLight }}>
-            Protected admin area · Soulful Scribble © 2024
+            Protected admin area · Soulful Scribble © 2025
           </p>
         </div>
       </div>
