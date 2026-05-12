@@ -5,7 +5,7 @@ venv/
 # Ignore secret or config files
 *.env
 
-
+updates.txt
 
 
 

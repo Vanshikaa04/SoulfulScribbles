@@ -1,15 +1,17 @@
-const backendurl = import.meta.env.VITE_backendurl;
-
 export const apiFetch = async (url, options = {}) => {
-  const token = localStorage.getItem("token");
+  const finalUrl = url.startsWith('http') ? url : `${import.meta.env.VITE_backendurl}${url}`;
 
-  const res = await fetch(`${backendurl}${url}`, {
+  const headers = { ...options.headers };
+
+  // 1. Only add JSON content-type if not sending a file
+  if (options.body && !(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
+
+  return fetch(finalUrl, {
     ...options,
-    headers: {
-      ...(options.headers || {}),
-      ...(token && { Authorization: `Bearer ${token}` })
-    }
+    headers,
+    // 2. CRITICAL: This tells the browser to send the 'token' cookie automatically
+    credentials: 'include', 
   });
-
-  return res;
 };

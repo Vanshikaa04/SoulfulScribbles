@@ -5,11 +5,12 @@ import { A } from './theme.js';
 
 export default function AdminDashboard() {
   const { admin, setAdmin } = useContext(AuthContext);
+  // console.log("AdminDashboard: admin from context:", admin);
   const navigate            = useNavigate();
   const [open, setOpen]     = useState(false);
   // const [lastRefresh, setLastRefresh] = useState(new Date());
  const backendurl = import.meta.env.VITE_backendurl ;
-
+// console.log("AdminDashboard rendered, admin:", admin);
 
   // Auto-refresh every 60 seconds — bumps lastRefresh so child pages can react
   // useEffect(() => {
@@ -17,13 +18,17 @@ export default function AdminDashboard() {
   //   return () => clearInterval(id);
   // }, []);
 
+  useEffect(() => {
+    console.log(admin);
+  })
 const logout = async () => {
   try {
     // Optional: call backend if you want
     await fetch(`${backendurl}/api/auth/logout`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Ensure space after Bearer
       }
     });
   } catch (err) {

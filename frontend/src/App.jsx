@@ -15,6 +15,7 @@ import Footer from './components/Footer.jsx';
 
 import UnderConstruction from './components/UnderConstruction';
 import Scrolling from './components/Scrolling.jsx';
+import Chatbot from "./chatbot/Chatbot.jsx";
 
 export const AuthContext = createContext(null);
 
@@ -25,28 +26,53 @@ function ProtectedRoute({ children }) {
 }
 
 function PublicLayout({ children }) {
+
   return (
     <>
       <Navbar />
       {children}
       <Footer />
+          <Chatbot />
     </>
   );
 }
 
 export default function App() {
+
   const isUnderConstruction = import.meta.env.VITE_MAINTENANCE_MODE === 'true';
  const backendurl = import.meta.env.VITE_backendurl ;
    
   const [admin, setAdmin] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`${backendurl}/api/auth/me`, { credentials: 'include' })
-      .then(r => r.ok ? r.json() : null)
-      .then(data => { setAdmin(data); setAuthLoading(false); })
-      .catch(() => setAuthLoading(false));
-  }, []);
+// App.jsx
+useEffect(() => {
+  const token = localStorage.getItem("token");
+   console.log("Checking auth with token:", token);
+  // If there's no token, we don't even need to fetch
+  if (!token) {
+    setAuthLoading(false);
+    return;
+  }
+
+  fetch(`${backendurl}/api/auth/me`, { 
+    headers: {
+      'Authorization': `Bearer ${token}` // Pass the token here!
+    }
+  })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => { 
+      if (data) {
+        setAdmin(data); 
+      } else {
+        localStorage.removeItem("token"); // Clean up invalid tokens
+      }
+      setAuthLoading(false); 
+    })
+    .catch(() => {
+      setAuthLoading(false);
+    });
+}, [backendurl]);
 
   // 🔄 Loading screen
   if (authLoading) {

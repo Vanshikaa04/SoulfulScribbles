@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import ExperienceCarousel from '../components/ExperienceCarousel';
 
 const WA = '919876543210';
 
@@ -54,14 +55,18 @@ const CAT_COLOR = {
   'Machine Learning': '#0C4A50',
   'Other':            '#403050',
 };
-
+    const WAIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+  </svg>
+);
 const SERVICES = [
   { icon:'🌐', title:'Website Building',       desc:'Custom, responsive, high-performance websites — from landing pages to full-stack MERN apps built exactly for your brand.',  tags:['React','Next.js','MERN','WordPress'],    cat:'Web Dev' },
   { icon:'✏️', title:'Logo Designing',          desc:'Logos that are the visual soul of your brand — timeless, versatile, delivered with a full branding kit.',                  tags:['Figma','Vector','Branding Kit'],         cat:'Design' },
   { icon:'📣', title:'Digital Marketing',       desc:'Data-driven campaigns that convert. Strategy to execution — your brand\'s growth handled personally.',                     tags:['Meta Ads','Google Ads','Analytics'],     cat:'Digital Marketing' },
   { icon:'🔍', title:'SEO Optimization',        desc:'Get found by the right people. On-page, off-page and technical SEO that moves your rankings sustainably.',                 tags:['On-Page','Technical SEO','Local SEO'],   cat:'SEO' },
   { icon:'🎬', title:'Video Editing',            desc:'Cinematic reels, polished ads, YouTube content — professional edits that captivate and convert.',                          tags:['Reels','YouTube','Motion Graphics'],     cat:'Video' },
-  { icon:'📱', title:'Social Media Marketing',  desc:'Full social management — content calendars, creatives, engagement and growth strategy across all key platforms.',           tags:['Instagram','LinkedIn','Facebook'],       cat:'Social Media' },
+  // { icon:'📱', title:'Social Media Marketing',  desc:'Full social management — content calendars, creatives, engagement and growth strategy across all key platforms.',           tags:['Instagram','LinkedIn','Facebook'],       cat:'Social Media' },
   { icon:'📊', title:'Data Analysis',           desc:'Turn raw data into clear decisions. Exploratory analysis, dashboards, visualisations and insight reports for businesses.',  tags:['Python','Pandas','Power BI','Excel'],    cat:'Data Analysis' },
   { icon:'🤖', title:'Machine Learning',        desc:'Predictive models, recommendation engines and NLP — intelligent automation for real business problems.',                    tags:['Python','Scikit-learn','TensorFlow'],    cat:'Machine Learning' },
 ];
@@ -148,8 +153,8 @@ function HeroSection() {
             </motion.div>
 
             <motion.h1 {...fa(0.08)} style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(40px,7.5vw,82px)', fontWeight:300, color:C.text, lineHeight:1.0, marginBottom:'20px' }}>
-              Your Digital Presence,<br />
-              <em style={{ fontStyle:'italic', color:C.textSub }}>Crafted with Precision</em>
+             Soulfully Designed to blend<br />
+              <em style={{ fontStyle:'italic', color:C.textSub }}>Creativity with Intelligence!</em>
             </motion.h1>
 
             <motion.div {...fa(0.14)} style={{ display:'flex', alignItems:'center', gap:'14px', marginBottom:'20px' }}>
@@ -172,7 +177,8 @@ function HeroSection() {
                 style={{ padding:'13px 28px', borderRadius:'50px', background:'transparent', color:C.textSub, border:`1.5px solid rgba(92,19,34,0.2)`, fontSize:'14px', fontWeight:600, transition:'all 0.28s' }}
                 onMouseEnter={e => { e.currentTarget.style.background=C.petal; e.currentTarget.style.borderColor=`rgba(92,19,34,0.35)`; }}
                 onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor=`rgba(92,19,34,0.2)`; }}>
-                💬 Let's Talk
+                                   <WAIcon />
+ Let's Talk
               </a>
             </motion.div>
           </div>
@@ -364,6 +370,7 @@ function ProjectsSection({ projects, loading }) {
           <p style={{ fontSize:'15px', color:C.textMut, marginTop:'8px' }}>Projects at Code Master Technology &amp; freelance engagements</p>
         </motion.div>
 
+     
         {/* Filter pills */}
         <div style={{ display:'flex', gap:'7px', flexWrap:'wrap', marginBottom:'36px' }}>
           {allCats.map(c => (
@@ -405,6 +412,8 @@ function ProjectsSection({ projects, loading }) {
           </>
         )}
       </div>
+
+      <ExperienceCarousel/>
 
       <style>{`
         .proj-grid-4 {
@@ -535,7 +544,8 @@ function JoinSection() {
             style={{ display:'inline-flex', alignItems:'center', gap:'10px', padding:'14px 34px', borderRadius:'50px', background:`linear-gradient(135deg,${C.textSub},${C.rose})`, color:'#fff', fontWeight:700, fontSize:'15px', boxShadow:`0 8px 24px rgba(92,19,34,0.22)`, transition:'all 0.28s' }}
             onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow=`0 12px 32px rgba(92,19,34,0.32)`; }}
             onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=`0 8px 24px rgba(92,19,34,0.22)`; }}>
-            💬 Let's Connect on WhatsApp
+                               <WAIcon />
+ Let's Connect on WhatsApp
           </a>
         </motion.div>
       </div>
@@ -569,7 +579,8 @@ function CtaSection() {
               style={{ padding:'13px 30px', borderRadius:'50px', background:'#25D366', color:'#fff', fontWeight:700, fontSize:'14px', boxShadow:'0 6px 18px rgba(0,0,0,0.18)', display:'flex', alignItems:'center', gap:'7px', transition:'all 0.25s' }}
               onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
               onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
-              💬 WhatsApp
+                                 <WAIcon />
+ WhatsApp
             </a>
             <a href="mailto:soulfulscribble@gmail.com"
               style={{ padding:'13px 30px', borderRadius:'50px', background:'rgba(255,255,255,0.15)', color:'#fff', fontWeight:500, fontSize:'14px', border:'1.5px solid rgba(255,255,255,0.32)', backdropFilter:'blur(8px)', transition:'all 0.25s' }}

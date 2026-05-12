@@ -19,40 +19,31 @@ const handleLogin = async (e) => {
   setError('');
 
   try {
-    const res = await fetch(`${backendurl}/api/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
+    // Step 1: Login
+ const res = await fetch(`${backendurl}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include' // <--- REQUIRED FOR COOKIES
+  });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Login failed');
+  if (!res.ok) throw new Error('Login failed');
 
-    // ✅ STORE TOKEN FIRST
-    localStorage.setItem("token", data.token);
-
-    // ✅ NOW CALL /auth/me WITH TOKEN
-    const meRes = await fetch(`${backendurl}/api/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${data.token}`
-      }
-    });
-
-    const meData = await meRes.json();
-
-    // ✅ SET ADMIN
-    setAdmin(meData);
-
-    // ✅ NAVIGATE
-    navigate('/admin');
-
-  } catch (err) {
+  // Skip localStorage! Just fetch profile
+  const meRes = await fetch(`${backendurl}/api/auth/me`, {
+    credentials: 'include' // Backend will read the cookie automatically
+  });
+  
+  const meData = await meRes.json();
+  setAdmin(meData);
+  navigate('/admin');
+} catch (err) {
+    console.error("Login Error:", err);
     setError(err.message);
   } finally {
     setLoading(false);
   }
 };
-
   const fieldStyle = { display:'flex', flexDirection:'column', gap:'6px', marginBottom:'18px' };
   const labelStyle = { fontSize:'11px', color:A.textMuted, letterSpacing:'2px', textTransform:'uppercase' };
   const inputStyle = { width:'100%', padding:'12px 14px', borderRadius:'10px', background:A.inputBg, border:`1px solid ${A.border}`, color:A.textMain, fontSize:'14px', outline:'none', fontFamily:'DM Sans', boxSizing:'border-box', transition:'border-color 0.22s, box-shadow 0.22s' };

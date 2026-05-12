@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const WHATSAPP = '917202052004'; // Replace with actual number
-const EMAIL = 'soulful.scribble234@gmail.com';
+const EMAIL = 'soulfulscribble.in@gmail.com';
 const PHONE = '+91 7202052004';
 
 export default function Footer() {
@@ -95,7 +95,7 @@ export default function Footer() {
           {/* Col 3 — Techno Hub */}
           <div>
             <p style={{ fontFamily: 'Cormorant Garamond', fontSize: '18px', color: '#D4956A', fontWeight: 600, marginBottom: '8px' }}>⚡ Techno Hub</p>
-            <p style={{ fontSize: '11px', color: textMuted, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' }}>Freelance Tech Services</p>
+            <p style={{ fontSize: '11px', color: textMuted, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px' }}>Soulfully Designed To Blend Creativity with Intelligence</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '28px' }}>
               {['Website Building','Data Analysis','Machine Learning', 'Logo Designing', 'Digital Marketing', 'SEO Optimization', 'Video Editing', 'Social Media Marketing'].map(item => (
                 <Link key={item} to="/techno" style={{ fontSize: '13px', color: textMuted, transition: 'color 0.2s', display: 'flex', alignItems: 'center', gap: '6px' }}
@@ -109,7 +109,7 @@ export default function Footer() {
             <p style={{ fontSize: '11px', color: textMuted, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '14px' }}>Connect</p>
             <div style={{ display: 'flex', gap: '10px' }}>
               {[
-                // { href: 'https://instagram.com/vanshika.techno', icon: <IGIcon />, label: 'Instagram' },
+                { href: 'https://instagram.com/vanshika.techno', icon: <IGIcon />, label: 'Instagram' },
                 { href: 'https://www.linkedin.com/in/vanshika-wadhwani-8a515224b?utm_source=share_via&utm_content=profile&utm_medium=member_android', icon: <LIIcon />, label: 'LinkedIn' },
                 { href: 'https://github.com/Vanshikaa04', icon: <GHIcon />, label: 'GitHub' },
 
@@ -150,7 +150,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ paddingTop: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <p style={{ fontSize: '12px', color: textMuted }}>
-         © 2025 Soulful Scribble · Designed & Developed by Vanshika Wadhwani
+         © 2026 Soulful Scribble · Designed & Developed by Vanshika Wadhwani
           </p>
           <div style={{ display: 'flex', gap: '24px' }}>
             {[['/', 'Home'], ['/gifting', 'Gifting'], ['/techno', 'Techno'], ['/admin', 'Admin']].map(([to, label]) => (

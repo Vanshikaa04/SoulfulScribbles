@@ -19,8 +19,8 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:5174",
   "http://localhost:5000",
+  "http://localhost:5000/api",
   "https://soulful-scribbles-backend.vercel.app",
   "https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app",
   "https://soulful-scribblesadmin.vercel.app",

@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
     res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-    res.json({ message: 'Logged in successfully' });
+    res.json({ message: 'Logged in successfully'  });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
