@@ -19,34 +19,24 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      // Step 1: Login using centralized apiFetch
-      // No need to manually add headers or credentials here
-      const res = await apiFetch(`/api/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      });
+    const res = await apiFetch(`/api/auth/login`, {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'Login failed');
-      }
+    // ✅ Add this check before calling .json()
+    if (!res.ok) {
+      const text = await res.text(); // Get the raw response (might be HTML)
+      console.error("Server responded with error:", text);
+      throw new Error(`Server Error: ${res.status}`);
+    }
 
-      // Step 2: Fetch profile
-      // apiFetch will automatically send the cookie set in Step 1
-      const meRes = await apiFetch(`/api/auth/me`);
-      
-      if (!meRes.ok) throw new Error('Failed to fetch user profile');
-      
-      const meData = await meRes.json();
-      
-      // Step 3: Update Context and Navigate
-      setAdmin(meData);
-      navigate('/admin');
-      
-    } catch (err) {
-      console.error("Login Error:", err);
-      setError(err.message);
-    } finally {
+    const meData = await res.json();
+    setAdmin(meData);
+    navigate('/admin');
+  } catch (err) {
+    setError(err.message);
+  }finally {
       setLoading(false);
     }
   };
