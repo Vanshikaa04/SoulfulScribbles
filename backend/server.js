@@ -22,10 +22,9 @@ const allowedOrigins = [
   "http://localhost:5000",
   "http://localhost:5000/api",
   "https://soulful-scribbles-backend.vercel.app",
-  "https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app",
-  "https://soulful-scribblesadmin.vercel.app",
-  "https://www.soulfulscribble.in",
   "https://soulful-scribbles-backend.vercel.app/api",
+  "https://soulful-scribblesfrontend-git-main-vanshikas-projects-e45855e4.vercel.app",
+  "https://www.soulfulscribble.in",
 ];
 
 const corsOptions = {
