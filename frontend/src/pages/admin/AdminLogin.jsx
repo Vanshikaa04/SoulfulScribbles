@@ -2,9 +2,9 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../App.jsx';
 import { A } from './theme.js';
+import { apiFetch } from '../../utils/api.js'; // ✅ Import your utility
 
 export default function AdminLogin() {
-  const backendurl = import.meta.env.VITE_backendurl ;
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading]   = useState(false);
@@ -13,37 +13,44 @@ export default function AdminLogin() {
   const { setAdmin }            = useContext(AuthContext);
   const navigate                = useNavigate();
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError('');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  try {
-    // Step 1: Login
- const res = await fetch(`${backendurl}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-    credentials: 'include' // <--- REQUIRED FOR COOKIES
-  });
+    try {
+      // Step 1: Login using centralized apiFetch
+      // No need to manually add headers or credentials here
+      const res = await apiFetch(`/api/auth/login`, {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
 
-  if (!res.ok) throw new Error('Login failed');
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Login failed');
+      }
 
-  // Skip localStorage! Just fetch profile
-  const meRes = await fetch(`${backendurl}/api/auth/me`, {
-    credentials: 'include' // Backend will read the cookie automatically
-  });
-  
-  const meData = await meRes.json();
-  setAdmin(meData);
-  navigate('/admin');
-} catch (err) {
-    console.error("Login Error:", err);
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Step 2: Fetch profile
+      // apiFetch will automatically send the cookie set in Step 1
+      const meRes = await apiFetch(`/api/auth/me`);
+      
+      if (!meRes.ok) throw new Error('Failed to fetch user profile');
+      
+      const meData = await meRes.json();
+      
+      // Step 3: Update Context and Navigate
+      setAdmin(meData);
+      navigate('/admin');
+      
+    } catch (err) {
+      console.error("Login Error:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fieldStyle = { display:'flex', flexDirection:'column', gap:'6px', marginBottom:'18px' };
   const labelStyle = { fontSize:'11px', color:A.textMuted, letterSpacing:'2px', textTransform:'uppercase' };
   const inputStyle = { width:'100%', padding:'12px 14px', borderRadius:'10px', background:A.inputBg, border:`1px solid ${A.border}`, color:A.textMain, fontSize:'14px', outline:'none', fontFamily:'DM Sans', boxSizing:'border-box', transition:'border-color 0.22s, box-shadow 0.22s' };
