@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import img1 from "../assests/founder.jpeg";
+import Occasioncarouosel from "../components/OccasionCarousel";
 
 const occasionImages = [
   { label: "Birthdays", img: "/images/occasions/birthday.jpeg", emoji: "🎂" },
@@ -52,7 +54,8 @@ export default function HomePage() {
       <MarqueeSection />
       <HubCardsSection />
       <FounderSection />
-      <OccasionsSection />
+      <Occasioncarouosel/>
+      {/* <OccasionsSection /> */}
       <TechServicesSection />
       <CTABanner />
     </div>
@@ -527,7 +530,7 @@ function HeroSection() {
 
             {/* WhatsApp button — full width on both layouts */}
             <motion.a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/917202052004"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
@@ -723,8 +726,8 @@ function HubCardsSection() {
             emoji="💻"
             tag="Techno Hub"
             tagColor="#5C1322"
-            title="Your Digital Presence, Crafted with Precision"
-            desc="Solo freelance tech services by Vanshika Wadhwani — ex Full Stack Developer & Tech Educator at Code Master Technology. Websites, data analysis, ML projects, marketing and more — directly from me, no middlemen."
+            title="Soulfully Designed to Blend Creativity with Intelligence"
+            desc="Solo freelance tech services by Vanshika Wadhwani - Websites, data analysis, ML projects, marketing and more"
             features={[
               "Website Building",
               "Logo Designing",
@@ -941,7 +944,9 @@ function FounderSection() {
                   margin: "0 auto",
                 }}
               >
-                <span style={{ position: "relative", zIndex: 1 }}>👩‍💻</span>
+                <span style={{ position: "relative", zIndex: 1 }}>
+                  <img src={img1} alt="" srcset="" />
+                </span>
                 <div
                   style={{
                     position: "absolute",
@@ -1405,7 +1410,7 @@ function CTABanner() {
             }}
           >
             <motion.a
-              href="https://wa.me/919876543210?text=Hi%21%20I%20have%20an%20enquiry"
+              href="https://wa.me/917202052004?text=Hi%21%20I%20have%20an%20enquiry"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(0,0,0,0.25)" }}

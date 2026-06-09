@@ -10,7 +10,7 @@ import { QUICK_REPLIES, SYSTEM_PROMPT } from './knowledgeBase.js';
    Get your free key: https://aistudio.google.com/app/apikey
    Replace the placeholder below with your actual API key.
 ──────────────────────────────────────────────────────────────── */
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'YOUR_GEMINI_API_KEY_HERE';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY 
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 const WA             = '917202052004';
 const WAIcon = () => (
@@ -67,56 +67,69 @@ export default function Chatbot() {
   }, [open]);
 
   /* call Gemini API */
-  const callGemini = useCallback(async (userMessage, history) => {
-    if (GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-      return "⚙️ The chatbot API key hasn't been set up yet. Please reach out on WhatsApp for immediate help! 😊";
-    }
+const callGemini = useCallback(async (userMessage, history) => {
+  // if (GEMINI_API_KEY =="AIzaSyBNF1ffhMJQIU4JQ8XqVYNZatO98tXtRQ4") {
+  //   return "⚙️ API Key missing.";
+  // }
 
-    // Build conversation turns for Gemini
-    const contents = [];
+  // 1. Build the conversation contents
+  const contents = [];
 
-    // Previous turns (skip the welcome message)
-    history.slice(1).forEach(m => {
+  // 2. Inject the System Prompt as a 'user' message followed by a 'model' acknowledgment
+  // This is a reliable workaround when top-level system_instruction fails
+  contents.push({
+    role: 'user',
+    parts: [{ text: `INSTRUCTIONS: ${SYSTEM_PROMPT}\n\nPlease acknowledge these instructions and wait for the user.` }]
+  });
+  contents.push({
+    role: 'model',
+    parts: [{ text: "Understood. I will act as the Soulful Scribble assistant based on those instructions." }]
+  });
+
+  // 3. Add the rest of the actual user-bot history
+  history.slice(1).forEach(m => {
+    if (m.text && m.text.trim() !== '') {
       contents.push({
         role: m.role === 'bot' ? 'model' : 'user',
         parts: [{ text: m.text }],
       });
+    }
+  });
+
+  // 4. Add the current user question
+  contents.push({ 
+    role: 'user', 
+    parts: [{ text: userMessage }] 
+  });
+
+  const body = {
+    contents: contents,
+    generationConfig: {
+      temperature: 0.4,
+      maxOutputTokens: 512,
+    },
+  };
+
+  try {
+    const res = await fetch(GEMINI_URL, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify(body) 
     });
 
-    // Current user message
-    contents.push({ role: 'user', parts: [{ text: userMessage }] });
-
-    const body = {
-      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents,
-      generationConfig: {
-        temperature: 0.4,
-        maxOutputTokens: 512,
-        topP: 0.85,
-      },
-      safetySettings: [
-        { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-        { category: 'HARM_CATEGORY_HATE_SPEECH',       threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-      ],
-    };
-
-    const res  = await fetch(GEMINI_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json();
 
     if (!res.ok) {
-      const errMsg = data?.error?.message || 'API error';
-      if (errMsg.includes('quota') || errMsg.includes('rate')) {
-        return "I'm getting a lot of questions right now! 😅 Please WhatsApp us directly for the fastest reply.";
-      }
-      throw new Error(errMsg);
+      console.error("Gemini API Error:", data);
+      throw new Error(data?.error?.message || 'API Error');
     }
 
-    return data.candidates?.[0]?.content?.parts?.[0]?.text
-      || "I couldn't find an answer for that. Please WhatsApp us — we'd love to help! 😊";
-  }, []);
-
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response.";
+  } catch (err) {
+    console.error("Chatbot Error:", err);
+    throw err;
+  }
+}, []);
   /* send message */
   const sendMessage = useCallback(async (text) => {
     const question = text.trim();

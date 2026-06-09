@@ -16,6 +16,8 @@ import Footer from './components/Footer.jsx';
 import UnderConstruction from './components/UnderConstruction';
 import Scrolling from './components/Scrolling.jsx';
 import Chatbot from "./chatbot/Chatbot.jsx";
+import ProductPage from './pages/ProductPage.jsx';
+import ProjectsPage from './pages/ProjectsPage.jsx';
 
 export const AuthContext = createContext(null);
 
@@ -32,7 +34,7 @@ function PublicLayout({ children }) {
       <Navbar />
       {children}
       <Footer />
-          <Chatbot />
+          {/* <Chatbot /> */}
     </>
   );
 }
@@ -135,7 +137,10 @@ useEffect(() => {
               {/* 🌐 PUBLIC ROUTES */}
               <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
               <Route path="/gifting" element={<PublicLayout><GiftingHub /></PublicLayout>} />
+              <Route path="/products" element={<PublicLayout><ProductPage /></PublicLayout>} />
+
               <Route path="/techno" element={<PublicLayout><TechnoHub /></PublicLayout>} />
+              <Route path="/projects" element={<PublicLayout><ProjectsPage/></PublicLayout>} />
 
               {/* fallback */}
               <Route path="*" element={<Navigate to="/" replace />} />

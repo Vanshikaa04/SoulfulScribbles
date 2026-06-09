@@ -4,6 +4,9 @@
    Gifting: light pastel pink + white + blush
    Techno: deep brown + burgundy → pastel pink/white
 ============================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --burgundy: #6B1A2A;

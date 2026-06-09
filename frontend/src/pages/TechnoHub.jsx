@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ExperienceCarousel from '../components/ExperienceCarousel';
 
-const WA = '919876543210';
+const WA = '917202052004';
 
 /* ─────────────────────────────────────────────
    PALETTE
@@ -385,26 +385,27 @@ function ProjectsSection({ projects, loading }) {
           <SkeletonGrid />
         ) : (
           <>
-            {cmtList.length > 0 && (
-              <div style={{ marginBottom:'52px' }}>
-                <SectionDivider icon="🏢" title="Code Master Technology" sub="During my tenure as Full Stack Developer & Tech Educator" count={cmtList.length} />
-                <div className="proj-grid-4">
-                  {cmtList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
-                </div>
-              </div>
-            )}
-
-            {freeList.length > 0 && (
+                  {freeList.length > 0 && (
               <div>
                 <SectionDivider icon="💼" title="Freelance Work" sub="Independent projects and client engagements" count={freeList.length} />
-                <div className="proj-grid-4">
+                <div className="proj-grid-4 ">
                   {freeList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
                 </div>
               </div>
             )}
 
+            {cmtList.length > 0 && (
+              <div style={{ marginBottom:'52px' }}>
+                <SectionDivider icon="🏢" title="Code Master Technology" sub="During my tenure as Full Stack Developer & Tech Educator" count={cmtList.length} />
+                <div className="proj-grid-4 mt-5">
+                  {cmtList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
+                </div>
+              </div>
+            )}
+
+    
             {cmtList.length === 0 && freeList.length === 0 && (
-              <div style={{ textAlign:'center', padding:'60px 0' }}>
+              <div style={{ textAlign:'center', padding:'60px 0'}}>
                 <span style={{ fontSize:'44px', display:'block', marginBottom:'12px' }}>💻</span>
                 <p style={{ fontFamily:'Cormorant Garamond', fontSize:'22px', color:C.textMid, fontStyle:'italic' }}>No projects in this category yet</p>
               </div>
@@ -452,19 +453,50 @@ function ProjectCard({ project: p, delay }) {
         style={{ borderRadius:'16px', overflow:'hidden', background:C.white, border:`1.5px solid ${hov ? C.bdHov : C.border}`, transition:'all 0.28s', transform:hov?'translateY(-5px)':'translateY(0)', boxShadow:hov?`0 14px 36px rgba(92,19,34,0.1)`:'0 2px 8px rgba(92,19,34,0.04)' }}>
 
         {/* Thumbnail */}
-        <div style={{ height:'130px', background:`linear-gradient(135deg,${C.bg3},${C.bg2})`, position:'relative', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
-          {p.image
-            ? <img src={p.image} alt={p.title} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.4s', transform:hov?'scale(1.06)':'scale(1)' }} />
-            : <span style={{ fontSize:'34px', opacity:0.22 }}>💻</span>}
-          {p.category && (
-            <div style={{ position:'absolute', top:'8px', right:'8px', padding:'3px 9px', borderRadius:'20px', background:'rgba(255,255,255,0.9)', backdropFilter:'blur(6px)', color:C.textSub, fontSize:'10px', fontWeight:700, border:`1px solid ${C.border}` }}>
-              {p.category}
-            </div>
-          )}
-          {p.featured && (
-            <div style={{ position:'absolute', top:'8px', left:'8px', padding:'3px 9px', borderRadius:'20px', background:`linear-gradient(135deg,${C.textSub},${C.rose})`, color:'#fff', fontSize:'10px', fontWeight:700 }}>⭐</div>
-          )}
-        </div>
+        <div style={{ 
+  height: '200px', // Increased height for better visibility
+  background: C.bg3, 
+  position: 'relative', 
+  overflow: 'hidden', 
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'center' 
+}}>
+  {p.media && p.media.length > 0 ? (
+    p.media[0].type === 'video' ? (
+      <video 
+        src={p.media[0].url} 
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+        muted 
+        loop 
+        playsInline
+        onMouseEnter={e => e.target.play()} 
+        onMouseLeave={e => e.target.pause()} 
+      />
+    ) : (
+      <img 
+        src={p.media[0].url} 
+        alt={p.title} 
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          objectFit: 'cover', // Use 'contain' if you want to see the WHOLE image without cropping
+          transition: 'transform 0.4s ease', 
+          transform: hov ? 'scale(1.08)' : 'scale(1)' 
+        }} 
+      />
+    )
+  ) : (
+    <span style={{ fontSize: '34px', opacity: 0.22 }}>💻</span>
+  )}
+
+  {/* Overlays (Category & Featured) remain same */}
+  {p.category && (
+    <div style={{ position: 'absolute', top: '8px', right: '8px', padding: '3px 9px', borderRadius: '20px', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(6px)', color: C.textSub, fontSize: '10px', fontWeight: 700, border: `1px solid ${C.border}`, zIndex: 2 }}>
+      {p.category}
+    </div>
+  )}
+</div>
 
         <div style={{ padding:'13px 15px' }}>
           <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'15px', color:C.text, fontWeight:700, marginBottom:'5px', lineHeight:1.3, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.title}</h3>

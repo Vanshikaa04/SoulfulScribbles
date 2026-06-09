@@ -52,7 +52,7 @@ export default function OccasionCarousel() {
   };
 
   const handleClick = (occ) => {
-    navigate(`/gifting?occasion=${occ.tag}`);
+    navigate(`/gifting`);
   };
 
   return (
