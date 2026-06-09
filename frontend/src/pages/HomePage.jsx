@@ -55,7 +55,7 @@ export default function HomePage() {
       <MarqueeSection />
       <HubCardsSection />
       <FounderSection />
-      <OccasionCarousel/>
+      {/* <OccasionCarousel/> */}
       {/* <OccasionsSection /> */}
       <TechServicesSection />
       <CTABanner />
