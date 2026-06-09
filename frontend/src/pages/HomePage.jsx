@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import img1 from "../assests/founder.jpeg";
-import Occasioncarouosel from "../components/OccasionCarousel";
+import OccasionCarousel from "../components/OccasionCarousel";
+
 
 const occasionImages = [
   { label: "Birthdays", img: "/images/occasions/birthday.jpeg", emoji: "🎂" },
@@ -54,7 +55,7 @@ export default function HomePage() {
       <MarqueeSection />
       <HubCardsSection />
       <FounderSection />
-      <Occasioncarouosel/>
+      <OccasionCarousel/>
       {/* <OccasionsSection /> */}
       <TechServicesSection />
       <CTABanner />
