@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import img1 from "../assests/founder.jpeg";
-import OccasionCarousel from "../components/OccasionCarousel";
+// import OccasionCarousel from "../components/OccasionCarousel";
 
 
 const occasionImages = [
