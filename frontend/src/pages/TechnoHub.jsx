@@ -222,7 +222,7 @@ function HeroSection() {
 /* ════════════════ STATS ════════════════ */
 /* pastel pink strip */
 function StatsBar() {
-  const stats = [['1yr+','Experience'],['8+','Services'],['50+','Projects'],['1:1','Attention']];
+  const stats = [['1yr+','Experience'],['8+','Services'],['15+','Projects'],['1:1','Attention']];
   return (
     <div style={{ background:C.bg4, borderTop:`1px solid ${C.border}`, borderBottom:`1px solid ${C.border}`, padding:'32px 0' }}>
       <div className="container">
