@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import ExperienceCarousel from '../components/ExperienceCarousel';
 
 const WA = '917202052004';
-
 /* ─────────────────────────────────────────────
    PALETTE
    bg      = pure white        #FFFFFF
@@ -62,13 +61,13 @@ const CAT_COLOR = {
 );
 const SERVICES = [
   { icon:'🌐', title:'Website Building',       desc:'Custom, responsive, high-performance websites — from landing pages to full-stack MERN apps built exactly for your brand.',  tags:['React','Next.js','MERN','WordPress'],    cat:'Web Dev' },
+  { icon:'📊', title:'Data Analysis',           desc:'Turn raw data into clear decisions. Exploratory analysis, dashboards, visualisations and insight reports for businesses.',  tags:['Python','Pandas','Power BI','Excel'],    cat:'Data Analysis' },
+  { icon:'🤖', title:'Machine Learning',        desc:'Predictive models, recommendation engines and NLP — intelligent automation for real business problems.',                    tags:['Python','Scikit-learn','TensorFlow'],    cat:'Machine Learning' },
+  { icon:'🎬', title:'Video Editing',            desc:'Cinematic reels, polished ads, YouTube content — professional edits that captivate and convert.',                          tags:['Reels','YouTube','Motion Graphics'],     cat:'Video' },
   { icon:'✏️', title:'Logo Designing',          desc:'Logos that are the visual soul of your brand — timeless, versatile, delivered with a full branding kit.',                  tags:['Figma','Vector','Branding Kit'],         cat:'Design' },
   { icon:'📣', title:'Digital Marketing',       desc:'Data-driven campaigns that convert. Strategy to execution — your brand\'s growth handled personally.',                     tags:['Meta Ads','Google Ads','Analytics'],     cat:'Digital Marketing' },
   { icon:'🔍', title:'SEO Optimization',        desc:'Get found by the right people. On-page, off-page and technical SEO that moves your rankings sustainably.',                 tags:['On-Page','Technical SEO','Local SEO'],   cat:'SEO' },
-  { icon:'🎬', title:'Video Editing',            desc:'Cinematic reels, polished ads, YouTube content — professional edits that captivate and convert.',                          tags:['Reels','YouTube','Motion Graphics'],     cat:'Video' },
   // { icon:'📱', title:'Social Media Marketing',  desc:'Full social management — content calendars, creatives, engagement and growth strategy across all key platforms.',           tags:['Instagram','LinkedIn','Facebook'],       cat:'Social Media' },
-  { icon:'📊', title:'Data Analysis',           desc:'Turn raw data into clear decisions. Exploratory analysis, dashboards, visualisations and insight reports for businesses.',  tags:['Python','Pandas','Power BI','Excel'],    cat:'Data Analysis' },
-  { icon:'🤖', title:'Machine Learning',        desc:'Predictive models, recommendation engines and NLP — intelligent automation for real business problems.',                    tags:['Python','Scikit-learn','TensorFlow'],    cat:'Machine Learning' },
 ];
 
 function useInView(thresh = 0.1) {
@@ -105,9 +104,7 @@ export default function TechnoHub() {
       .then(d => { if (Array.isArray(d)) setProjects(d); setLoadingP(false); })
       .catch(() => setLoadingP(false)); 
   }, []);
-  useEffect(()=>{
-    console.log(projects)
-  })
+
 
   return (
     <div style={{ background: C.white, color: C.text, minHeight: '100vh', overflowX: 'hidden' }}>
@@ -255,12 +252,12 @@ function AboutSection() {
           <div>
             <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:C.rose, marginBottom:'14px', fontWeight:600 }}>About Me</p>
             <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,50px)', color:C.text, fontWeight:300, marginBottom:'18px', lineHeight:1.2 }}>
-              Not an agency.<br />
-              <em style={{ fontStyle:'italic', color:C.textSub }}>Just me — and I mean it.</em>
+              {/* Not an agency.<br /> */}
+              <em style={{ fontStyle:'italic', color:C.textSub }}>Vanshika Wadhwani</em>
             </h2>
             <div style={{ width:'48px', height:'2px', background:`linear-gradient(to right,${C.textSub},${C.rose})`, marginBottom:'20px', borderRadius:'2px' }} />
             <p style={{ fontSize:'15px', color:C.textMid, lineHeight:1.95, marginBottom:'14px', fontWeight:300 }}>
-              I'm <strong style={{ color:C.text }}>Vanshika Wadhwani</strong> — Full Stack Developer, designer, data analyst and digital strategist. I spent a year as a <span style={{ color:C.textSub, fontWeight:600 }}>Full Stack Developer &amp; Tech Educator at Code Master Technology</span>, building real projects and teaching developers.
+              I'm  a  Full Stack Developer, designer, data analyst and digital strategist. I spent a year as a <span style={{ color:C.textSub, fontWeight:600 }}>Full Stack Developer &amp; Tech Educator at Code Master Technology</span>, building real projects and teaching developers.
             </p>
             <p style={{ fontSize:'15px', color:C.textMid, lineHeight:1.95, fontWeight:300 }}>
               Now I bring that expertise directly to you. From sleek websites to predictive ML models — when you hire me, you get <em style={{ color:C.textSub, fontStyle:'italic' }}>me</em>, not a junior.
@@ -293,18 +290,29 @@ function AboutSection() {
 /* pastel pink section */
 function ServicesSection() {
   return (
-    <section id="services" style={{ padding:'clamp(60px,8vw,100px) 0', background:C.bg3 }}>
+   <section id="services" style={{ padding: 'clamp(60px,8vw,100px) 0', background: C.bg3 }}>
+      {/* 🛠️ Dynamic CSS Injection to hide elements on smaller screens */}
+      <style>{`
+        @media (max-width: 576px) {
+          .hide-on-mobile {
+            display: none !important;
+          }
+        }
+      `}</style>
+
       <div className="container">
-        <motion.div {...fv(0)} style={{ textAlign:'center', marginBottom:'52px' }}>
-          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:C.rose, marginBottom:'10px', fontWeight:600 }}>What I Offer</p>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,52px)', color:C.text, fontWeight:300 }}>
-            Services <em style={{ fontStyle:'italic', color:C.textSub }}>à la carte</em>
+        <motion.div {...fv(0)} style={{ textAlign: 'center', marginBottom: '52px' }}>
+          <p style={{ fontSize: '11px', letterSpacing: '4px', textTransform: 'uppercase', color: C.rose, marginBottom: '10px', fontWeight: 600 }}>What I Offer</p>
+          <h2 style={{ fontFamily: 'Cormorant Garamond', fontSize: 'clamp(28px,5vw,52px)', color: C.text, fontWeight: 300 }}>
+            Services <em style={{ fontStyle: 'italic', color: C.textSub }}>à la carte</em>
           </h2>
-          <p style={{ fontSize:'14px', color:C.textMut, marginTop:'10px' }}>Each service delivered personally — no outsourcing, no middlemen.</p>
+          <p style={{ fontSize: '14px', color: C.textMut, marginTop: '10px' }}>Each service delivered personally — no outsourcing, no middlemen.</p>
         </motion.div>
 
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(min(100%,260px),1fr))', gap:'16px' }}>
-          {SERVICES.map((s, i) => <ServiceCard key={s.title} service={s} delay={i * 0.05} />)}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(45%,260px),1fr))', gap: '16px' }}>
+          {SERVICES.map((s, i) => (
+            <ServiceCard key={s.title} service={s} delay={i * 0.05} />
+          ))}
         </div>
       </div>
     </section>
@@ -312,44 +320,44 @@ function ServicesSection() {
 }
 
 function ServiceCard({ service, delay }) {
-  const [hov, setHov] = useState(false);
-  const accent = CAT_COLOR[service.cat] || C.textSub;
   return (
-    <motion.div {...fv(delay)}>
-      <div
-        onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-        style={{
-          padding:'clamp(20px,2.5vw,28px)', borderRadius:'20px', height:'100%',
-          background: hov ? C.white : C.white,
-          border: `1.5px solid ${hov ? C.bdHov : C.border}`,
-          transition:'all 0.28s ease',
-          transform: hov ? 'translateY(-5px)' : 'translateY(0)',
-          boxShadow: hov ? `0 14px 36px rgba(92,19,34,0.1)` : '0 2px 8px rgba(92,19,34,0.04)',
-          position:'relative', overflow:'hidden', display:'flex', flexDirection:'column', cursor:'default',
-        }}
-      >
-        {/* Top colour bar on hover */}
-        <div style={{ position:'absolute', top:0, left:0, right:0, height:'3px', background:`linear-gradient(90deg,${C.textSub},${accent},${C.rose})`, borderRadius:'20px 20px 0 0', opacity: hov ? 1 : 0, transition:'opacity 0.28s' }} />
+    <motion.div
+      {...fv(delay)}
+      style={{
+        background: '#fff',
+        padding: '24px',
+        borderRadius: '20px',
+        border: '1px solid rgba(196,117,138,0.14)',
+        boxShadow: '0 4px 20px rgba(107,26,42,0.02)',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        boxSizing: 'border-box'
+      }}
+    >
+      {/* Logo / Icon */}
+      <div style={{ fontSize: '32px', marginBottom: '12px' }}>{service.icon}</div>
+      
+      {/* Title */}
+      <h3 style={{ fontFamily: 'Cormorant Garamond', fontSize: '22px', fontWeight: 600, color: C.text, marginBottom: '8px' }}>
+        {service.title}
+      </h3>
 
-        <span style={{ fontSize:'30px', marginBottom:'14px', display:'block' }}>{service.icon}</span>
-        <h3 style={{ fontFamily:'Cormorant Garamond', fontSize:'19px', fontWeight:700, color:C.text, marginBottom:'9px' }}>{service.title}</h3>
-        <p style={{ fontSize:'13px', color:C.textMut, lineHeight:1.8, marginBottom:'16px', fontWeight:300, flex:1 }}>{service.desc}</p>
+      {/* Description - Hidden on Mobile */}
+      <p className="hide-on-mobile" style={{ fontSize: '13px', color: C.textMut, lineHeight: 1.6, marginBottom: '16px', flexGrow: 1 }}>
+        {service.desc}
+      </p>
 
-        {/* Tags */}
-        <div style={{ display:'flex', flexWrap:'wrap', gap:'5px', marginBottom:'16px' }}>
+      {/* Tags - Hidden on Mobile */}
+      {service.tags && (
+        <div className="hide-on-mobile" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: 'auto' }}>
           {service.tags.map(t => (
-            <span key={t} style={{ padding:'3px 10px', borderRadius:'20px', fontSize:'11px', background:`${accent}10`, color:accent, border:`1px solid ${accent}25`, fontWeight:500 }}>{t}</span>
+            <span key={t} style={{ padding: '4px 10px', background: 'rgba(196,117,138,0.07)', borderRadius: '20px', fontSize: '11px', color: C.rose, fontWeight: 500 }}>
+              {t}
+            </span>
           ))}
         </div>
-
-        <a href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi Vanshika! I'm interested in your ${service.title} service 💻`)}`}
-          target="_blank" rel="noopener noreferrer"
-          style={{ fontSize:'13px', color:accent, fontWeight:700, display:'flex', alignItems:'center', gap:'5px', transition:'gap 0.2s' }}
-          onMouseEnter={e => e.currentTarget.style.gap='9px'}
-          onMouseLeave={e => e.currentTarget.style.gap='5px'}>
-          Get a Quote →
-        </a>
-      </div>
+      )}
     </motion.div>
   );
 }
@@ -360,25 +368,56 @@ function ProjectsSection({ projects, loading }) {
   const [filter, setFilter] = useState('All');
   const allCats = ['All', ...new Set(projects.map(p => p.category).filter(Boolean))];
 
-  const isCMT  = p => p.org?.toLowerCase().includes('code master');
-  const cmtList  = projects.filter(p => (filter === 'All' || p.category === filter) && isCMT(p));
-  const freeList = projects.filter(p => (filter === 'All' || p.category === filter) && !isCMT(p));
+  const isCMT = p => p.org?.toLowerCase().includes('code master');
+
+  // --- NEW LOGIC: Filter & Limit to 4 Projects Total ---
+  let selectedProjects = [];
+  
+  if (filter === 'All') {
+    const seenCats = new Set();
+    
+    // Pass 1: Try to get exactly 1 project per unique category
+    for (const p of projects) {
+      if (p.category && !seenCats.has(p.category)) {
+        selectedProjects.push(p);
+        seenCats.add(p.category);
+      }
+      if (selectedProjects.length === 4) break; // Stop at 4
+    }
+    
+    // Pass 2: If we have less than 4 categories, fill the remaining slots with other projects
+    if (selectedProjects.length < 4) {
+      for (const p of projects) {
+        // Only add if it's not already in the selected list
+        if (!selectedProjects.some(sp => sp._id === p._id)) {
+          selectedProjects.push(p);
+        }
+        if (selectedProjects.length === 4) break;
+      }
+    }
+  } else {
+    // If a specific category is selected, just grab the first 4 that match
+    selectedProjects = projects.filter(p => p.category === filter).slice(0, 4);
+  }
+
+  // Split our finalized 4 projects into their respective arrays
+  const cmtList = selectedProjects.filter(isCMT);
+  const freeList = selectedProjects.filter(p => !isCMT(p));
 
   return (
-    <section style={{ padding:'clamp(60px,8vw,100px) 0', background:C.white }}>
+    <section style={{ padding: 'clamp(60px,8vw,100px) 0', background: C.white }}>
       <div className="container">
-        <motion.div {...fv(0)} style={{ marginBottom:'36px' }}>
-          <p style={{ fontSize:'11px', letterSpacing:'4px', textTransform:'uppercase', color:C.rose, marginBottom:'10px', fontWeight:600 }}>Portfolio</p>
-          <h2 style={{ fontFamily:'Cormorant Garamond', fontSize:'clamp(28px,5vw,52px)', color:C.text, fontWeight:300, lineHeight:1.15 }}>My Work</h2>
-          <p style={{ fontSize:'15px', color:C.textMut, marginTop:'8px' }}>Projects at Code Master Technology &amp; freelance engagements</p>
+        <motion.div {...fv(0)} style={{ marginBottom: '36px' }}>
+          <p style={{ fontSize: '11px', letterSpacing: '4px', textTransform: 'uppercase', color: C.rose, marginBottom: '10px', fontWeight: 600 }}>Portfolio</p>
+          <h2 style={{ fontFamily: 'Cormorant Garamond', fontSize: 'clamp(28px,5vw,52px)', color: C.text, fontWeight: 300, lineHeight: 1.15 }}>My Work</h2>
+          <p style={{ fontSize: '15px', color: C.textMut, marginTop: '8px' }}>Projects at Code Master Technology &amp; freelance engagements</p>
         </motion.div>
 
-     
         {/* Filter pills */}
-        <div style={{ display:'flex', gap:'7px', flexWrap:'wrap', marginBottom:'36px' }}>
+        <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap', marginBottom: '36px' }}>
           {allCats.map(c => (
             <button key={c} onClick={() => setFilter(c)}
-              style={{ padding:'7px 16px', borderRadius:'40px', fontSize:'12px', cursor:'pointer', fontFamily:'DM Sans', transition:'all 0.2s', background:filter===c?`linear-gradient(135deg,${C.textSub},${C.rose})`:C.bg2, color:filter===c?'#fff':C.textMid, border:filter===c?'none':`1.5px solid ${C.border}`, fontWeight:filter===c?700:400 }}>
+              style={{ padding: '7px 16px', borderRadius: '40px', fontSize: '12px', cursor: 'pointer', fontFamily: 'DM Sans', transition: 'all 0.2s', background: filter === c ? `linear-gradient(135deg,${C.textSub},${C.rose})` : C.bg2, color: filter === c ? '#fff' : C.textMid, border: filter === c ? 'none' : `1.5px solid ${C.border}`, fontWeight: filter === c ? 700 : 400 }}>
               {c}
             </button>
           ))}
@@ -388,17 +427,17 @@ function ProjectsSection({ projects, loading }) {
           <SkeletonGrid />
         ) : (
           <>
-                  {freeList.length > 0 && (
+            {freeList.length > 0 && (
               <div>
                 <SectionDivider icon="💼" title="Freelance Work" sub="Independent projects and client engagements" count={freeList.length} />
-                <div className="proj-grid-4 ">
+                <div className="proj-grid-4">
                   {freeList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
                 </div>
               </div>
             )}
 
             {cmtList.length > 0 && (
-              <div style={{ marginBottom:'52px' }}>
+              <div style={{ marginBottom: '52px', marginTop: freeList.length > 0 ? '40px' : '0' }}>
                 <SectionDivider icon="🏢" title="Code Master Technology" sub="During my tenure as Full Stack Developer & Tech Educator" count={cmtList.length} />
                 <div className="proj-grid-4 mt-5">
                   {cmtList.map((p, i) => <ProjectCard key={p._id} project={p} delay={i * 0.04} />)}
@@ -406,18 +445,33 @@ function ProjectsSection({ projects, loading }) {
               </div>
             )}
 
-    
             {cmtList.length === 0 && freeList.length === 0 && (
-              <div style={{ textAlign:'center', padding:'60px 0'}}>
-                <span style={{ fontSize:'44px', display:'block', marginBottom:'12px' }}>💻</span>
-                <p style={{ fontFamily:'Cormorant Garamond', fontSize:'22px', color:C.textMid, fontStyle:'italic' }}>No projects in this category yet</p>
+              <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                <span style={{ fontSize: '44px', display: 'block', marginBottom: '12px' }}>💻</span>
+                <p style={{ fontFamily: 'Cormorant Garamond', fontSize: '22px', color: C.textMid, fontStyle: 'italic' }}>No projects in this category yet</p>
+              </div>
+            )}
+
+            {/* "See all Projects" CTA */}
+            {(cmtList.length > 0 || freeList.length > 0) && (
+              <div style={{ textAlign: 'center', marginTop: '48px' }}>
+                <a href="/projects" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '14px 32px',
+                  background: C.textSub, color: '#fff', borderRadius: '40px', fontSize: '15px', fontWeight: 600,
+                  textDecoration: 'none', transition: 'all 0.3s', boxShadow: '0 4px 14px rgba(107,26,42,0.2)'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(107,26,42,0.3)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(107,26,42,0.2)'; }}
+                >
+                  See all Projects <span style={{ fontSize: '18px' }}>&rarr;</span>
+                </a>
               </div>
             )}
           </>
         )}
       </div>
 
-      <ExperienceCarousel/>
+      <ExperienceCarousel />
 
       <style>{`
         .proj-grid-4 {

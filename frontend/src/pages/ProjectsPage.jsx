@@ -11,9 +11,7 @@ const CAT_COLOR = {
   "Machine Learning": "#0C4A50",
   "Digital Marketing": "#5C2A80",
   SEO: "#183A7C",
-
   "Social Media": "#0A5C4A",
-
   Other: "#403050",
 };
 
@@ -223,8 +221,8 @@ export default function ProjectsPage() {
                         boxShadow: "0 18px 40px rgba(107,26,42,0.14)",
                       }}
                     >
-                      {/* Image */}
-                      <div style={{ position: "relative" }}>
+                      {/* Media Wrapper */}
+                      <div style={{ position: "relative", height: "140px", overflow: "hidden", background: "#000" }}>
                         {p.featured && (
                           <div
                             style={{
@@ -236,18 +234,37 @@ export default function ProjectsPage() {
                               fontSize: "10px",
                               padding: "3px 8px",
                               borderRadius: "20px",
+                              zIndex: 2,
                             }}
                           >
                             Featured
                           </div>
                         )}
 
+                        {/* Render Image */}
                         {p.media?.[0]?.type === "image" && (
                           <img
                             src={p.media[0].url}
+                            alt={p.title}
                             style={{
                               width: "100%",
-                              height: "140px",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                        )}
+
+                        {/* Render Autoplay Video */}
+                        {p.media?.[0]?.type === "video" && (
+                          <video
+                            src={p.media[0].url}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            style={{
+                              width: "100%",
+                              height: "100%",
                               objectFit: "cover",
                             }}
                           />
@@ -314,6 +331,7 @@ export default function ProjectsPage() {
                           <a
                             href={p.link}
                             target="_blank"
+                            rel="noopener noreferrer"
                             style={{
                               display: "inline-block",
                               marginTop: "8px",
@@ -324,24 +342,6 @@ export default function ProjectsPage() {
                             View Project →
                           </a>
                         )}
-
-                        {/* WhatsApp */}
-                        {/* <a
-                          href={buildWaLink(p)}
-                          target="_blank"
-                          style={{
-                            display: "block",
-                            textAlign: "center",
-                            marginTop: "10px",
-                            padding: "6px",
-                            background: "#25D366",
-                            borderRadius: "40px",
-                            color: "#fff",
-                            fontSize: "12px"
-                          }}
-                        >
-                          WhatsApp
-                        </a> */}
                       </div>
                     </motion.div>
                   ))}
