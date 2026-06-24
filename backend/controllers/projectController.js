@@ -21,13 +21,9 @@ const isVideo = (url) => {
 // @route GET /api/projects
 export const getProjects = async (req, res) => {
   try {
-    const { category, featured } = req.query;
-    const filter = {};
-
-    if (category) filter.category = category;
-    if (featured === 'true') filter.featured = true;
-
-    const projects = await Project.find(filter).sort({ order: 1, createdAt: -1 });
+    // We pass an empty object {} to .find() so it fetches all documents
+    const projects = await Project.find({}).sort({ order: 1, createdAt: -1 });
+    
     res.json(projects);
   } catch (err) {
     res.status(500).json({ message: err.message });

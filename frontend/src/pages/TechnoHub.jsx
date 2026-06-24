@@ -103,8 +103,11 @@ export default function TechnoHub() {
     fetch('/api/projects')
       .then(r => r.json())
       .then(d => { if (Array.isArray(d)) setProjects(d); setLoadingP(false); })
-      .catch(() => setLoadingP(false));
+      .catch(() => setLoadingP(false)); 
   }, []);
+  useEffect(()=>{
+    console.log(projects)
+  })
 
   return (
     <div style={{ background: C.white, color: C.text, minHeight: '100vh', overflowX: 'hidden' }}>
