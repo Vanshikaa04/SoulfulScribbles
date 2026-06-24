@@ -25,6 +25,15 @@ export default function ProductPage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  // Read URL query parameter for category landing updates
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const catParam = params.get('category');
+    if (catParam && (catParam === 'All' || Object.keys(CAT_META).includes(catParam))) {
+      setCategory(catParam);
+    }
+  }, []);
+
   useEffect(() => {
     apiFetch(`/api/products`)
       .then(res => res.json())
@@ -37,7 +46,6 @@ export default function ProductPage() {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // ✅ GROUP BY CATEGORY (same as projects)
   const grouped = Object.keys(CAT_META).map(cat => ({
     category: cat,
     items: products.filter(p =>
@@ -69,10 +77,16 @@ export default function ProductPage() {
           <div style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             marginBottom: "20px"
           }}>
-            <h2 style={{ fontFamily: 'Cormorant Garamond' }}>Products</h2>
-            <FaFilter onClick={() => setShowDrawer(true)} />
+            <h2 style={{ fontFamily: 'Cormorant Garamond', color: '#2A0A12', margin: 0 }}>Products</h2>
+            <div 
+              onClick={() => setShowDrawer(true)} 
+              style={{ padding: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            >
+              <FaFilter size={18} color="#6B1A2A" />
+            </div>
           </div>
         )}
 
@@ -90,7 +104,7 @@ export default function ProductPage() {
               top: "120px",
               height: "fit-content"
             }}>
-              <h3 style={{ marginBottom: "10px" }}>Categories</h3>
+              <h3 style={{ marginBottom: "10px", fontFamily: 'Cormorant Garamond', fontSize: '20px' }}>Categories</h3>
 
               {["All", ...Object.keys(CAT_META)].map(cat => (
                 <div
@@ -102,45 +116,56 @@ export default function ProductPage() {
                 </div>
               ))}
 
-              {/* Clear filter */}
               <button
                 onClick={() => setCategory("All")}
                 style={{
                   marginTop: "12px",
                   fontSize: "12px",
-                  color: "var(--burgundy)"
+                  color: "var(--burgundy)",
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0
                 }}
               >
                 Clear Filter
               </button>
 
-              {/* Price filter */}
-              <h3 style={{ marginTop: "20px" }}>Max Price</h3>
+              <h3 style={{ marginTop: "24px", marginBottom: "10px", fontFamily: 'Cormorant Garamond', fontSize: '20px' }}>Max Price</h3>
               <input
                 type="range"
                 min="0"
                 max="5000"
                 value={price}
+                style={{ width: '100%', accentColor: '#6B1A2A' }}
                 onChange={(e) => setPrice(Number(e.target.value))}
               />
-              <p>₹ {price}</p>
+              <p style={{ fontWeight: 500, color: '#6B1A2A', marginTop: '4px' }}>₹ {price}</p>
             </div>
           )}
 
-          {/* Drawer */}
+          {/* Drawer Overlay & Content */}
           {isMobile && showDrawer && (
-            <div style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(0,0,0,0.3)",
-              zIndex: 100
-            }}>
-              <div style={{
-                width: "260px",
-                background: "#fff",
-                height: "100%",
-                padding: "20px"
-              }}>
+            <div 
+              onClick={() => setShowDrawer(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.4)",
+                zIndex: 1000
+              }}
+            >
+              <div 
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  width: "280px",
+                  background: "#fff",
+                  height: "100%",
+                  padding: "24px 20px",
+                  boxShadow: "4px 0 24px rgba(0,0,0,0.15)"
+                }}
+              >
+                <h3 style={{ marginBottom: "16px", fontFamily: 'Cormorant Garamond', fontSize: '22px' }}>Categories</h3>
                 {["All", ...Object.keys(CAT_META)].map(cat => (
                   <div
                     key={cat}
@@ -150,7 +175,7 @@ export default function ProductPage() {
                       setShowDrawer(false);
                     }}
                   >
-                    {cat}
+                    {CAT_META[cat]} {cat}
                   </div>
                 ))}
 
@@ -162,16 +187,30 @@ export default function ProductPage() {
                   style={{
                     marginTop: "16px",
                     fontSize: "13px",
-                    color: "var(--burgundy)"
+                    color: "var(--burgundy)",
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer'
                   }}
                 >
                   Clear Filter
                 </button>
+
+                <h3 style={{ marginTop: "32px", marginBottom: "10px", fontFamily: 'Cormorant Garamond', fontSize: '22px' }}>Max Price</h3>
+                <input
+                  type="range"
+                  min="0"
+                  max="5000"
+                  value={price}
+                  style={{ width: '100%', accentColor: '#6B1A2A' }}
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                />
+                <p style={{ fontWeight: 500, color: '#6B1A2A' }}>₹ {price}</p>
               </div>
             </div>
           )}
 
-          {/* MAIN */}
+          {/* Main Content Area */}
           <div style={{
             flex: 1,
             maxHeight: "calc(100vh - 120px)",
@@ -182,7 +221,6 @@ export default function ProductPage() {
             {grouped.map(group => (
               <div key={group.category} style={{ marginBottom: "50px" }}>
 
-                {/* Section Title */}
                 <h2 style={{
                   fontFamily: "Cormorant Garamond",
                   fontSize: "28px",
@@ -192,26 +230,30 @@ export default function ProductPage() {
                   {group.category}
                 </h2>
 
-                {/* Grid */}
+                {/* Grid Structure: Optimized minmax configurations to eliminate horizontal squishing */}
                 <div style={{
                   display: "grid",
                   gridTemplateColumns: isMobile
                     ? "repeat(2, 1fr)"
-                    : "repeat(auto-fill, minmax(220px,1fr))",
-                  gap: "18px"
+                    : "repeat(auto-fill, minmax(200px, 1fr))",
+                  gap: "20px"
                 }}>
                   {group.items.map((product, idx) => (
                     <motion.div
                       key={product._id}
                       initial={{ opacity: 0, y: 28 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.05 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.04 }}
                       style={{
                         background: '#fff',
                         borderRadius: '20px',
                         overflow: 'hidden',
                         border: '1px solid rgba(196,117,138,0.14)',
-                        boxShadow: '0 2px 12px rgba(107,26,42,0.05)'
+                        boxShadow: '0 2px 12px rgba(107,26,42,0.05)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%'
                       }}
                       whileHover={{
                         y: -6,
@@ -219,58 +261,83 @@ export default function ProductPage() {
                       }}
                     >
 
-                      {/* Image + Featured */}
-                      <div style={{ position: "relative" }}>
+                      {/* Image Box wrapped in a Portrait aspect-ratio layout */}
+                      <div style={{ 
+                        position: "relative",
+                        width: "100%",
+                        paddingTop: "120%", // Changes layout to 5:6 Portrait ratio
+                        background: "linear-gradient(135deg,#FFF5F7,#F7E8EC)",
+                        overflow: "hidden"
+                      }}>
                         {product.featured && (
                           <div style={{
                             position: "absolute",
-                            top: "8px",
-                            right: "8px",
-                            background: "#6B1A2A",
+                            top: "10px",
+                            right: "10px",
+                            background: "linear-gradient(135deg,#6B1A2A,#C4758A)",
                             color: "#fff",
                             fontSize: "10px",
-                            padding: "3px 8px",
-                            borderRadius: "20px"
+                            fontWeight: 600,
+                            padding: "4px 10px",
+                            borderRadius: "20px",
+                            zIndex: 2
                           }}>
-                            Featured
+                            ✨ Featured
                           </div>
                         )}
 
                         <img
-                          src={product.images?.[0]}
+                          src={product.images?.[0] || 'https://via.placeholder.com/300x360?text=Gift'}
+                          alt={product.name}
                           style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
                             width: "100%",
-                            height: "150px",
-                            objectFit: "cover"
+                            height: "100%",
+                            objectFit: "cover" // Ensures it crops properly without distortion
                           }}
                         />
                       </div>
 
-                      {/* Content */}
-                      <div style={{ padding: "12px" }}>
-                        <h3 style={{ fontFamily: 'Cormorant Garamond' }}>
+                      {/* Descriptive Details */}
+                      <div style={{ padding: "14px", display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                        <h3 style={{ 
+                          fontFamily: 'Cormorant Garamond', 
+                          fontSize: '18px', 
+                          fontWeight: 600, 
+                          color: '#2A0A12',
+                          margin: '0 0 6px 0',
+                          lineHeight: 1.3
+                        }}>
                           {product.name}
                         </h3>
 
                         <p style={{
                           color: '#6B1A2A',
-                          fontWeight: 600
+                          fontWeight: 700,
+                          fontSize: '16px',
+                          margin: '0 0 12px 0',
+                          marginTop: 'auto' // Pushes price and CTA seamlessly to bottom
                         }}>
-                          ₹{product.price}
+                          ₹{product.price.toLocaleString('en-IN')}
                         </p>
 
-                        {/* WhatsApp */}
                         <a
                           href={buildWaLink(product)}
                           target="_blank"
+                          rel="noopener noreferrer"
                           style={{
                             display: 'block',
                             textAlign: 'center',
-                            marginTop: '10px',
-                            padding: '8px',
+                            padding: '10px 14px',
                             background: '#25D366',
                             borderRadius: '40px',
-                            color: '#fff'
+                            color: '#fff',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            textDecoration: 'none',
+                            boxShadow: '0 4px 12px rgba(37,211,102,0.2)'
                           }}
                         >
                           WhatsApp
