@@ -35,7 +35,7 @@ export default function LatestCollection() {
     return (
       <section style={{ padding: 'clamp(60px,7vw,90px) 0', background: '#FFFFFF' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%,240px),1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(45%,240px),1fr))', gap: '20px' }}>
             {[1,2,3,4].map(i => (
               <div key={i} style={{ borderRadius: '20px', overflow: 'hidden', background: '#FFF8FA', border: '1px solid rgba(196,117,138,0.1)' }}>
                 <div style={{ aspectRatio: '1/1', background: 'linear-gradient(90deg,#FFF5F7,#FAF0F2,#FFF5F7)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite' }} />
@@ -76,7 +76,7 @@ export default function LatestCollection() {
           </a>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%,240px),1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(45%,240px),1fr))', gap: '20px' }}>
           {products.map((product, idx) => (
             <motion.div
               key={product._id}

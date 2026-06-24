@@ -107,7 +107,7 @@ export default function GiftingHub() {
         <section style={{ padding: 'clamp(48px,6vw,80px) 0', background: '#FFFFFF' }}>
           <div className="container">
             <SectionHead tag="Curated Picks" title="✨ Featured Products" />
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(45%, 280px), 1fr))', gap: '24px' }}>
               {featured.map(p => <ProductCard key={p._id} product={p} featured />)}
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function GiftingHub() {
           </div>
 
           {loading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(45%, 280px), 1fr))', gap: '24px' }}>
               {[1,2,3,4,5,6].map(i => <SkeletonCard key={i} />)}
             </div>
           ) : filtered.length === 0 ? (
@@ -153,7 +153,7 @@ export default function GiftingHub() {
           ) : (
             <>
               <p style={{ marginBottom: '28px', color: '#8B6070', fontSize: '13px' }}>Showing <strong style={{ color: '#2A0A12' }}>{filtered.length}</strong> {cat !== 'All' ? `in ${cat}` : 'products'}</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(45%, 280px), 1fr))', gap: '24px' }}>
                 {filtered.map(p => <ProductCard key={p._id} product={p} />)}
               </div>
             </>
@@ -165,7 +165,7 @@ export default function GiftingHub() {
       <section style={{ padding: 'clamp(48px,6vw,80px) 0', background: '#FFF0F4' }}>
         <div className="container">
           <SectionHead tag="Browse By" title="Shop by Category" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 180px), 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(45%, 180px), 1fr))', gap: '16px' }}>
             {Object.entries(CAT_META).map(([name, meta]) => (
               <button key={name} onClick={() => { setCat(name); document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' }); }} style={{
                 padding: 'clamp(20px,3vw,30px) 16px', borderRadius: '20px', background: '#fff', border: '1px solid rgba(196,117,138,0.14)',
