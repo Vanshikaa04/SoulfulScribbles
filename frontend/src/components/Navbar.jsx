@@ -18,11 +18,8 @@ const WAIcon = () => (
 export default function Navbar() {
   const [scrolled, setScrolled]         = useState(false);
   const [menuOpen, setMenuOpen]         = useState(false);
-  const [hubDropdown, setHubDropdown]   = useState(false);
   const location  = useLocation();
-  const navigate  = useNavigate();
   const navRef    = useRef(null);
-  const dropRef   = useRef(null);
 
   /* ── route helpers ── */
   const path      = location.pathname;
@@ -31,10 +28,6 @@ export default function Navbar() {
   const isTechno  = path.startsWith('/techno')  || path.startsWith('/projects');
   const isAdmin   = path.startsWith('/admin');
 
-  /* which hub is "active" for styling */
-  const inGiftingHub = isGifting;
-  const inTechnoHub  = isTechno;
-
   /* ── scroll listener ── */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -42,15 +35,14 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  /* ── close on route change ── */
-  useEffect(() => { setMenuOpen(false); setHubDropdown(false); }, [path]);
+  /* ── close drawer on route change ── */
+  useEffect(() => { setMenuOpen(false); }, [path]);
 
-  /* ── close drawer/dropdown on outside click ── */
+  /* ── close drawer on outside click ── */
   useEffect(() => {
     const h = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
         setMenuOpen(false);
-        setHubDropdown(false);
       }
     };
     document.addEventListener('mousedown', h);
@@ -63,33 +55,9 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  /* ── nav colours — always light (Techno is now light-theme) ── */
   const navBg     = scrolled ? PINK_BG : 'transparent';
   const logoColor = BURG;
   const logoSub   = 'rgba(42,10,18,0.4)';
-
-  /* ── context-aware nav items ── */
-  const giftingNav = [
-    { to: '/',           label: 'Home'             },
-    { to: '/gifting',    label: 'Gifting Hub'      },
-    { to: '/products',   label: 'Products'         },
-    { to: '/admin',      label: 'Admin'            },
-  ];
-  const technoNav = [
-    { to: '/',           label: 'Home'             },
-    { to: '/techno',     label: 'Techno Hub'       },
-    { to: '/projects',   label: 'Projects'         },
-    { to: '/admin',      label: 'Admin'            },
-  ];
-  const defaultNav = [
-    { to: '/',           label: 'Home'             },
-    { to: '/admin',      label: 'Admin'            },
-  ];
-
-  const navItems = inGiftingHub ? giftingNav : inTechnoHub ? technoNav : defaultNav;
-
-  /* currently active hub label for the switcher button */
-  const currentHub = inGiftingHub ? '🎁 Gifting Hub' : inTechnoHub ? '⚡ Techno Hub' : '🌐 Hubs';
 
   return (
     <>
@@ -115,79 +83,56 @@ export default function Navbar() {
             <div style={{ lineHeight: 1 }}>
               <p style={{ fontFamily: 'Cormorant Garamond', fontSize: '19px', fontWeight: 600, color: logoColor, lineHeight: 1.1 }}>Soulful Scribble</p>
               <p style={{ fontSize: '9px', color: logoSub, letterSpacing: '2.5px', textTransform: 'uppercase', marginTop: '2px' }}>
-                {inGiftingHub ? 'Gifting Hub' : inTechnoHub ? 'Techno Hub' : 'Two worlds · One soul'}
+                {isGifting ? 'Gifting Hub' : isTechno ? 'Techno Hub' : 'Two worlds · One soul'}
               </p>
             </div>
           </Link>
 
           {/* ── Desktop Navigation ── */}
-          <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+          <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            
+            {/* ── CONDITION 1: HOME PAGE NAVIGATION ── */}
+            {isHome && (
+              <>
+                <DLink to="/" label="Home" active={true} />
+                <DLink to="/gifting" label="Gifting Hub" active={false} />
+                <DLink to="/techno" label="Techno Hub" active={false} />
+                <DLink to="/admin" label="Admin" active={false} />
+              </>
+            )}
 
-            {/* Context-aware page links */}
-            {navItems.map(item => (
-              <DLink key={item.to} to={item.to} label={item.label} active={path === item.to} />
-            ))}
+            {/* ── CONDITION 2: GIFTING HUB & PRODUCTS NAVIGATION ── */}
+            {isGifting && (
+              <>
+                <DLink to="/" label="Home" active={false} />
+                <DLink to="/gifting" label="Gifting Hub" active={path === '/gifting'} />
+                <DLink to="/products" label="Products" active={path === '/products'} />
+                <DLink to="/techno" label="⚡ Techno Hub" active={false} isPill={true} />
+                <DLink to="/admin" label="Admin" active={false} />
+              </>
+            )}
 
-            {/* ── Hub Switcher Dropdown ── */}
-            <div style={{ position: 'relative', marginLeft: '6px' }} ref={dropRef}>
-              <button
-                onClick={() => setHubDropdown(o => !o)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '7px',
-                  padding: '8px 16px', borderRadius: '40px', cursor: 'pointer',
-                  fontFamily: 'DM Sans', fontSize: '13px', fontWeight: 600,
-                  background: (inGiftingHub || inTechnoHub)
-                    ? `linear-gradient(135deg,${BURG},${ROSE})`
-                    : 'rgba(107,26,42,0.07)',
-                  color: (inGiftingHub || inTechnoHub) ? '#fff' : BURG,
-                  border: (inGiftingHub || inTechnoHub) ? 'none' : `1px solid rgba(107,26,42,0.14)`,
-                  transition: 'all 0.25s',
-                  boxShadow: (inGiftingHub || inTechnoHub) ? '0 4px 14px rgba(107,26,42,0.25)' : 'none',
-                }}
-              >
-                {currentHub}
-                {/* Chevron */}
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
-                  style={{ transition: 'transform 0.25s', transform: hubDropdown ? 'rotate(180deg)' : 'rotate(0)' }}>
-                  <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+            {/* ── CONDITION 3: TECHNO HUB & PROJECTS NAVIGATION ── */}
+            {isTechno && (
+              <>
+                <DLink to="/" label="Home" active={false} />
+                <DLink to="/techno" label="Techno Hub" active={path === '/techno'} />
+                <DLink to="/projects" label="Projects" active={path === '/projects'} />
+                <DLink to="/gifting" label="🎁 Gifting Hub" active={false} isPill={true} />
+                <DLink to="/admin" label="Admin" active={false} />
+              </>
+            )}
 
-              {/* ── Dropdown (opens UPWARD on scroll, stays below otherwise) ── */}
-              {hubDropdown && (
-                <div style={{
-                  position: 'absolute',
-                  /* upward: bottom of button + 8px gap */
-                  bottom: scrolled ? 'calc(100% + 8px)' : 'auto',
-                  top:    scrolled ? 'auto' : 'calc(100% + 8px)',
-                  right: 0,
-                  minWidth: '220px',
-                  background: '#FFFFFF',
-                  border: `1.5px solid rgba(107,26,42,0.12)`,
-                  borderRadius: '16px',
-                  boxShadow: '0 16px 48px rgba(107,26,42,0.16)',
-                  overflow: 'hidden',
-                  zIndex: 200,
-                  animation: 'fadeDropdown 0.2s ease',
-                }}>
-                  <div style={{ padding: '8px' }}>
-                    {/* Gifting Hub group */}
-                    <DropSection label="🎁 Gifting Hub" active={inGiftingHub} color={BURG}>
-                      <DropItem to="/gifting"  label="About Gifting Hub" icon="🌸" active={path==='/gifting'} />
-                      <DropItem to="/products" label="All Products"      icon="🛍️" active={path==='/products'} />
-                    </DropSection>
+            {/* ── CONDITION 4: ADMIN OR UNKNOWN ROOT PAGES ── */}
+            {!isHome && !isGifting && !isTechno && (
+              <>
+                <DLink to="/" label="Home" active={false} />
+                <DLink to="/gifting" label="Gifting Hub" active={false} />
+                <DLink to="/techno" label="Techno Hub" active={false} />
+                <DLink to="/admin" label="Admin" active={isAdmin} />
+              </>
+            )}
 
-                    <div style={{ height: '1px', background: 'rgba(107,26,42,0.08)', margin: '4px 8px' }} />
-
-                    {/* Techno Hub group */}
-                    <DropSection label="⚡ Techno Hub" active={inTechnoHub} color={BURG}>
-                      <DropItem to="/techno"   label="About Techno Hub" icon="💻" active={path==='/techno'} />
-                      <DropItem to="/projects" label="All Projects"     icon="🗂️" active={path==='/projects'} />
-                    </DropSection>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
 
           {/* ── Hamburger (mobile) ── */}
@@ -221,10 +166,10 @@ export default function Navbar() {
       }}>
         <div style={{ padding:'0 20px 24px', flex:1 }}>
           {/* Current Hub label */}
-          {(inGiftingHub || inTechnoHub) && (
+          {(isGifting || isTechno) && (
             <div style={{ padding:'8px 12px', borderRadius:'10px', background:'rgba(107,26,42,0.06)', border:`1px solid rgba(107,26,42,0.1)`, marginBottom:'16px' }}>
               <p style={{ fontSize:'11px', color:BURG, fontWeight:700, letterSpacing:'1px' }}>
-                Currently in: {inGiftingHub ? '🎁 Gifting Hub' : '⚡ Techno Hub'}
+                Currently in: {isGifting ? '🎁 Gifting Hub' : '⚡ Techno Hub'}
               </p>
             </div>
           )}
@@ -262,51 +207,63 @@ export default function Navbar() {
           .desktop-nav   { display: none !important; }
           .hamburger-btn { display: flex !important; }
         }
-        @keyframes fadeDropdown {
-          from { opacity:0; transform: translateY(-6px); }
-          to   { opacity:1; transform: translateY(0); }
-        }
       `}</style>
     </>
   );
 }
 
-/* ─── Desktop nav link ─── */
-function DLink({ to, label, active }) {
+/* ─── Desktop nav link (Supports standard links & Cross-hub Pills) ─── */
+function DLink({ to, label, active, isPill = false }) {
   const [hov, setHov] = useState(false);
-  const c = active ? BURG : hov ? BURG : 'rgba(42,10,18,0.58)';
+  
+  if (isPill) {
+    return (
+      <Link 
+        to={to} 
+        style={{ 
+          padding: '6px 14px', 
+          fontSize: '12px', 
+          fontWeight: 600, 
+          color: hov ? '#fff' : BURG, 
+          borderRadius: '40px', 
+          transition: 'all 0.25s ease', 
+          background: hov ? `linear-gradient(135deg,${BURG},${ROSE})` : 'rgba(107,26,42,0.06)',
+          border: `1px solid rgba(107,26,42,0.12)`,
+          marginLeft: '8px',
+          marginRight: '4px',
+          textDecoration: 'none',
+          boxShadow: hov ? '0 4px 12px rgba(107,26,42,0.15)' : 'none'
+        }}
+        onMouseEnter={() => setHov(true)} 
+        onMouseLeave={() => setHov(false)}
+      >
+        {label}
+      </Link>
+    );
+  }
+
   return (
-    <Link to={to} style={{ padding:'8px 13px', fontSize:'13px', fontWeight: active ? 700 : 500, color:c, borderRadius:'8px', transition:'all 0.2s', background: active ? 'rgba(107,26,42,0.07)' : hov ? 'rgba(107,26,42,0.05)' : 'transparent', textDecoration:'none' }}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+    <Link 
+      to={to} 
+      style={{ 
+        padding:'8px 13px', 
+        fontSize:'13px', 
+        fontWeight: active ? 700 : 500, 
+        color: active ? BURG : hov ? BURG : 'rgba(42,10,18,0.58)', 
+        borderRadius:'8px', 
+        transition:'all 0.2s', 
+        background: active ? 'rgba(107,26,42,0.07)' : hov ? 'rgba(107,26,42,0.05)' : 'transparent', 
+        textDecoration:'none' 
+      }}
+      onMouseEnter={() => setHov(true)} 
+      onMouseLeave={() => setHov(false)}
+    >
       {label}
     </Link>
   );
 }
 
-/* ─── Dropdown section header ─── */
-function DropSection({ label, active, color, children }) {
-  return (
-    <div>
-      <p style={{ fontSize:'10px', letterSpacing:'2px', textTransform:'uppercase', color: active ? color : 'rgba(42,10,18,0.35)', padding:'8px 10px 4px', fontWeight:700 }}>{label}</p>
-      {children}
-    </div>
-  );
-}
-
-/* ─── Dropdown item ─── */
-function DropItem({ to, label, icon, active }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <Link to={to} style={{ display:'flex', alignItems:'center', gap:'10px', padding:'9px 12px', borderRadius:'10px', background: active ? 'rgba(107,26,42,0.07)' : hov ? 'rgba(107,26,42,0.04)' : 'transparent', color: active ? BURG : 'rgba(42,10,18,0.65)', fontSize:'13px', fontWeight: active ? 700 : 400, textDecoration:'none', transition:'all 0.18s' }}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
-      <span style={{ fontSize:'16px' }}>{icon}</span>
-      <span>{label}</span>
-      {active && <span style={{ marginLeft:'auto', fontSize:'16px', color:ROSE }}>←</span>}
-    </Link>
-  );
-}
-
-/* ─── Mobile helpers ─── */
+/* ─── Mobile Link helpers ─── */
 function MLink({ to, label, active }) {
   return (
     <Link to={to} style={{ display:'block', padding:'12px 14px', borderRadius:'12px', fontSize:'14px', fontWeight: active ? 700 : 400, color: active ? BURG : 'rgba(42,10,18,0.65)', transition:'all 0.18s', background: active ? 'rgba(107,26,42,0.07)' : 'transparent', border:`1px solid ${active ? 'rgba(107,26,42,0.14)' : 'transparent'}`, marginBottom:'3px', textDecoration:'none' }}>
